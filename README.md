@@ -1,8 +1,10 @@
-# Bridge Scorer Project
+# Utilities
+
+[![Build Status](https://travis-ci.org/thebridsk/utilities.svg?branch=master)](https://travis-ci.org/thebridsk/utilities)
 
 ## Development Environment
 
-	git clone <utilitiesProject>
+	git clone https://github.com/thebridsk/utilities.git
 
 ## Releasing
 
@@ -16,10 +18,10 @@ To create the release, execute:
 ## Prereqs
 
 - Java 1.8
-- [Scala 2.12.2](http://www.scala-lang.org/)
-- [SBT 0.13.15](http://www.scala-sbt.org/)
-- [Eclipse Mars+](https://eclipse.org/)
-- [Scala IDE](http://scala-ide.org/) [Update site](http://download.scala-ide.org/sdk/lithium/e46/scala211/stable/site)
+- [Scala 2.12.4](http://www.scala-lang.org/)
+- [SBT 1.0.4](http://www.scala-sbt.org/)
+- [Eclipse Oxygen](https://eclipse.org/)
+- [Scala IDE](http://scala-ide.org/) [Update site](http://download.scala-ide.org/sdk/lithium/e47/scala212/stable/site)
 
 ## SBT Global Setup
 
