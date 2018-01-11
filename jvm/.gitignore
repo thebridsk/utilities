@@ -1,0 +1,7 @@
+/bin/
+/.settings/
+/.cache-main
+/.classpath
+/.project
+/target/
+/.cache-tests
