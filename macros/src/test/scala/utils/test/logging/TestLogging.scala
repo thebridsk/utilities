@@ -32,6 +32,8 @@ object TestLogging {
 }
 
 import TestLogging._
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class TestLogging extends FlatSpec with MustMatchers {
 
@@ -40,6 +42,9 @@ class TestLogging extends FlatSpec with MustMatchers {
   val runningInEclipse = sys.props.get("RunningInEclipse").map(s=>true).getOrElse(false)
 
   behavior of "MyFormatter in utilities-macros"
+
+  val fulldate = new SimpleDateFormat("MM-dd HH:mm:ss").format( new Date(0))
+  val justtime = new SimpleDateFormat("HH:mm:ss").format( new Date(0))
 
   it should "format a log record" in {
     Thread.currentThread().setName("TestThread")
@@ -50,7 +55,7 @@ class TestLogging extends FlatSpec with MustMatchers {
     val formatter = new MyFormatter("MM-dd HH:mm:ss",10,10,true,false,false,false,true)
 
     val msg = formatter.format(record).removeTrailingCRLF()
-    msg must fullyMatch regex ( """12-31 19:00:00 \d{10} Test       I Testing""" )
+    msg must fullyMatch regex ( fulldate+""" \d{10} Test       I Testing""" )
   }
 
   it should "format an entry log record" in {
@@ -62,7 +67,7 @@ class TestLogging extends FlatSpec with MustMatchers {
     val formatter = new MyFormatter("MM-dd HH:mm:ss",10,10,true,false,false,false,true)
 
     val msg = formatter.format(record).removeTrailingCRLF()
-    msg must fullyMatch regex ( """12-31 19:00:00 \d{10} Test       > ENTRY \{Testing\}""" )
+    msg must fullyMatch regex ( fulldate+""" \d{10} Test       > ENTRY \{Testing\}""" )
   }
 
   it should "format a log record with parameters" in {
@@ -75,7 +80,7 @@ class TestLogging extends FlatSpec with MustMatchers {
     val formatter = new MyFormatter("HH:mm:ss",10,10,true,false,false,false,true)
 
     val msg = formatter.format(record).removeTrailingCRLF()
-    msg must fullyMatch regex ( """19:00:00 \d{10} Test       I Testing arg=1""" )
+    msg must fullyMatch regex ( justtime+""" \d{10} Test       I Testing arg=1""" )
   }
 
   it should "format a log record with shorter thread and logger names" in {
@@ -87,7 +92,7 @@ class TestLogging extends FlatSpec with MustMatchers {
     val formatter = new MyFormatter("MM-dd HH:mm:ss",5,8,true,false,false,false,true)
 
     val msg = formatter.format(record).removeTrailingCRLF()
-    msg must fullyMatch regex ( """12-31 19:00:00 \d{5} Test     I Testing""" )
+    msg must fullyMatch regex ( fulldate+""" \d{5} Test     I Testing""" )
   }
 
   it should "format a log record with simple console formatter" in {
@@ -143,7 +148,7 @@ class TestLogging extends FlatSpec with MustMatchers {
     val formatter = new MyFormatter("MM-dd HH:mm:ss",10,10,true,false,false,false,true)
 
     val msg = formatter.format(record).removeTrailingCRLF()
-    msg must fullyMatch regex ( """12-31 19:00:00 \d{10} Test       I Testing""" )
+    msg must fullyMatch regex ( fulldate+""" \d{10} Test       I Testing""" )
   }}
 
   it should "format a log record with threadLen=-1 in config" in withLoggerConfiguration(
@@ -159,7 +164,7 @@ class TestLogging extends FlatSpec with MustMatchers {
     val formatter = new MyFormatter("MM-dd HH:mm:ss",10,10,true,false,false,false,true)
 
     val msg = formatter.format(record)
-    msg mustBe "12-31 19:00:00 TestThread Test       I Testing"+lineend
+    msg mustBe fulldate+" TestThread Test       I Testing"+lineend
   }}
 
   it should "format a log record with threadLen=-1 and EST in config" in withLoggerConfiguration(
