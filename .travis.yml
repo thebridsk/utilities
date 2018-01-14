@@ -15,6 +15,7 @@ deploy:
   skip_cleanup: true
   api_key:
     secure: iUq9V39onMNLxTwaQ54IumfQcqce6jhhdKH8c4/Td9YfVc2dD+eKKrjXqtxAUec7kqtAfgS9DVmpazblJuiW8bSUp8EvG/gEtU28OX4dk52KrL8NY+XeC+l6Blz7/AVlHuoGLzULIP1tSpE/8rOKqBtj8OvWYu5b4tS/kmNTU6Gy+e4JIHK586CcDX3GCjDTMvg1DbKEVqNDlR6DXjekhUIWEcD23Wj5sr/38SToeaXTAfElpwul/LlJHe7Nypv/1hwQ3oEUUzfQK6GrXLek2Y76Fg+Fh/HjS3AecX7BE0Ns31vm+QDctSsOx6xjJ7JMx5VSAZ41O6vg+/q/DuR4kW8EGRCBUstFlPPkJhuQ3GKG8cdcQTu1PSsktn2rReA+Djf6uuvuwzQpud3/3pefQTnyydzNi5S5GPqkW30q6/GsEngPK+iNblj1D2piZCQzSfLfGfQGkLWYVDsUPOYwwkXesr7TaVnZjP+LYPClOWm4CTAQXU6TaokCAWCpBmWnZp04NVBURnNeMiW9440Qu/fXATKv6aINYGG+JKjRrvRY6yXLLA1XyTq6ltyE1Urx1r78psZI6IOcN13HhA+Ct/4Pxmt7szQBkerQERmMY6pBKXNXMhH6avi7W6BseY817vp9sc2x7IgYDe1Ktv4mKobcrBj1d935+ebfHWxrhFQ=
+  file_glob: true
   file: jvm/target/scala-2.12/utilities-jvm_*.jar
   on:
     repo: thebridsk/utilities
