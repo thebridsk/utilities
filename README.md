@@ -48,8 +48,14 @@ The following steps are needed to work in eclipse.
 - In the project-utilities add all the jars from the current SBT in `~\.sbt\boot\`.  As of Dec 2016, this was
 `~\.sbt\boot\scala-2.10.6\org.scala-sbt\sbt\0.13.13`.
 
-## Installing Travis CLI
+## Travis CI
+
+### Installing Travis CLI
 
     sudo apt-get install gcc ruby ruby-dev ruby-ffi
     sudo gem install travis -v 1.8.8 --no-rdoc --no-ri
+
+### Validating .travis.yml
+
+    travis lint .travis.yml
     
