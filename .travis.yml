@@ -1,9 +1,12 @@
 language: scala
 scala:
 - 2.12.4
+
 branches:
   only:
   - master
+  - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
+  
 script:
 - sbt clean distribution:travis
 
