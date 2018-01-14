@@ -189,12 +189,19 @@ lazy val Distribution = config("distribution") describedAs("tasks for creating a
 
 val mydist = taskKey[Unit]("Make a build for distribution") in Distribution
 
+val travis = taskKey[Unit]("The build done in Travis CI") in Distribution
+
 mydist := Def.sequential( 
                 clean.all(rootfilter),
                 (test in Test).all(rootfilter), 
                 packageBin in Compile in `utilities-jvm`
           ).value
 
+travis := Def.sequential( 
+                clean.all(rootfilter),
+                (test in Test).all(rootfilter), 
+                packageBin in Compile in `utilities-jvm`
+          ).value
 
 releaseUseGlobalVersion := false
 
