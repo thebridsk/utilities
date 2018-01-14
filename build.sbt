@@ -241,8 +241,9 @@ releaseProcess := Seq[ReleaseStep](
   publishRelease,                         // : ReleaseStep, custom
   setNextVersion,                         // : ReleaseStep
   commitNextVersion,                      // : ReleaseStep
-  gitMergeReleaseMaster,
-  recalculateVersion,                     // : ReleaseStep
-  pushChanges                             // : ReleaseStep, also checks that an upstream branch is properly configured
+//  gitPushReleaseBranch
+//  gitMergeReleaseMaster,
+//  recalculateVersion,                     // : ReleaseStep
+//  pushChanges                             // : ReleaseStep, also checks that an upstream branch is properly configured
 )
   
