@@ -21,7 +21,8 @@ lazy val commonSettings = versionSetting ++ Seq(
   scalaVersion  := verScalaVersion,
   crossScalaVersions := verCrossScalaVersions,
   scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8", "-feature" /* , "-Xlog-implicits" */),
-  EclipseKeys.withSource := true
+  EclipseKeys.withSource := true,
+  testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oD")
 //  EclipseKeys.useProjectId := true
 )
 
