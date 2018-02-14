@@ -19,8 +19,8 @@ object Dependencies {
 
   lazy val verCrossScalaVersions = Seq("2.11.8", verScalaVersion)
 
-  lazy val vScalactic = "3.0.4"      // https://mvnrepository.com/artifact/org.scalactic/scalactic_2.12
-  lazy val vScalatest = "3.0.4"      // http://mvnrepository.com/artifact/org.scalatest/scalatest_2.11
+  lazy val vScalactic = "3.0.5"      // https://mvnrepository.com/artifact/org.scalactic/scalactic_2.12
+  lazy val vScalatest = "3.0.5"      // http://mvnrepository.com/artifact/org.scalatest/scalatest_2.11
   lazy val vJunit = "4.12"           // http://mvnrepository.com/artifact/junit/junit
 
   lazy val vScalaArm = "2.0"         // http://mvnrepository.com/artifact/com.jsuereth/scala-arm_2.11
