@@ -3,6 +3,8 @@ import Dependencies._
 import MyEclipseTransformers._
 import MyReleaseVersion._
 
+import sbtcrossproject.{crossProject, CrossType}
+
 enablePlugins(GitVersioning, GitBranchPrompt, BuildInfoPlugin)
 
 //
@@ -133,7 +135,7 @@ lazy val `utilities-sjvm` = project.in(file("sjvm")).
   ).
   dependsOn(sharedJVM % "test->test;compile->compile")
 
-lazy val `utilities-shared` = crossProject.in(file("shared")).
+lazy val `utilities-shared` = crossProject(JSPlatform, JVMPlatform).in(file("shared")).
   enablePlugins(BuildInfoPlugin).
   settings(commonSettings: _*).
   settings(

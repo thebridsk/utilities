@@ -4,6 +4,7 @@ import sbt._
 // Scala.js additions, see http://www.scala-js.org/doc/project/
 import org.scalajs.sbtplugin.ScalaJSPlugin
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
+import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 
 // see http://www.scala-sbt.org/0.13/docs/Organizing-Build.html
 
