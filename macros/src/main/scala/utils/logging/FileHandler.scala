@@ -19,6 +19,8 @@ import java.security.PrivilegedAction
 import java.io.BufferedOutputStream
 import java.util.logging.ErrorManager
 import java.util.Date
+import java.io.FilenameFilter
+import java.util.regex.Pattern
 
 
 /**
@@ -100,7 +102,8 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
     // TODO: fix this implementation
     private val MAX_UNIQUE = 100;
 
-    private val fSDF = new SimpleDateFormat("_yyyy.MM.dd.HH.mm.ss.SSS");
+    private val fSDF = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss.SSS");
+    private val dateRegex = """\d\d\d\d\.\d\d\.\d\d\.\d\d\.\d\d\.\d\d\.\d\d\d"""
 
     private var fUnique = -1;
 
@@ -115,7 +118,12 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
     private var fLockStream: FileOutputStream  = null;
     private var fMeter: MeteredOutputStream = null;
 
+    private var fHasDate: Boolean = false
+
     private val fOldFiles: ArrayList[File] = new ArrayList[File]()
+
+    def setLimit( l: Long ) = { fLimit = l }
+    def setCount( c: Int ) = { fCount = c }
 
     myCheckAccess();
     configure(pattern);
@@ -272,7 +280,7 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
           }
         } catch {
           case x: IOException =>
-            println( "Current log files is "+fCurrentFile )
+            println( "Current log file is "+fCurrentFile+": "+x )
             throw x
         }
     }
@@ -299,9 +307,20 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
         fMeter = null;
     }
 
+    var lastDate: Date = null;
+
+    private def getDate() = {
+      var d = new Date();
+      while (lastDate!=null && lastDate.getTime == d.getTime) {
+        d = new Date();
+      }
+      lastDate = d;
+      fSDF.format(d)
+    }
+
     private def openFiles(): Unit = {
         acquireLock();
-        fCurrentFile = new File(getFileName( fUnique, "_"));
+        fCurrentFile = new File(getFileName( fUnique, getDate() ));
         if (fAppend)
         {
             open(fCurrentFile, true);
@@ -336,37 +355,42 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
      */
     def rotate()
     {
-        val oldLevel = getLevel();
-        setLevel(Level.OFF);
+      val oldLevel = getLevel();
+      setLevel(Level.OFF);
 
-        super.close();
+      super.close();
+      if (!fHasDate) {
         rename();
+      } else {
+        nextFile()
+      }
 
-        try {
-            open(fCurrentFile, false);
-        } catch {
-          case ix: IOException =>
-            // We don't want to throw an exception here, but we
-            // report the exception to any registered ErrorManager.
-            reportError(null, ix, ErrorManager.OPEN_FAILURE);
-        }
-        cleanupExistingFiles();
-        setLevel(oldLevel);
+      try {
+          open(fCurrentFile, false);
+      } catch {
+        case ix: IOException =>
+          // We don't want to throw an exception here, but we
+          // report the exception to any registered ErrorManager.
+          reportError(null, ix, ErrorManager.OPEN_FAILURE);
+      }
+      cleanupExistingFiles();
+      setLevel(oldLevel);
+
+    }
+
+    private def nextFile() = {
+        fCurrentFile = new File(getFileName(fUnique, getDate()))
+        prune(fCurrentFile)
     }
 
     private def rename() =
     {
-        val fn = getFileName(fUnique, fSDF.format(new Date()));
+        val fn = getFileName(fUnique, getDate());
         try
         {
             val newName = new File(fn);
             fCurrentFile.renameTo(newName);
-            fOldFiles.add(newName);
-            while (fCount > 0 && fOldFiles.size() > fCount)
-            {
-                val n = fOldFiles.remove(0);
-                n.delete();
-            }
+            prune(newName)
         } catch {
           case e: Exception =>
             // We don't want to throw an exception here, but we
@@ -375,14 +399,63 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
         }
     }
 
-    private def cleanupExistingFiles() =
-    {
-        // This is called when starting.
-        // need to check existing files to see if they match the pattern.
-        // If they do, need to add them to fOldFiles in cron order, with oldest at index 0.
+    private def prune( nextfile: File ) = {
+//      println( s"Adding $nextfile" )
+      fOldFiles.add(nextfile);
+      while (fCount > 0 && fOldFiles.size() > fCount)
+      {
+          val n = fOldFiles.remove(0);
+//          println( s"Adding $nextfile, deleting $n" )
+          n.delete();
+      }
     }
 
-    private def getFileName( unique: Int, date: String ): String =
+    private def cleanupExistingFiles() =
+    {
+        // This is called when starting or rotating file.
+        // need to check existing files to see if they match the pattern.
+        // If they do, need to add them to fOldFiles in cron order, with oldest at index 0.
+
+      val filename = getFileName( fUnique, "", false )
+      val dir = new File(filename).getParent+"/"
+      val regex = getFileName( fUnique, "", true )
+
+      val reg = if (regex.startsWith(dir)) {
+        regex.substring(dir.length())
+      } else {
+        regex
+      }
+
+      val d = if (dir.length == 0) "." else dir
+
+      val pat = Pattern.compile(reg)
+
+      val dirf = new File(dir)
+      val files = dirf.list( new FilenameFilter() {
+        def accept( dir: File, name: String ) = {
+          pat.matcher(name).matches()
+        }
+      })
+
+      import scala.collection.JavaConversions._
+      val sortedfiles = files.toList.sorted
+      println(s"Found ${sortedfiles.length} log files with pattern ${pat}")
+      if (sortedfiles.length > fCount) {
+        val del = sortedfiles.length - fCount
+        sortedfiles.take(del).foreach { f =>
+          val todelete = new File(dirf,f )
+          println( s"  Deleting ${todelete}" )
+          todelete.delete
+        }
+      }
+    }
+
+    /**
+     * @param unique
+     * @param date
+     * @param regex generate regex to search for log files
+     */
+    private def getFileName( unique: Int, date: String, regex: Boolean = false ): String =
     {
         val u = Integer.toString(unique);
         val b = new StringBuilder();
@@ -418,24 +491,45 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
                     case 'h' =>
                         b.append(System.getProperty("user.home"));
                     case 'u' =>
-                        foundUnique = true;
+                      foundUnique = true;
+                      if (regex) {
+                        b.append("\\d*")
+                      } else {
                         b.append(u);
+                      }
                     case 'd' =>
+                      if (regex) {
+                        b.append(dateRegex)
+                      } else {
+                        fHasDate = true;
                         b.append(date);
+                      }
                     case _ =>
-                      b.append(c);
+                      if (regex) {
+                        if (FileHandler.special.indexOf(c) >= 0) {
+                          b.append('\\')
+                        }
+                      }
+                      b.append(c)
                   }
-              }
-              else
-              {
-                  b.append(c);
+              } else {
+                if (regex) {
+                  if (FileHandler.special.indexOf(c) >= 0) {
+                    b.append('\\')
+                  }
+                }
+                b.append(c)
               }
               i+=1;
           }
         }
         if (!foundUnique)
         {
+          if (regex) {
+            b.append("""\d*""")
+          } else {
             b.append(u);
+          }
         }
         return b.toString();
     }
@@ -491,4 +585,10 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
         }
         throw new IOException("Unable to acquire lock for pattern "+fPattern);
     }
+}
+
+object FileHandler {
+
+    private val special = ".*+?[](){}\\"
+
 }
