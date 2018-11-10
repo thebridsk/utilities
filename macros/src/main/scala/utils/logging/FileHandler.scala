@@ -439,7 +439,7 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
 
       import scala.collection.JavaConversions._
       val sortedfiles = files.toList.sorted
-      println(s"Found ${sortedfiles.length} log files with pattern ${pat}")
+//      println(s"Found ${sortedfiles.length} log files with pattern ${pat}")
       if (sortedfiles.length > fCount) {
         val del = sortedfiles.length - fCount
         sortedfiles.take(del).foreach { f =>
