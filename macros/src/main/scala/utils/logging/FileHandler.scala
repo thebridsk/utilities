@@ -120,13 +120,14 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
 
     private var fHasDate: Boolean = false
 
-    private val fOldFiles: ArrayList[File] = new ArrayList[File]()
+    private var fOldFiles: List[File] = List()
 
     def setLimit( l: Long ) = { fLimit = l }
     def setCount( c: Int ) = { fCount = c }
 
     myCheckAccess();
     configure(pattern);
+    cleanupExistingFiles();
     openFiles();
 
     private def myCheckAccess() =
@@ -373,7 +374,6 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
           // report the exception to any registered ErrorManager.
           reportError(null, ix, ErrorManager.OPEN_FAILURE);
       }
-      cleanupExistingFiles();
       setLevel(oldLevel);
 
     }
@@ -401,10 +401,11 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
 
     private def prune( nextfile: File ) = {
 //      println( s"Adding $nextfile" )
-      fOldFiles.add(nextfile);
-      while (fCount > 0 && fOldFiles.size() > fCount)
+      fOldFiles = fOldFiles:::List(nextfile)
+      while (fCount > 0 && fOldFiles.length > fCount)
       {
-          val n = fOldFiles.remove(0);
+          val n = fOldFiles.head
+          fOldFiles = fOldFiles.tail
 //          println( s"Adding $nextfile, deleting $n" )
           n.delete();
       }
@@ -417,10 +418,11 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
         // If they do, need to add them to fOldFiles in cron order, with oldest at index 0.
 
       val filename = getFileName( fUnique, "", false )
-      val dir = new File(filename).getParent+"/"
+      val parent = new File(filename).getParent
+      val dir = if (parent==null) "" else parent+"/";
       val regex = getFileName( fUnique, "", true )
 
-      val reg = if (regex.startsWith(dir)) {
+      val reg = if (dir.length()>0 && regex.startsWith(dir)) {
         regex.substring(dir.length())
       } else {
         regex
@@ -430,9 +432,9 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
 
       val pat = Pattern.compile(reg)
 
-      val dirf = new File(dir)
+      val dirf = new File(d)
       val files = dirf.list( new FilenameFilter() {
-        def accept( dir: File, name: String ) = {
+        def accept( dir1: File, name: String ) = {
           pat.matcher(name).matches()
         }
       })
@@ -444,10 +446,12 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
         val del = sortedfiles.length - fCount
         sortedfiles.take(del).foreach { f =>
           val todelete = new File(dirf,f )
-          println( s"  Deleting ${todelete}" )
+//          println( s"  Deleting ${todelete}" )
           todelete.delete
         }
+        sortedfiles.drop(del)
       }
+      fOldFiles = sortedfiles.map{ f => new File(dirf,f) }
     }
 
     /**
