@@ -7,6 +7,8 @@ import sbtcrossproject.{crossProject, CrossType}
 
 enablePlugins(GitVersioning, GitBranchPrompt, BuildInfoPlugin)
 
+ ensimeScalaVersion in ThisBuild := verScalaVersion
+
 //
 // Debugging deprecation and feature warnings
 //
@@ -37,7 +39,7 @@ lazy val utilities = project.in(file(".")).
     publishLocal := {}
   ).
   aggregate(`utilities-macros`, sharedJS, sharedJVM, `utilities-js`, `utilities-jvm`, `utilities-sjvm` )
-  
+
 
 lazy val `utilities-jvm` = project.in(file("jvm")).
   enablePlugins(BuildInfoPlugin).
@@ -129,7 +131,7 @@ lazy val `utilities-sjvm` = project.in(file("sjvm")).
     libraryDependencies += scalaVersion("org.scala-lang" % "scala-compiler" % _).value,
 
     fork in Test := true,
-    
+
     publish := {},
     publishLocal := {}
   ).
@@ -194,15 +196,15 @@ val mydist = taskKey[Unit]("Make a build for distribution") in Distribution
 
 val travis = taskKey[Unit]("The build done in Travis CI") in Distribution
 
-mydist := Def.sequential( 
+mydist := Def.sequential(
                 clean.all(rootfilter),
-                (test in Test).all(rootfilter), 
+                (test in Test).all(rootfilter),
                 packageBin in Compile in `utilities-jvm`
           ).value
 
-travis := Def.sequential( 
+travis := Def.sequential(
                 clean.all(rootfilter),
-                (test in Test).all(rootfilter), 
+                (test in Test).all(rootfilter),
                 packageBin in Compile in `utilities-jvm`
           ).value
 
@@ -249,4 +251,3 @@ releaseProcess := Seq[ReleaseStep](
 //  recalculateVersion,                     // : ReleaseStep
 //  pushChanges                             // : ReleaseStep, also checks that an upstream branch is properly configured
 )
-  
