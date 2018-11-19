@@ -1,14 +1,17 @@
 language: scala
 scala:
-- 2.12.4
+- 2.12.6
 
 branches:
   only:
   - master
   - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
-  
+
 script:
-- sbt clean distribution:travis
+  - sh |
+         . jdk_switcher openjdk8j9
+         java -version
+         sbt clean distribution:travis
 
 deploy:
   provider: releases
@@ -20,4 +23,3 @@ deploy:
   on:
     repo: thebridsk/utilities
     tags: true
-    
