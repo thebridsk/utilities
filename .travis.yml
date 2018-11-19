@@ -5,19 +5,16 @@ language: scala
 scala:
 - 2.12.6
 
-java: openjdk8j9
-
 branches:
   only:
   - master
   - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
 
-#         . jdk_switcher openjdk8j9
 
 script:
-  - sh |
-         java -version
-         sbt clean distribution:travis
+  - jdk_switcher use openjdk8j9
+  - java -version
+  - sbt clean distribution:travis
 
 deploy:
   provider: releases
