@@ -205,11 +205,4 @@ abstract class Main( val defaultLevel: Option[Level] = None ) extends ScallopCon
       case ExitException(rc) => rc
     }
   }
-
-  private def traceArgs( args: Array[String]): Unit = {
-    logger.fine("Arguments are:")
-    for (i <- 0 until args.length) {
-      logger.fine("  {0}: {1}",new Integer(i),args(i))
-    }
-  }
 }
