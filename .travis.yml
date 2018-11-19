@@ -4,7 +4,7 @@ sudo: false
 language: scala
 scala:
 - 2.12.6
-jdk: openjdk8j9
+jdk: openjdk8
 
 branches:
   only:
