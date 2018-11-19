@@ -1,18 +1,19 @@
-dist: trusty
+dist: xenial
 sudo: false
 
 language: scala
 scala:
 - 2.12.6
+jdk: openjdk8j9
 
 branches:
   only:
   - master
   - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
 
+#  - jdk_switcher use openjdk8j9
 
 script:
-  - jdk_switcher use openjdk8j9
   - java -version
   - sbt clean distribution:travis
 
