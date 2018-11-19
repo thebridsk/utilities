@@ -245,7 +245,7 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
             try
             {
                 val keyCls = getClass().getClassLoader().loadClass(value).asSubclass(cls);
-                return keyCls.newInstance();
+                return keyCls.getDeclaredConstructor().newInstance();
             } catch {
               case _: Exception =>
                 // ignore errors, use default
