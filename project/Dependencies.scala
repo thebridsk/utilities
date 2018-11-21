@@ -25,7 +25,7 @@ object Dependencies {
   lazy val vJunit = "4.12"           // http://mvnrepository.com/artifact/junit/junit
 
   lazy val vScalaArm = "2.0"         // http://mvnrepository.com/artifact/com.jsuereth/scala-arm_2.11
-  lazy val vScallop = "3.1.3"        // http://mvnrepository.com/artifact/org.rogach/scallop_2.11
+  lazy val vScallop = "3.1.5"        // http://mvnrepository.com/artifact/org.rogach/scallop_2.11
 
 
   // libraries
