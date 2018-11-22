@@ -1,6 +1,8 @@
 language: scala
 scala:
 - 2.12.4
+jdk:
+- openjdk8
 
 branches:
   only:
