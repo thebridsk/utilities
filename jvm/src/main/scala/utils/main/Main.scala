@@ -61,10 +61,24 @@ abstract class Main( val defaultLevel: Option[Level] = None ) extends ScallopCon
     case other => throw other
   }
 
+  /**
+   * Called at startup, before arguments are parsed.
+   */
   def init(): Int = 0
 
+  /**
+   * Called after arguments are parsed, before execute.
+   */
+  def setup(): Int = 0
+
+  /**
+   * Execute top level command, this is not called for subcommands.
+   */
   def execute() : Int
 
+  /**
+   * called just before shutting down JVM
+   */
   def cleanup(): Unit = {}
 
   def main(args: Array[String]): Unit = {
@@ -90,14 +104,20 @@ abstract class Main( val defaultLevel: Option[Level] = None ) extends ScallopCon
 
               showArgs(args)
 
-              val rc = if (subcommands.isEmpty) {
-                logger.fine("Calling execute")
-                execute()
+              val setuprc = setup()
+              if (setuprc == 0) {
+                val rc = if (subcommands.isEmpty) {
+                  logger.fine("Calling execute")
+                  execute()
+                } else {
+                  logger.fine("Calling execute")
+                  invokeSubcommand(subcommands)
+                }
+                rc
               } else {
-                logger.fine("Calling execute")
-                invokeSubcommand(subcommands)
+                setuprc
               }
-              rc
+
             case rc =>
               rc
           }
