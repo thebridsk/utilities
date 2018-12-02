@@ -593,6 +593,6 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
 
 object FileHandler {
 
-    private val special = ".*+?[](){}\\"
+  val special = ".*+?[](){}\\"
 
 }
