@@ -321,7 +321,7 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
 
     private def openFiles(): Unit = {
         acquireLock();
-        fCurrentFile = new File(getFileName( fUnique, getDate() ));
+        fCurrentFile = new File(getFileName( fPattern, fUnique, getDate() ));
         if (fAppend)
         {
             open(fCurrentFile, true);
@@ -379,13 +379,13 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
     }
 
     private def nextFile() = {
-        fCurrentFile = new File(getFileName(fUnique, getDate()))
+        fCurrentFile = new File(getFileName(fPattern,fUnique, getDate()))
         prune(fCurrentFile)
     }
 
     private def rename() =
     {
-        val fn = getFileName(fUnique, getDate());
+        val fn = getFileName(fPattern,fUnique, getDate());
         try
         {
             val newName = new File(fn);
@@ -417,20 +417,21 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
         // need to check existing files to see if they match the pattern.
         // If they do, need to add them to fOldFiles in cron order, with oldest at index 0.
 
-      val filename = getFileName( fUnique, "", false )
+      val filename = getFileName( fPattern,fUnique, "", false )
       val parent = new File(filename).getParent
-      val dir = if (parent==null) "" else parent+"/";
-      val regex = getFileName( fUnique, "", true )
-
-      val reg = if (dir.length()>0 && regex.startsWith(dir)) {
-        regex.substring(dir.length())
+      val dir1 = if (parent==null) "" else parent+File.separator;
+      val dir = dir1.replace('\\', '/')
+      val reg = if (dir.length()>0 && fPattern.startsWith(dir)) {
+        fPattern.substring(dir.length())
       } else {
-        regex
+        fPattern
       }
+
+      val regex = getFileName( reg, fUnique, "", true )
 
       val d = if (dir.length == 0) "." else dir
 
-      val pat = Pattern.compile(reg)
+      val pat = Pattern.compile(regex)
 
       val dirf = new File(d)
       val files = dirf.list( new FilenameFilter() {
@@ -459,19 +460,19 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
      * @param date
      * @param regex generate regex to search for log files
      */
-    private def getFileName( unique: Int, date: String, regex: Boolean = false ): String =
+    private def getFileName( pattern: String, unique: Int, date: String, regex: Boolean = false ): String =
     {
         val u = Integer.toString(unique);
         val b = new StringBuilder();
 
         var foundUnique = false;
-        val len = fPattern.length();
+        val len = pattern.length();
         var i = 0;
         import scala.util.control.Breaks._
         breakable {
           while (i < len)
           {
-              var c = fPattern.charAt(i);
+              var c = pattern.charAt(i);
               if (c == '%')
               {
                   i+=1;
@@ -480,7 +481,7 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
                       // ignore an isolated % at end of string
                       break;
                   }
-                  c = fPattern.charAt(i);
+                  c = pattern.charAt(i);
                   c match {
                     case '%' =>
                         b.append(c);
@@ -542,7 +543,7 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
         for (i <- 1 until MAX_UNIQUE )
         {
             fUnique = i
-            val fn = getFileName( i, "_")+".lck";
+            val fn = getFileName( fPattern,i, "_")+".lck";
             fLockStream = null;
             var fc= try
               {
