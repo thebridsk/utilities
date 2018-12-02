@@ -145,7 +145,7 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
     {
         val cname = getClass().getName();
 
-        fPattern = if (pattern!=null) pattern else getStringProperty(cname + ".pattern", "%h/trace.%u.%d.log");
+        fPattern = (if (pattern!=null) pattern else getStringProperty(cname + ".pattern", "%h/trace.%u.%d.log")).replace('\\', '/');
         fLimit = getIntProperty(cname + ".limit", 0);
         if (fLimit < 0) {
             fLimit = 0;
@@ -419,7 +419,7 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
 
       val filename = getFileName( fPattern,fUnique, "", false )
       val parent = new File(filename).getParent
-      val dir1 = if (parent==null) "" else parent+File.separator;
+      val dir1 = if (parent==null) "." else parent+File.separator;
       val dir = dir1.replace('\\', '/')
       val reg = if (dir.length()>0 && fPattern.startsWith(dir)) {
         fPattern.substring(dir.length())
@@ -429,11 +429,9 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
 
       val regex = getFileName( reg, fUnique, "", true )
 
-      val d = if (dir.length == 0) "." else dir
-
       val pat = Pattern.compile(regex)
 
-      val dirf = new File(d)
+      val dirf = new File(dir)
       val files = dirf.list( new FilenameFilter() {
         def accept( dir1: File, name: String ) = {
           pat.matcher(name).matches()
