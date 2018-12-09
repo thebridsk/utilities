@@ -11,7 +11,7 @@ import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 object Dependencies {
   // version numbers
 
-  lazy val verScalaVersion = "2.12.6"
+  lazy val verScalaVersion = "2.12.8"
   lazy val verScalaMajorMinor = {
     val i = verScalaVersion.indexOf('.')
     val i2 = verScalaVersion.indexOf('.', i+1)
