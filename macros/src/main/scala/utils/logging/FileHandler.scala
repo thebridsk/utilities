@@ -99,7 +99,6 @@ import java.util.regex.Pattern
  */
 class FileHandler( pattern: String = null ) extends StreamHandler {
 
-    // TODO: fix this implementation
     private val MAX_UNIQUE = 100;
 
     private val fSDF = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss.SSS");
