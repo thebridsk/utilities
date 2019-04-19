@@ -1,6 +1,7 @@
 # Utilities
 
 [![Build Status](https://travis-ci.org/thebridsk/utilities.svg?branch=master)](https://travis-ci.org/thebridsk/utilities)
+[![GitHub release](https://img.shields.io/github/release/thebridsk/utilities.svg)](https://github.com/thebridsk/utilities/releases/latest)
 
 ## Development Environment
 
