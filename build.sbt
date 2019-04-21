@@ -50,13 +50,20 @@ lazy val buildInfoCommonSettings = Seq(
 )
 
 lazy val utilities = project.in(file(".")).
-  enablePlugins(GitVersioning, GitBranchPrompt).
+  enablePlugins(GitVersioning, GitBranchPrompt,BuildInfoPlugin).
   settings( commonSettings: _* ).
   settings(
     organization := "com.example",
     name := "utilities",
+    mainClass := None,
     publish := {},
-    publishLocal := {}
+    publishLocal := {},
+    buildInfoRenderFactory := PropertiesBuildInfoRenderer.apply,
+    buildInfoPackage := "com.example.utilities.version",
+    buildInfoObject := "VersionUtilities",
+    buildInfoUsePackageAsPath := true,
+    buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
+    buildInfoOptions += BuildInfoOption.BuildTime,
   ).
   aggregate(`utilities-macros`, sharedJS, sharedJVM, `utilities-js`, `utilities-jvm`, `utilities-sjvm` )
 
