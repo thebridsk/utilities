@@ -215,7 +215,7 @@ lazy val sharedJVM = `utilities-shared`.jvm
 
 
 val rootfilter = ScopeFilter(
-     inAggregates(utilities, includeRoot = false)
+     inAggregates(utilities, includeRoot = true)
    )
 
 
