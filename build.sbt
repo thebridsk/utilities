@@ -5,7 +5,7 @@ import MyReleaseVersion._
 
 import sbtcrossproject.{crossProject, CrossType}
 
-enablePlugins(GitVersioning, GitBranchPrompt, BuildInfoPlugin)
+ensimeScalaVersion in ThisBuild := verScalaVersion
 
 //
 // Debugging deprecation and feature warnings
@@ -24,20 +24,49 @@ lazy val commonSettings = versionSetting ++ Seq(
   crossScalaVersions := verCrossScalaVersions,
   scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8", "-feature" /* , "-Xlog-implicits" */),
   EclipseKeys.withSource := true,
-  testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oD")
-//  EclipseKeys.useProjectId := true
+  testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oD"),
+//  EclipseKeys.useProjectId := true,
+)
+
+import XTimestamp._
+
+lazy val buildInfoCommonSettings = Seq(
+
+// this replaces 
+//
+//     buildInfoOptions += BuildInfoOption.BuildTime
+//
+// This uses a constant timestamp if it is a snapshot build
+// to mitigate a long build time.
+
+  buildInfoKeys ++= Seq[BuildInfoKey](
+    BuildInfoKey.action( "builtAtString" ) { 
+        string(isSnapshotVersion) 
+    },
+    BuildInfoKey.action( "builtAtMillis" ) { 
+        millis(isSnapshotVersion) 
+    }
+  )
 )
 
 lazy val utilities = project.in(file(".")).
+  enablePlugins(GitVersioning, GitBranchPrompt,BuildInfoPlugin).
   settings( commonSettings: _* ).
   settings(
     organization := "com.example",
     name := "utilities",
+    mainClass := None,
     publish := {},
-    publishLocal := {}
+    publishLocal := {},
+    buildInfoRenderFactory := PropertiesBuildInfoRenderer.apply,
+    buildInfoPackage := "com.example.utilities.version",
+    buildInfoObject := "VersionUtilities",
+    buildInfoUsePackageAsPath := true,
+    buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
+    buildInfoOptions += BuildInfoOption.BuildTime,
   ).
   aggregate(`utilities-macros`, sharedJS, sharedJVM, `utilities-js`, `utilities-jvm`, `utilities-sjvm` )
-  
+
 
 lazy val `utilities-jvm` = project.in(file("jvm")).
   enablePlugins(BuildInfoPlugin).
@@ -54,7 +83,7 @@ lazy val `utilities-jvm` = project.in(file("jvm")).
     buildInfoPackage := "com.example.utilities.version",
     buildInfoObject := "VersionUtilities",
     buildInfoUsePackageAsPath := true,
-    buildInfoOptions += BuildInfoOption.BuildTime,
+//    buildInfoOptions += BuildInfoOption.BuildTime,
     buildInfoOptions += BuildInfoOption.ToJson,
     EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.ManagedClasses,
 
@@ -64,6 +93,7 @@ lazy val `utilities-jvm` = project.in(file("jvm")).
     mappings in (Compile, packageBin) ++= mappings.in(`utilities-macros`, Compile, packageBin).value,
     mappings in (Compile, packageSrc) ++= mappings.in(`utilities-macros`, Compile, packageSrc).value
   ).
+  settings( buildInfoCommonSettings: _* ).
   dependsOn(`utilities-macros`)
 
 lazy val `utilities-macros` = project.in(file("macros")).
@@ -129,7 +159,7 @@ lazy val `utilities-sjvm` = project.in(file("sjvm")).
     libraryDependencies += scalaVersion("org.scala-lang" % "scala-compiler" % _).value,
 
     fork in Test := true,
-    
+
     publish := {},
     publishLocal := {}
   ).
@@ -146,7 +176,7 @@ lazy val `utilities-shared` = crossProject(JSPlatform, JVMPlatform).in(file("sha
     buildInfoPackage := "utils.version",
     buildInfoObject := "VersionShared",
     buildInfoUsePackageAsPath := true,
-    buildInfoOptions += BuildInfoOption.BuildTime,
+//    buildInfoOptions += BuildInfoOption.BuildTime,
     buildInfoOptions += BuildInfoOption.ToJson,
 
     libraryDependencies ++= sharedDeps.value,
@@ -166,6 +196,7 @@ lazy val `utilities-shared` = crossProject(JSPlatform, JVMPlatform).in(file("sha
     )
 
   ).
+  settings( buildInfoCommonSettings: _* ).
   jvmSettings(
 
   ).
@@ -184,7 +215,7 @@ lazy val sharedJVM = `utilities-shared`.jvm
 
 
 val rootfilter = ScopeFilter(
-     inAggregates(utilities, includeRoot = false)
+     inAggregates(utilities, includeRoot = true)
    )
 
 
@@ -194,15 +225,15 @@ val mydist = taskKey[Unit]("Make a build for distribution") in Distribution
 
 val travis = taskKey[Unit]("The build done in Travis CI") in Distribution
 
-mydist := Def.sequential( 
+mydist := Def.sequential(
                 clean.all(rootfilter),
-                (test in Test).all(rootfilter), 
+                (test in Test).all(rootfilter),
                 packageBin in Compile in `utilities-jvm`
           ).value
 
-travis := Def.sequential( 
+travis := Def.sequential(
                 clean.all(rootfilter),
-                (test in Test).all(rootfilter), 
+                (test in Test).all(rootfilter),
                 packageBin in Compile in `utilities-jvm`
           ).value
 
@@ -230,8 +261,6 @@ val publishRelease = ReleaseStep(
   action = releaseStepTaskAggregated(mydist in Distribution in utilities) // publish release notes
 )
 
-import MyReleaseVersion._
-
 releaseProcess := Seq[ReleaseStep](
   checkSnapshotDependencies,              // : ReleaseStep
   gitMakeReleaseBranch,
@@ -249,4 +278,3 @@ releaseProcess := Seq[ReleaseStep](
 //  recalculateVersion,                     // : ReleaseStep
 //  pushChanges                             // : ReleaseStep, also checks that an upstream branch is properly configured
 )
-  

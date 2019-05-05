@@ -23,7 +23,7 @@ class TestMacros extends Logging {
   }
 
   import scala.language.implicitConversions
-  implicit def intToAnyRef( i: Int ) : AnyRef = new java.lang.Integer(i)
+  implicit def intToAnyRef( i: Int ) : AnyRef =  java.lang.Integer.valueOf(i)
 
   def testMacros( i: Int ) : Unit = {
     logger.info("in testMacros(x=%s)",i)

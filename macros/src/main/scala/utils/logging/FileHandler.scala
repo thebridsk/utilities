@@ -19,6 +19,8 @@ import java.security.PrivilegedAction
 import java.io.BufferedOutputStream
 import java.util.logging.ErrorManager
 import java.util.Date
+import java.io.FilenameFilter
+import java.util.regex.Pattern
 
 
 /**
@@ -97,10 +99,10 @@ import java.util.Date
  */
 class FileHandler( pattern: String = null ) extends StreamHandler {
 
-    // TODO: fix this implementation
     private val MAX_UNIQUE = 100;
 
-    private val fSDF = new SimpleDateFormat("_yyyy.MM.dd.HH.mm.ss.SSS");
+    private val fSDF = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss.SSS");
+    private val dateRegex = """\d\d\d\d\.\d\d\.\d\d\.\d\d\.\d\d\.\d\d\.\d\d\d"""
 
     private var fUnique = -1;
 
@@ -115,10 +117,16 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
     private var fLockStream: FileOutputStream  = null;
     private var fMeter: MeteredOutputStream = null;
 
-    private val fOldFiles: ArrayList[File] = new ArrayList[File]()
+    private var fHasDate: Boolean = false
+
+    private var fOldFiles: List[File] = List()
+
+    def setLimit( l: Long ) = { fLimit = l }
+    def setCount( c: Int ) = { fCount = c }
 
     myCheckAccess();
     configure(pattern);
+    cleanupExistingFiles();
     openFiles();
 
     private def myCheckAccess() =
@@ -136,7 +144,7 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
     {
         val cname = getClass().getName();
 
-        fPattern = if (pattern!=null) pattern else getStringProperty(cname + ".pattern", "%h/trace.%u.%d.log");
+        fPattern = (if (pattern!=null) pattern else getStringProperty(cname + ".pattern", "%h/trace.%u.%d.log")).replace('\\', '/');
         fLimit = getIntProperty(cname + ".limit", 0);
         if (fLimit < 0) {
             fLimit = 0;
@@ -236,7 +244,7 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
             try
             {
                 val keyCls = getClass().getClassLoader().loadClass(value).asSubclass(cls);
-                return keyCls.newInstance();
+                return keyCls.getDeclaredConstructor().newInstance();
             } catch {
               case _: Exception =>
                 // ignore errors, use default
@@ -272,7 +280,7 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
           }
         } catch {
           case x: IOException =>
-            println( "Current log files is "+fCurrentFile )
+            println( "Current log file is "+fCurrentFile+": "+x )
             throw x
         }
     }
@@ -299,9 +307,20 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
         fMeter = null;
     }
 
+    var lastDate: Date = null;
+
+    private def getDate() = {
+      var d = new Date();
+      while (lastDate!=null && lastDate.getTime == d.getTime) {
+        d = new Date();
+      }
+      lastDate = d;
+      fSDF.format(d)
+    }
+
     private def openFiles(): Unit = {
         acquireLock();
-        fCurrentFile = new File(getFileName( fUnique, "_"));
+        fCurrentFile = new File(getFileName( fPattern, fUnique, getDate() ));
         if (fAppend)
         {
             open(fCurrentFile, true);
@@ -336,37 +355,41 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
      */
     def rotate()
     {
-        val oldLevel = getLevel();
-        setLevel(Level.OFF);
+      val oldLevel = getLevel();
+      setLevel(Level.OFF);
 
-        super.close();
+      super.close();
+      if (!fHasDate) {
         rename();
+      } else {
+        nextFile()
+      }
 
-        try {
-            open(fCurrentFile, false);
-        } catch {
-          case ix: IOException =>
-            // We don't want to throw an exception here, but we
-            // report the exception to any registered ErrorManager.
-            reportError(null, ix, ErrorManager.OPEN_FAILURE);
-        }
-        cleanupExistingFiles();
-        setLevel(oldLevel);
+      try {
+          open(fCurrentFile, false);
+      } catch {
+        case ix: IOException =>
+          // We don't want to throw an exception here, but we
+          // report the exception to any registered ErrorManager.
+          reportError(null, ix, ErrorManager.OPEN_FAILURE);
+      }
+      setLevel(oldLevel);
+
+    }
+
+    private def nextFile() = {
+        fCurrentFile = new File(getFileName(fPattern,fUnique, getDate()))
+        prune(fCurrentFile)
     }
 
     private def rename() =
     {
-        val fn = getFileName(fUnique, fSDF.format(new Date()));
+        val fn = getFileName(fPattern,fUnique, getDate());
         try
         {
             val newName = new File(fn);
             fCurrentFile.renameTo(newName);
-            fOldFiles.add(newName);
-            while (fCount > 0 && fOldFiles.size() > fCount)
-            {
-                val n = fOldFiles.remove(0);
-                n.delete();
-            }
+            prune(newName)
         } catch {
           case e: Exception =>
             // We don't want to throw an exception here, but we
@@ -375,26 +398,78 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
         }
     }
 
-    private def cleanupExistingFiles() =
-    {
-        // This is called when starting.
-        // need to check existing files to see if they match the pattern.
-        // If they do, need to add them to fOldFiles in cron order, with oldest at index 0.
+    private def prune( nextfile: File ) = {
+//      println( s"Adding $nextfile" )
+      fOldFiles = fOldFiles:::List(nextfile)
+      while (fCount > 0 && fOldFiles.length > fCount)
+      {
+          val n = fOldFiles.head
+          fOldFiles = fOldFiles.tail
+//          println( s"Adding $nextfile, deleting $n" )
+          n.delete();
+      }
     }
 
-    private def getFileName( unique: Int, date: String ): String =
+    private def cleanupExistingFiles() =
+    {
+        // This is called when starting or rotating file.
+        // need to check existing files to see if they match the pattern.
+        // If they do, need to add them to fOldFiles in cron order, with oldest at index 0.
+
+      val filename = getFileName( fPattern,fUnique, "", false )
+      val parent = new File(filename).getParent
+      val dir1 = if (parent==null) "." else parent+File.separator;
+      val dir = dir1.replace('\\', '/')
+      val reg = if (dir.length()>0 && fPattern.startsWith(dir)) {
+        fPattern.substring(dir.length())
+      } else {
+        fPattern
+      }
+
+      val regex = getFileName( reg, fUnique, "", true )
+
+      val pat = Pattern.compile(regex)
+
+      val dirf = new File(dir)
+      val files = dirf.list( new FilenameFilter() {
+        def accept( dir1: File, name: String ) = {
+          pat.matcher(name).matches()
+        }
+      })
+
+      import scala.collection.JavaConversions._
+      val sortedfiles = files.toList.sorted
+//      println(s"Found ${sortedfiles.length} log files with pattern ${pat}")
+      if (sortedfiles.length > fCount) {
+        val del = sortedfiles.length - fCount
+        sortedfiles.take(del).foreach { f =>
+          val todelete = new File(dirf,f )
+//          println( s"  Deleting ${todelete}" )
+          todelete.delete
+        }
+        sortedfiles.drop(del)
+      }
+      fOldFiles = sortedfiles.map{ f => new File(dirf,f) }
+    }
+
+    /**
+     * @param unique
+     * @param date
+     * @param regex generate regex to search for log files
+     */
+    private def getFileName( pattern: String, unique: Int, date: String, regex: Boolean = false ): String =
     {
         val u = Integer.toString(unique);
         val b = new StringBuilder();
 
         var foundUnique = false;
-        val len = fPattern.length();
+        val len = pattern.length();
         var i = 0;
         import scala.util.control.Breaks._
         breakable {
           while (i < len)
           {
-              var c = fPattern.charAt(i);
+              var c = pattern.charAt(i);
               if (c == '%')
               {
                   i+=1;
@@ -403,7 +478,7 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
                       // ignore an isolated % at end of string
                       break;
                   }
-                  c = fPattern.charAt(i);
+                  c = pattern.charAt(i);
                   c match {
                     case '%' =>
                         b.append(c);
@@ -418,24 +493,45 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
                     case 'h' =>
                         b.append(System.getProperty("user.home"));
                     case 'u' =>
-                        foundUnique = true;
+                      foundUnique = true;
+                      if (regex) {
+                        b.append("\\d*")
+                      } else {
                         b.append(u);
+                      }
                     case 'd' =>
+                      if (regex) {
+                        b.append(dateRegex)
+                      } else {
+                        fHasDate = true;
                         b.append(date);
+                      }
                     case _ =>
-                      b.append(c);
+                      if (regex) {
+                        if (FileHandler.special.indexOf(c) >= 0) {
+                          b.append('\\')
+                        }
+                      }
+                      b.append(c)
                   }
-              }
-              else
-              {
-                  b.append(c);
+              } else {
+                if (regex) {
+                  if (FileHandler.special.indexOf(c) >= 0) {
+                    b.append('\\')
+                  }
+                }
+                b.append(c)
               }
               i+=1;
           }
         }
         if (!foundUnique)
         {
+          if (regex) {
+            b.append("""\d*""")
+          } else {
             b.append(u);
+          }
         }
         return b.toString();
     }
@@ -444,7 +540,7 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
         for (i <- 1 until MAX_UNIQUE )
         {
             fUnique = i
-            val fn = getFileName( i, "_")+".lck";
+            val fn = getFileName( fPattern,i, "_")+".lck";
             fLockStream = null;
             var fc= try
               {
@@ -491,4 +587,10 @@ class FileHandler( pattern: String = null ) extends StreamHandler {
         }
         throw new IOException("Unable to acquire lock for pattern "+fPattern);
     }
+}
+
+object FileHandler {
+
+  val special = ".*+?[](){}\\"
+
 }

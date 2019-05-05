@@ -6,22 +6,23 @@
 
 name := "project-utilities"
 
-scalaVersion := "2.12.6"
+scalaVersion := "2.12.8"
 
-val vLog4j = "1.7.25"               // https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
-val vJGit = "4.11.0.201803080745-r" // https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit.pgm
+val vLog4j = "1.7.26"               // https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
+val vJGit = "5.3.0.201903130848-r" // https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit.pgm
 
-val vCrossProject = "0.4.0"        // https://github.com/portable-scala/sbt-crossproject
+val vCrossProject = "0.6.0"        // https://github.com/portable-scala/sbt-crossproject
 val vPlatformDeps = "1.0.0"        // https://github.com/portable-scala/sbt-platform-deps
-val vScalaJSDefault = "0.6.23"     // http://www.scala-js.org/
-val vSbtAssembly = "0.14.6"        // https://github.com/sbt/sbt-assembly
+val vScalaJSDefault = "0.6.27"     // http://www.scala-js.org/
+val vSbtAssembly = "0.14.9"        // https://github.com/sbt/sbt-assembly
 val vSbtGit = "1.0.0"              // https://github.com/sbt/sbt-git
 val vSbtSCoverage = "1.5.1"        // https://github.com/scoverage/sbt-scoverage
 val vSbtBuildInfo = "0.9.0"        // https://github.com/sbt/sbt-buildinfo
-val vSbtRelease = "1.0.8"          // https://github.com/sbt/sbt-release
+val vSbtRelease = "1.0.11"         // https://github.com/sbt/sbt-release
 val vSbtEclipse = "5.2.4"          // https://github.com/typesafehub/sbteclipse
-val vSbtDependencyGraph = "0.9.0"  // https://github.com/jrudolph/sbt-dependency-graph
-val vSbtUpdates = "0.3.4"          // https://github.com/rtimush/sbt-updates
+val vSbtDependencyGraph = "0.9.2"  // https://github.com/jrudolph/sbt-dependency-graph
+val vSbtUpdates = "0.4.0"          // https://github.com/rtimush/sbt-updates
+val vSbtEnsime = "2.6.1"           // https://github.com/ensime/ensime-sbt
 
 val scalaJSVersion = Option(System.getenv("SCALAJS_VERSION")).getOrElse(vScalaJSDefault)
 
@@ -42,12 +43,12 @@ libraryDependencies ++= Seq(
      exclude("com.sun.jmx", "jmxri")
 )
 
-resolvers += 
-  "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+// resolvers +=
+//   "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % vCrossProject)
 addSbtPlugin("org.scala-js" % "sbt-scalajs" % scalaJSVersion)
-  
+
 // addSbtPlugin("io.spray" % "sbt-revolver" % vSbtRevolver)
 addSbtPlugin("com.eed3si9n" % "sbt-assembly" % vSbtAssembly)
 addSbtPlugin("com.typesafe.sbt" % "sbt-git" % vSbtGit)
@@ -55,8 +56,10 @@ addSbtPlugin("org.scoverage" % "sbt-scoverage" % vSbtSCoverage)
 addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % vSbtBuildInfo)
 addSbtPlugin("com.github.gseitz" % "sbt-release" % vSbtRelease)
 addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % vSbtEclipse)
-addSbtPlugin("com.timushev.sbt" % "sbt-updates" % vSbtUpdates) 
+addSbtPlugin("com.timushev.sbt" % "sbt-updates" % vSbtUpdates)
 addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % vSbtDependencyGraph)  // must be updated for sbt 1.0
+
+addSbtPlugin("org.ensime" % "sbt-ensime" % vSbtEnsime)
 
 scalacOptions ++= Seq( "-unchecked", "-deprecation" )
 

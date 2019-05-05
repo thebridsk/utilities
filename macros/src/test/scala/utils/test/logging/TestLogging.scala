@@ -284,7 +284,7 @@ INFO: Testing""".replace("\n",lineend)+lineend
     println(ClassPath.show("SystemClassLoader ", loader))
     try {
       val clz = loader.loadClass("utils.logging.MyFormatter")
-      val f = clz.newInstance()
+      val f = clz.getDeclaredConstructor().newInstance()
       f.getClass().getName mustBe "utils.logging.MyFormatter"
       if (runningInEclipse) fail("Should not find MyFormatter, if running in sbt,  unset System Property RunningInEclipse")
     } catch {

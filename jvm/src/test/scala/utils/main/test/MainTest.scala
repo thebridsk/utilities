@@ -7,6 +7,13 @@ import utils.main.Subcommand
 import utils.main.Main
 import java.util.concurrent.atomic.AtomicInteger
 import utils.classpath.ClassPath
+import java.util.logging.{ Logger => JLogger }
+import utils.logging.Config
+import utils.logging.FileHandler
+import utils.logging.FileFormatter
+import java.util.logging.Level
+import utils.logging.RedirectOutput
+import utils.logging.Logger
 
 trait Counters {
 
@@ -37,6 +44,8 @@ object ReturnOptions {
 }
 
 import ReturnOptions._
+import java.io.File
+import java.io.FilenameFilter
 
 class ExampleSubcommand( name: String,
                          val counter: AtomicInteger,
@@ -83,9 +92,29 @@ class SimpleMain( returnOptions: Options = optionOk ) extends Main with Counters
   }
 }
 
+object MainTest {
+
+  val testlog = Logger[MainTest]()
+
+  def startTestLogging() = {
+    val logfilenameprefix = "logs/unittestLoggingTest"
+    val handler = new FileHandler(s"${logfilenameprefix}.%d.%u.log")
+    handler.setLimit(10000)
+    handler.setCount(6)
+    handler.setFormatter( new FileFormatter )
+    handler.setLevel(Level.ALL)
+    JLogger.getLogger("").addHandler(handler)
+//    RedirectOutput.traceStandardOutAndErr()
+    testlog.fine(ClassPath.show("    ",getClass.getClassLoader))
+  }
+
+}
+
 class MainTest extends FlatSpec with MustMatchers {
 
   TestStartLogging.startLogging()
+
+  MainTest.startTestLogging()
 
 //  println( ClassPath.show("", getClass.getClassLoader) )
 
@@ -413,6 +442,26 @@ class MainTest extends FlatSpec with MustMatchers {
     n.cleanupCount mustBe 5
     t.cleanupCount mustBe 6
     m.cleanupCount mustBe 7
+  }
+
+  it should "have only 6 unittestLoggingTest* files in the logs directory" in {
+    val dir = new File("logs")
+    val files = dir.listFiles( new FilenameFilter() {
+      /**
+       * Tests if a specified file should be included in a file list.
+       *
+       * @param   dir    the directory in which the file was found.
+       * @param   name   the name of the file.
+       * @return  <code>true</code> if and only if the name should be
+       * included in the file list; <code>false</code> otherwise.
+       */
+      def accept( dir: File, name: String ) = {
+        name.startsWith("unittestLoggingTest") && !name.startsWith("unittestLoggingTest._")
+      }
+    })
+    println("Log Files:")
+    files.foreach( f => println(s"  $f"))
+    files.length mustBe 6
   }
 
 }

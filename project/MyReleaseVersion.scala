@@ -53,6 +53,7 @@ object MyReleaseVersion {
 
   private val releaseBranch = "release"
 
+  private val releaseFromBranch = sys.props.get("RELEASEFROMBRANCH").getOrElse( sys.env.get("RELEASEFROMBRANCH").getOrElse("master"))
 
   private val globalVersionString = "git.baseVersion in ThisBuild := \"%s\""
   private val versionString = "git.baseVersion := \"%s\""
@@ -83,17 +84,38 @@ object MyReleaseVersion {
   val versionSetting =   Seq(
       version := {
         val v = version.value
-        val v1 = if (v contains gitHeadCommit.value.getOrElse("Unknown")) v
-                 else v+"-"+gitHeadCommit.value.getOrElse("Unknown")+(if (gitUncommittedChanges.value) "-SNAPSHOT" else "")
-        val v2 = if (v1.endsWith(gitCurrentBranch.value) || gitCurrentBranch.value == releaseBranch) v1
-                 else v1+ "-"+gitCurrentBranch.value
-//        println("Version is "+version.value)
-        val js = if (isScalaJSProject.value) " JS" else ""
-        println("Version is "+v2+" in "+ name.value+js)
-        v2
+        val n = name.value
+        val headCommit = gitHeadCommit.value
+        val curBranch = gitCurrentBranch.value
+        val uncommittedChanges = gitUncommittedChanges.value
+        val isScalaJS = isScalaJSProject.value
+        val js = if (isScalaJS) " JS" else ""
+//        println(s"""Original version for ${n+js}: ${v}""")
+        val v1 = if (v contains headCommit.getOrElse("Unknown")) v
+                 else v+"-"+headCommit.getOrElse("Unknown")+(if (uncommittedChanges) "-SNAPSHOT" else "")
+//        println("v1 is "+v1+" in "+ n+js)
+        val v2 = if (v1.endsWith(curBranch) || curBranch == releaseBranch) v1
+                 else if ( headCommit.map( _ == curBranch).getOrElse(false) ) v1+"-DANGER-HEAD"
+                 else v1+ "-"+curBranch
+//        println("v2 is "+v2+" in "+ n+js)
+        val v3 = v2.replaceAll("[\\/]", "_")
+        println("Version is "+v3+" in "+ n+js)
+        v3
       },
-      isSnapshot := version.value.contains("-SNAPSHOT")
+      isSnapshot := {
+        val ver = version.value
+        snapshotVersion = ver.contains("-SNAPSHOT") || ver.contains("DANGER-HEAD")
+        snapshotVersion
+      }
   )
+
+  private var snapshotVersion = false
+
+  /**
+   * Is the current version a SNAPSHOT version.
+   * This is ONLY valid after version setting is used in build.
+   */
+  def isSnapshotVersion = snapshotVersion
 
 
   lazy val setReleaseVersion: ReleaseStep = setVersion(_._1)
@@ -169,7 +191,7 @@ object MyReleaseVersion {
     { st: State =>
       val extracted = Project.extract(st)
       val currentBranch = extracted.get(gitCurrentBranch)
-      if (currentBranch != "master") sys.error(s"""Must be on master branch to release, currently on ${currentBranch}""")
+      if (currentBranch != releaseFromBranch) sys.error(s"""Must be on ${releaseFromBranch} branch to release, use RELEASEFROMBRANCH=${currentBranch} env var""")
       st
     }
   )

@@ -11,7 +11,7 @@ import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 object Dependencies {
   // version numbers
 
-  lazy val verScalaVersion = "2.12.6"
+  lazy val verScalaVersion = "2.12.8"
   lazy val verScalaMajorMinor = {
     val i = verScalaVersion.indexOf('.')
     val i2 = verScalaVersion.indexOf('.', i+1)
@@ -20,12 +20,12 @@ object Dependencies {
 
   lazy val verCrossScalaVersions = Seq("2.11.8", verScalaVersion)
 
-  lazy val vScalactic = "3.0.5"      // https://mvnrepository.com/artifact/org.scalactic/scalactic_2.12
-  lazy val vScalatest = "3.0.5"      // http://mvnrepository.com/artifact/org.scalatest/scalatest_2.11
+  lazy val vScalactic = "3.0.7"      // https://mvnrepository.com/artifact/org.scalactic/scalactic_2.12
+  lazy val vScalatest = "3.0.7"      // http://mvnrepository.com/artifact/org.scalatest/scalatest_2.11
   lazy val vJunit = "4.12"           // http://mvnrepository.com/artifact/junit/junit
 
   lazy val vScalaArm = "2.0"         // http://mvnrepository.com/artifact/com.jsuereth/scala-arm_2.11
-  lazy val vScallop = "3.1.2"        // http://mvnrepository.com/artifact/org.rogach/scallop_2.11
+  lazy val vScallop = "3.2.0"        // http://mvnrepository.com/artifact/org.rogach/scallop_2.11
 
 
   // libraries
