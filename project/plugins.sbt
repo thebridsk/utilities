@@ -46,20 +46,20 @@ libraryDependencies ++= Seq(
 // resolvers +=
 //   "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 
-addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % vCrossProject)
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % scalaJSVersion)
+addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % vCrossProject withSources())
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % scalaJSVersion withSources())
 
-// addSbtPlugin("io.spray" % "sbt-revolver" % vSbtRevolver)
-addSbtPlugin("com.eed3si9n" % "sbt-assembly" % vSbtAssembly)
-addSbtPlugin("com.typesafe.sbt" % "sbt-git" % vSbtGit)
-addSbtPlugin("org.scoverage" % "sbt-scoverage" % vSbtSCoverage)
-addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % vSbtBuildInfo)
-addSbtPlugin("com.github.gseitz" % "sbt-release" % vSbtRelease)
-addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % vSbtEclipse)
-addSbtPlugin("com.timushev.sbt" % "sbt-updates" % vSbtUpdates)
-addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % vSbtDependencyGraph)  // must be updated for sbt 1.0
+// addSbtPlugin("io.spray" % "sbt-revolver" % vSbtRevolver withSources())
+addSbtPlugin("com.eed3si9n" % "sbt-assembly" % vSbtAssembly withSources())
+addSbtPlugin("com.typesafe.sbt" % "sbt-git" % vSbtGit withSources())
+addSbtPlugin("org.scoverage" % "sbt-scoverage" % vSbtSCoverage withSources())
+addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % vSbtBuildInfo withSources())
+addSbtPlugin("com.github.gseitz" % "sbt-release" % vSbtRelease withSources())
+addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % vSbtEclipse withSources())
+addSbtPlugin("com.timushev.sbt" % "sbt-updates" % vSbtUpdates withSources())
+addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % vSbtDependencyGraph withSources())  // must be updated for sbt 1.0
 
-addSbtPlugin("org.ensime" % "sbt-ensime" % vSbtEnsime)
+addSbtPlugin("org.ensime" % "sbt-ensime" % vSbtEnsime withSources())
 
 scalacOptions ++= Seq( "-unchecked", "-deprecation" )
 
