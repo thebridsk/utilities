@@ -9,11 +9,11 @@ name := "project-utilities"
 scalaVersion := "2.12.8"
 
 val vLog4j = "1.7.26"               // https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
-val vJGit = "5.3.0.201903130848-r" // https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit.pgm
+val vJGit = "5.3.1.201904271842-r" // https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit.pgm
 
 val vCrossProject = "0.6.0"        // https://github.com/portable-scala/sbt-crossproject
 val vPlatformDeps = "1.0.0"        // https://github.com/portable-scala/sbt-platform-deps
-val vScalaJSDefault = "0.6.27"     // http://www.scala-js.org/
+val vScalaJSDefault = "0.6.28"     // http://www.scala-js.org/
 val vSbtAssembly = "0.14.9"        // https://github.com/sbt/sbt-assembly
 val vSbtGit = "1.0.0"              // https://github.com/sbt/sbt-git
 val vSbtSCoverage = "1.5.1"        // https://github.com/scoverage/sbt-scoverage
@@ -46,20 +46,20 @@ libraryDependencies ++= Seq(
 // resolvers +=
 //   "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 
-addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % vCrossProject)
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % scalaJSVersion)
+addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % vCrossProject withSources())
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % scalaJSVersion withSources())
 
-// addSbtPlugin("io.spray" % "sbt-revolver" % vSbtRevolver)
-addSbtPlugin("com.eed3si9n" % "sbt-assembly" % vSbtAssembly)
-addSbtPlugin("com.typesafe.sbt" % "sbt-git" % vSbtGit)
-addSbtPlugin("org.scoverage" % "sbt-scoverage" % vSbtSCoverage)
-addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % vSbtBuildInfo)
-addSbtPlugin("com.github.gseitz" % "sbt-release" % vSbtRelease)
-addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % vSbtEclipse)
-addSbtPlugin("com.timushev.sbt" % "sbt-updates" % vSbtUpdates)
-addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % vSbtDependencyGraph)  // must be updated for sbt 1.0
+// addSbtPlugin("io.spray" % "sbt-revolver" % vSbtRevolver withSources())
+addSbtPlugin("com.eed3si9n" % "sbt-assembly" % vSbtAssembly withSources())
+addSbtPlugin("com.typesafe.sbt" % "sbt-git" % vSbtGit withSources())
+addSbtPlugin("org.scoverage" % "sbt-scoverage" % vSbtSCoverage withSources())
+addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % vSbtBuildInfo withSources())
+addSbtPlugin("com.github.gseitz" % "sbt-release" % vSbtRelease withSources())
+addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % vSbtEclipse withSources())
+addSbtPlugin("com.timushev.sbt" % "sbt-updates" % vSbtUpdates withSources())
+addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % vSbtDependencyGraph withSources())  // must be updated for sbt 1.0
 
-addSbtPlugin("org.ensime" % "sbt-ensime" % vSbtEnsime)
+addSbtPlugin("org.ensime" % "sbt-ensime" % vSbtEnsime withSources())
 
 scalacOptions ++= Seq( "-unchecked", "-deprecation" )
 
