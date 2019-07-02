@@ -1,4 +1,3 @@
-
 package utils.main
 
 import utils.logging.Logger
@@ -26,9 +25,10 @@ import utils.classpath.ClassPath
 import org.rogach.scallop.ScallopConfBase
 import scala.annotation.tailrec
 
-case class ExitException( rc: Int ) extends Exception
+case class ExitException(rc: Int) extends Exception
 
-abstract class Subcommand( val name: String, val aliases: String* ) extends ScallopSubcommand((name::aliases.toList): _*) {
+abstract class Subcommand(val name: String, val aliases: String*)
+    extends ScallopSubcommand((name :: aliases.toList): _*) {
 
   def init(): Int = 0
 
@@ -37,7 +37,9 @@ abstract class Subcommand( val name: String, val aliases: String* ) extends Scal
   def cleanup(): Unit = {}
 }
 
-abstract class Main( val defaultLevel: Option[Level] = None ) extends ScallopConf with Logging {
+abstract class Main(val defaultLevel: Option[Level] = None)
+    extends ScallopConf
+    with Logging {
 
   override def onError(e: Throwable): Unit = e match {
     case Help("") =>
@@ -54,7 +56,9 @@ abstract class Main( val defaultLevel: Option[Level] = None ) extends ScallopCon
         // no colors on output
         println("[%s] Error: %s" format (printedName, message))
       } else {
-        println("[\u001b[31m%s\u001b[0m] Error: %s" format (printedName, message))
+        println(
+          "[\u001b[31m%s\u001b[0m] Error: %s" format (printedName, message)
+        )
       }
       throw new ExitException(1)
 
@@ -62,23 +66,23 @@ abstract class Main( val defaultLevel: Option[Level] = None ) extends ScallopCon
   }
 
   /**
-   * Called at startup, before arguments are parsed.
-   */
+    * Called at startup, before arguments are parsed.
+    */
   def init(): Int = 0
 
   /**
-   * Called after arguments are parsed, before execute.
-   */
+    * Called after arguments are parsed, before execute.
+    */
   def setup(): Int = 0
 
   /**
-   * Execute top level command, this is not called for subcommands.
-   */
-  def execute() : Int
+    * Execute top level command, this is not called for subcommands.
+    */
+  def execute(): Int
 
   /**
-   * called just before shutting down JVM
-   */
+    * called just before shutting down JVM
+    */
   def cleanup(): Unit = {}
 
   def main(args: Array[String]): Unit = {
@@ -87,7 +91,7 @@ abstract class Main( val defaultLevel: Option[Level] = None ) extends ScallopCon
 
   def mainRun(args: Array[String]): Int = {
 
-    val loggerOptions = new ConfigArguments(this,defaultLevel)
+    val loggerOptions = new ConfigArguments(this, defaultLevel)
 
     lazy val version = builder.vers.getOrElse("unknown")
 
@@ -97,8 +101,8 @@ abstract class Main( val defaultLevel: Option[Level] = None ) extends ScallopCon
 
       try {
         val initrc = init()
-        if (initrc==0) {
-          parseArgs( args ) match {
+        if (initrc == 0) {
+          parseArgs(args) match {
             case 0 =>
               loggerOptions.execute()
 
@@ -134,15 +138,20 @@ abstract class Main( val defaultLevel: Option[Level] = None ) extends ScallopCon
     }
   }
 
-  private def invokeSubcommand( subc: List[ScallopConfBase] ): Int = {
+  private def invokeSubcommand(subc: List[ScallopConfBase]): Int = {
 
-    def cmdname( cmd: List[ScallopConfBase] ) = {
-      cmd.reverse.map { scb =>
-        if (scb.isInstanceOf[Subcommand]) scb.asInstanceOf[Subcommand].name else "unknown"
-      }.mkString(" "," ","")
+    def cmdname(cmd: List[ScallopConfBase]) = {
+      cmd.reverse
+        .map { scb =>
+          if (scb.isInstanceOf[Subcommand]) scb.asInstanceOf[Subcommand].name
+          else "unknown"
+        }
+        .mkString(" ", " ", "")
     }
 
-    def asSubcommand( scb: ScallopConfBase ) = if (scb.isInstanceOf[Subcommand]) Some(scb.asInstanceOf[Subcommand]) else None
+    def asSubcommand(scb: ScallopConfBase) =
+      if (scb.isInstanceOf[Subcommand]) Some(scb.asInstanceOf[Subcommand])
+      else None
 
     /*
      * Initizalize the subcommands in order.  Stop initializing when one returns a non-zero value.
@@ -152,37 +161,50 @@ abstract class Main( val defaultLevel: Option[Level] = None ) extends ScallopCon
      * and inited are the subcommands that have been initialized, head is the most recent.
      */
     @tailrec
-    def init( cmds: List[ScallopConfBase], inited: List[ScallopConfBase] = List() ): (Int, List[ScallopConfBase]) = {
+    def init(
+        cmds: List[ScallopConfBase],
+        inited: List[ScallopConfBase] = List()
+    ): (Int, List[ScallopConfBase]) = {
       if (!cmds.isEmpty) {
         val newinited = cmds.head :: inited
         val rc =
-          cmds.headOption.flatMap( asSubcommand ).
-                          map { sc =>
-                            try {
-                              sc.init()
-                            } catch {
-                              case x: Throwable =>
-                                logger.warning(s"""Failed in init of subcommand${cmdname(inited)}""", x)
-                                98
-                            }
-                          }.getOrElse(0)
+          cmds.headOption
+            .flatMap(asSubcommand)
+            .map { sc =>
+              try {
+                sc.init()
+              } catch {
+                case x: Throwable =>
+                  logger.warning(s"""Failed in init of subcommand${cmdname(
+                    inited
+                  )}""", x)
+                  98
+              }
+            }
+            .getOrElse(0)
         if (rc == 0) {
-          init( cmds.tail, newinited )
+          init(cmds.tail, newinited)
         } else {
           (rc, newinited)
         }
       } else {
-        val rc = inited.headOption.flatMap( asSubcommand ).
-                                   map { sc =>
-                                     try {
-                                       sc.executeSubcommand()
-                                     } catch {
-                                       case x: Throwable =>
-                                         logger.warning(s"""Failed in executeSubcommand of subcommand${cmdname(inited)}""", x)
-                                         98
-                                     }
-                                   }.
-                                   getOrElse( execute() )
+        val rc = inited.headOption
+          .flatMap(asSubcommand)
+          .map { sc =>
+            try {
+              sc.executeSubcommand()
+            } catch {
+              case x: Throwable =>
+                logger.warning(
+                  s"""Failed in executeSubcommand of subcommand${cmdname(
+                    inited
+                  )}""",
+                  x
+                )
+                98
+            }
+          }
+          .getOrElse(execute())
         (rc, inited)
       }
     }
@@ -191,19 +213,20 @@ abstract class Main( val defaultLevel: Option[Level] = None ) extends ScallopCon
 
     // cleanup
     @tailrec
-    def cleanup( cmds: List[ScallopConfBase] ): Unit = {
+    def cleanup(cmds: List[ScallopConfBase]): Unit = {
       if (!cmds.isEmpty) {
-        cmds.headOption.flatMap( asSubcommand ).
-                        map { sc =>
-                          try {
-                            sc.cleanup()
-                          } catch {
-                            case x: Throwable =>
-                              logger.warning(s"""Failed in cleanup of subcommand${cmdname(inited)}""", x)
-                          }
-                        }
+        cmds.headOption.flatMap(asSubcommand).map { sc =>
+          try {
+            sc.cleanup()
+          } catch {
+            case x: Throwable =>
+              logger.warning(s"""Failed in cleanup of subcommand${cmdname(
+                inited
+              )}""", x)
+          }
+        }
 
-        cleanup( cmds.tail )
+        cleanup(cmds.tail)
       }
     }
     cleanup(inited)
@@ -211,11 +234,13 @@ abstract class Main( val defaultLevel: Option[Level] = None ) extends ScallopCon
     rc
   }
 
-  private def showArgs( args: Array[String]): Unit = {
-    logger.fine( "Args:\n"+ (for (a <- args.zipWithIndex) yield { a._2.toString()+": "+a._1 }).mkString("\n") )
+  private def showArgs(args: Array[String]): Unit = {
+    logger.fine("Args:\n" + (for (a <- args.zipWithIndex) yield {
+      a._2.toString() + ": " + a._1
+    }).mkString("\n"))
   }
 
-  private def parseArgs( args: Array[String]): Int = {
+  private def parseArgs(args: Array[String]): Int = {
     try {
       editBuilder { _.args(args) }
       verify

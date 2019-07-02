@@ -2,7 +2,8 @@ package utils.stream
 
 import java.io.OutputStream
 
-class MeteredOutputStream(out: OutputStream, initialcount: Long = 0) extends OutputStream {
+class MeteredOutputStream(out: OutputStream, initialcount: Long = 0)
+    extends OutputStream {
   private var currentsize = initialcount
 
   override def write(b: Int): Unit = {
@@ -25,11 +26,10 @@ class MeteredOutputStream(out: OutputStream, initialcount: Long = 0) extends Out
   override def close() = out.close()
 
   /**
-   * @return the count
-   */
-  def getCurrentSize() =
-    {
-      currentsize;
-    }
+    * @return the count
+    */
+  def getCurrentSize() = {
+    currentsize;
+  }
 
 }
