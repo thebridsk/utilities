@@ -8,20 +8,21 @@ class TeeOutputStream(streams: OutputStream*) extends OutputStream {
 
   override def flush(): Unit = streams.foreach(_.flush())
 
-  override def write(b: Array[Byte], off: Int, len: Int): Unit = streams.foreach(_.write(b, off, len))
+  override def write(b: Array[Byte], off: Int, len: Int): Unit =
+    streams.foreach(_.write(b, off, len))
 
   override def write(b: Array[Byte]): Unit = streams.foreach(_.write(b))
 
   override def write(b: Int): Unit = streams.foreach(_.write(b))
 
   /**
-   * Get specified stream, and optionally close other stream.
-   * This TeeOutputStream should not be used after calling this method with a true for closeOthers.
-   * @param i the index of the stream to return
-   * @param closeOthers
-   * @return the stream, null if index is out of range
-   * @throws IOException
-   */
+    * Get specified stream, and optionally close other stream.
+    * This TeeOutputStream should not be used after calling this method with a true for closeOthers.
+    * @param i the index of the stream to return
+    * @param closeOthers
+    * @return the stream, null if index is out of range
+    * @throws IOException
+    */
   def getStream(i: Int, closeOthers: Boolean) = {
     var ret: OutputStream = null;
     if (closeOthers) {

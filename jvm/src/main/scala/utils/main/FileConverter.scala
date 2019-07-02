@@ -12,12 +12,12 @@ object Converters {
     // parse returns Left with error message, if there was an error while parsing
     // if no option was found, it returns Right(None)
     // and if option was found, it returns Right(...)
-    def parse(s:List[(String, List[String])]):Either[String,Option[Path]] =
+    def parse(s: List[(String, List[String])]): Either[String, Option[Path]] =
       s match {
         case (option, dir :: Nil) :: Nil =>
           Right(Some(Path(dir)))
         case Nil => Right(None) // no person found
-        case _ => Left("provide filename") // error when parsing
+        case _   => Left("provide filename") // error when parsing
       }
 
     val tag = scala.reflect.runtime.universe.typeTag[Path] // some magic to make typing work
@@ -30,12 +30,14 @@ object Converters {
     // parse returns Left with error message, if there was an error while parsing
     // if no option was found, it returns Right(None)
     // and if option was found, it returns Right(...)
-    def parse(s:List[(String, List[String])]):Either[String,Option[Directory]] =
+    def parse(
+        s: List[(String, List[String])]
+    ): Either[String, Option[Directory]] =
       s match {
         case (option, dir :: Nil) :: Nil =>
           Right(Some(Directory(dir)))
         case Nil => Right(None) // no person found
-        case _ => Left("provide filename") // error when parsing
+        case _   => Left("provide filename") // error when parsing
       }
 
     val tag = scala.reflect.runtime.universe.typeTag[Directory] // some magic to make typing work
