@@ -11,10 +11,10 @@ import BldCommonSettings._
 object BldUtilitiesJvm {
 
   lazy val `utilities-jvm` = project.in(file("jvm")).
-    configure( commonSettings, buildInfo("com.example.utilities.version", "VersionUtilities") ).
+    configure( commonSettings, buildInfo("com.github.thebridsk.utilities.version", "VersionUtilities") ).
     disablePlugins(ScalaJSPlugin).
     settings(
-      organization := "com.example",
+      organization := "com.github.thebridsk",
       name := "utilities-jvm",
       mainClass := None,
       isScalaJSProject := false,

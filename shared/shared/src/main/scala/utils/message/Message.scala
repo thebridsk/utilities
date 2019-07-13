@@ -1,8 +1,8 @@
-package utils.message
+package com.github.thebridsk.utilities.message
 
 import org.scalactic.source.Position
-import utils.logging.Logger
-import utils.logging.Level
+import com.github.thebridsk.utilities.logging.Logger
+import com.github.thebridsk.utilities.logging.Level
 
 /**
   * @constructor

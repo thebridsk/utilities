@@ -2,7 +2,7 @@
 // Created Apr 29, 2012
 //
 
-package utils.logging;
+package com.github.thebridsk.utilities.logging;
 
 /**
   * @author whs

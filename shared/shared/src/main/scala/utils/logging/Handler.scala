@@ -1,4 +1,4 @@
-package utils.logging
+package com.github.thebridsk.utilities.logging
 
 abstract class Handler(
     var level: Level = Level.ALL,

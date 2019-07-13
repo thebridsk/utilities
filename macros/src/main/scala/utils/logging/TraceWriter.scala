@@ -1,4 +1,4 @@
-package utils.logging
+package com.github.thebridsk.utilities.logging
 
 import java.io.FilterOutputStream
 import java.io.ByteArrayOutputStream

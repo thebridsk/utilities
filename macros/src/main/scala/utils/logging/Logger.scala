@@ -1,4 +1,4 @@
-package utils.logging
+package com.github.thebridsk.utilities.logging
 
 import language.experimental.macros
 import java.util.logging.{Logger => JavaLogger}
@@ -107,7 +107,7 @@ class Logger private (name: String, resource: String) {
   def throwing(arg: Throwable): Unit = macro LoggerMacro.throwingArg
 }
 
-import utils.macros.Source
+import com.github.thebridsk.utilities.macros.Source
 import scala.reflect.ClassTag
 import scala.reflect.ClassTag
 

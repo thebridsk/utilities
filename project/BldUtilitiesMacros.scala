@@ -13,7 +13,7 @@ object BldUtilitiesMacros {
     disablePlugins(ScalaJSPlugin).
     configure( commonSettings, noPublish ).
     settings(
-      organization := "com.example",
+      organization := "com.github.thebridsk",
       name := "utilities-macros",
       mainClass := None,
       isScalaJSProject := false,

@@ -15,7 +15,7 @@ object BldUtilitiesJs {
     configure( commonSettings, noPublish ).
     enablePlugins(ScalaJSPlugin).
     settings(
-      organization := "com.example",
+      organization := "com.github.thebridsk",
       name := "utilities-js",
       mainClass := None,
       isScalaJSProject := true,

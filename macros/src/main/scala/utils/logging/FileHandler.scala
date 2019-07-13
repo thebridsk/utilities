@@ -1,4 +1,4 @@
-package utils.logging
+package com.github.thebridsk.utilities.logging
 
 import java.util.logging.StreamHandler
 import java.io.File
@@ -6,7 +6,7 @@ import java.io.FileOutputStream
 import java.nio.channels.FileChannel
 import java.io.IOException
 import java.text.SimpleDateFormat
-import utils.stream.MeteredOutputStream
+import com.github.thebridsk.utilities.stream.MeteredOutputStream
 import java.util.ArrayList
 import java.util.Arrays
 import java.util.logging.LogManager
@@ -42,23 +42,23 @@ import java.util.regex.Pattern
   * properties are not defined (or have invalid values) then the specified
   * default values are used.
   * <ul>
-  * <li>util.logging.FileHandler.level specifies the default level for the
+  * <li>com.github.thebridsk.utilities.logging.FileHandler.level specifies the default level for the
   * <tt>Handler</tt> (defaults to <tt>Level.ALL</tt>).
-  * <li>util.logging.FileHandler.filter specifies the name of a <tt>Filter</tt>
+  * <li>com.github.thebridsk.utilities.logging.FileHandler.filter specifies the name of a <tt>Filter</tt>
   * class to use (defaults to no <tt>Filter</tt>).
-  * <li>util.logging.FileHandler.formatter specifies the name of a
+  * <li>com.github.thebridsk.utilities.logging.FileHandler.formatter specifies the name of a
   * <tt>Formatter</tt> class to use (defaults to
   * <tt>java.util.logging.XMLFormatter</tt>)
-  * <li>util.logging.FileHandler.encoding the name of the character set encoding
+  * <li>com.github.thebridsk.utilities.logging.FileHandler.encoding the name of the character set encoding
   * to use (defaults to the default platform encoding).
-  * <li>util.logging.FileHandler.limit specifies an approximate maximum amount to
+  * <li>com.github.thebridsk.utilities.logging.FileHandler.limit specifies an approximate maximum amount to
   * write (in bytes) to any one file. If this is zero, then there is no limit.
   * (Defaults to no limit).
-  * <li>util.logging.FileHandler.count specifies how many output files to cycle
+  * <li>com.github.thebridsk.utilities.logging.FileHandler.count specifies how many output files to cycle
   * through (defaults to 1). 0 indicates no limit
-  * <li>util.logging.FileHandler.pattern specifies a pattern for generating the
+  * <li>com.github.thebridsk.utilities.logging.FileHandler.pattern specifies a pattern for generating the
   * output file name. See below for details. (Defaults to "%h/java%u.log").
-  * <li>util.logging.FileHandler.append specifies whether the FileHandler should
+  * <li>com.github.thebridsk.utilities.logging.FileHandler.append specifies whether the FileHandler should
   * append onto any existing files (defaults to false).
   * </ul>
   * <p>

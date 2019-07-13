@@ -1,9 +1,9 @@
-package utils.logging.test
+package com.github.thebridsk.utilities.logging.test
 
-import utils.logging.Handler
-import utils.logging.TraceMsg
-import utils.logging.Level
-import utils.logging.Level._
+import com.github.thebridsk.utilities.logging.Handler
+import com.github.thebridsk.utilities.logging.TraceMsg
+import com.github.thebridsk.utilities.logging.Level
+import com.github.thebridsk.utilities.logging.Level._
 
 class TestHandler extends Handler {
 

@@ -1,9 +1,9 @@
-package utils.logging
+package com.github.thebridsk.utilities.logging
 
 import java.util.logging.{Logger => JLogger}
 import java.io.PrintStream
 import java.util.logging.Level
-import utils.stream.TeeOutputStream
+import com.github.thebridsk.utilities.stream.TeeOutputStream
 
 object RedirectOutput {
   private val fsLog =
@@ -20,8 +20,8 @@ object RedirectOutput {
   /**
     * Capture and trace standard out and standard error calls.
     * <p>
-    * The logger name that is used for standard out is "util.logging.RedirectOutput.StdOut",
-    * and "util.logging.RedirectOutput.StdErr" for standard err.
+    * The logger name that is used for standard out is "com.github.thebridsk.utilities.logging.RedirectOutput.StdOut",
+    * and "com.github.thebridsk.utilities.logging.RedirectOutput.StdErr" for standard err.
     * @param stdout The trace level to use for stdout.  If null, then {@link TraceLevel#STDOUT} is used.
     * @param stderr The trace level to use for stderr.  If null, then {@link TraceLevel#STDERR} is used.
     */

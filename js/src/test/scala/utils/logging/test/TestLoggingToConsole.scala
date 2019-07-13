@@ -1,13 +1,13 @@
-package utils.logging.test
+package com.github.thebridsk.utilities.logging.test
 
 import org.scalatest.FlatSpec
 import org.scalatest.MustMatchers
-import utils.logging.impl.LoggerImplFactory
-import utils.logging.Logger
-import utils.logging.Handler
-import utils.logging.Level
+import com.github.thebridsk.utilities.logging.impl.LoggerImplFactory
+import com.github.thebridsk.utilities.logging.Logger
+import com.github.thebridsk.utilities.logging.Handler
+import com.github.thebridsk.utilities.logging.Level
 import scala.util.matching.Regex
-import utils.logging.PrintHandler
+import com.github.thebridsk.utilities.logging.PrintHandler
 
 class TestLoggingToConsole extends FlatSpec with MustMatchers {
   behavior of this.getClass.getName+" in utilities-js"

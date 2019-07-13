@@ -1,7 +1,7 @@
-package utils.logging.test
+package com.github.thebridsk.utilities.logging.test
 
-import utils.logging.impl.SystemTime
-import utils.logging.impl.LoggerImplFactory
+import com.github.thebridsk.utilities.logging.impl.SystemTime
+import com.github.thebridsk.utilities.logging.impl.LoggerImplFactory
 import scala.scalajs.js.Date
 
 object SystemTimeJs {

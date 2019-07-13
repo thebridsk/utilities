@@ -1,15 +1,15 @@
 //
 // Created May 24, 2015
 //
-package utils.main.test.manual
+package com.github.thebridsk.utilities.main.test.manual
 
-import utils.logging.Logger
-import utils.logging.Logging
-import utils.macros.Source._
+import com.github.thebridsk.utilities.logging.Logger
+import com.github.thebridsk.utilities.logging.Logging
+import com.github.thebridsk.utilities.macros.Source._
 import java.util.logging.Level
-import utils.main.Main
+import com.github.thebridsk.utilities.main.Main
 import org.rogach.scallop.ScallopConf
-import utils.classpath.ClassPath
+import com.github.thebridsk.utilities.classpath.ClassPath
 
 class TestMacros extends Logging {
 

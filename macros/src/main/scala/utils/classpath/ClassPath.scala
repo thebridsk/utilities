@@ -1,4 +1,4 @@
-package utils.classpath
+package com.github.thebridsk.utilities.classpath
 
 import scala.annotation.tailrec
 import java.net.URLClassLoader

@@ -1,7 +1,7 @@
-package utils.main
+package com.github.thebridsk.utilities.main
 
-import utils.logging.Logger
-import utils.logging.Logging
+import com.github.thebridsk.utilities.logging.Logger
+import com.github.thebridsk.utilities.logging.Logging
 
 import java.util.logging.Level
 
@@ -9,7 +9,7 @@ import java.io.PrintWriter
 
 import scala.util.control.Breaks._
 import scala.language.postfixOps
-import utils.logging.Config
+import com.github.thebridsk.utilities.logging.Config
 import org.rogach.scallop.ScallopConf
 import org.rogach.scallop.exceptions.Help
 import org.rogach.scallop.exceptions.Version
@@ -20,8 +20,8 @@ import org.rogach.scallop.{Subcommand => ScallopSubcommand}
 import org.rogach.scallop.Scallop
 import org.rogach.scallop.ValueConverter
 import org.rogach.scallop.ScallopOption
-import utils.main.logging.ConfigArguments
-import utils.classpath.ClassPath
+import com.github.thebridsk.utilities.main.logging.ConfigArguments
+import com.github.thebridsk.utilities.classpath.ClassPath
 import org.rogach.scallop.ScallopConfBase
 import scala.annotation.tailrec
 

@@ -1,9 +1,9 @@
-package utils.logging
+package com.github.thebridsk.utilities.logging
 
 import java.util.{Formatter => JFormatter}
 import java.io.StringWriter
 import java.io.PrintWriter
-import utils.logging.impl.LoggerImplFactory
+import com.github.thebridsk.utilities.logging.impl.LoggerImplFactory
 
 trait Formatter {
   def format(traceMsg: TraceMsg): String

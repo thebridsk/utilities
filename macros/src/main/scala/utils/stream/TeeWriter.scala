@@ -1,4 +1,4 @@
-package utils.stream
+package com.github.thebridsk.utilities.stream
 
 import java.io.Writer
 

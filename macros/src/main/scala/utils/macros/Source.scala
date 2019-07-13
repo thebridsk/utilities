@@ -1,4 +1,4 @@
-package utils.macros
+package com.github.thebridsk.utilities.macros
 
 object Source {
   import scala.language.experimental.macros

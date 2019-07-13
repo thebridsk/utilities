@@ -1,4 +1,4 @@
-package utils.logging
+package com.github.thebridsk.utilities.logging
 
 import java.util.logging.{Logger => JLogger, FileHandler => JFileHandler}
 import java.util.regex.Pattern
@@ -9,7 +9,7 @@ import java.io.FileInputStream
 import java.io.InputStream
 import java.util.logging.LogManager
 import scala.collection.mutable.TreeSet
-import utils.nls.Messages
+import com.github.thebridsk.utilities.nls.Messages
 
 object Config {
   val fsLog = JLogger.getLogger(classOf[Config].getName(), Messages.BUNDLE_NAME);
@@ -19,7 +19,7 @@ object Config {
     */
   val fsLoggingProperties = "logging.properties";
   val fsFileLoggingProperties = new File(fsLoggingProperties);
-  val fsDefaultLoggingProperties = "utils/logging/" + fsLoggingProperties
+  val fsDefaultLoggingProperties = "com/github/thebridsk/utilties/logging/" + fsLoggingProperties
 
   private[Config] var fsProgramName: Option[String] = None;
   private[Config] var fsProgramVersion: Option[String] = None;
@@ -66,7 +66,7 @@ object Config {
     * <ol>
     * <li>logging.properties file in current directory
     * <li>logging.properties in classpath in same directory as main program
-    * <li>logging.properties in classpath at utils/logging/logging.properties
+    * <li>logging.properties in classpath at com.github.thebridsk.utilities/logging/logging.properties
     * </ol>
     * The resource searches use the classloader that loaded the main program.
     * <p>

@@ -1,21 +1,21 @@
-package utils.test.logging
+package com.github.thebridsk.utilities.test.logging
 
 import org.scalatest.FlatSpec
 import org.scalatest.MustMatchers
 import java.util.logging.LogRecord
 import java.util.logging.Level
-import utils.logging.MyFormatter
+import com.github.thebridsk.utilities.logging.MyFormatter
 import java.util.TimeZone
-import utils.logging.SimpleConsoleFormatter
+import com.github.thebridsk.utilities.logging.SimpleConsoleFormatter
 import java.io.StringReader
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.io.ByteArrayOutputStream
 import java.io.ByteArrayInputStream
 import java.util.logging.LogManager
-import utils.test.logging.CaptureStdOutAndErr.RunWithCapture
-import utils.logging.ConsoleHandler
-import utils.classpath.ClassPath
+import com.github.thebridsk.utilities.test.logging.CaptureStdOutAndErr.RunWithCapture
+import com.github.thebridsk.utilities.logging.ConsoleHandler
+import com.github.thebridsk.utilities.classpath.ClassPath
 
 object TestLogging {
 
@@ -153,7 +153,7 @@ class TestLogging extends FlatSpec with MustMatchers {
 
   it should "format a log record with threadLen=-1 in config" in withLoggerConfiguration(
       """
-      utils.logging.MyFormatter.threadLen = -1
+      com.github.thebridsk.utilities.logging.MyFormatter.threadLen = -1
        """
       ) { () => {
     Thread.currentThread().setName("TestThread")
@@ -169,9 +169,9 @@ class TestLogging extends FlatSpec with MustMatchers {
 
   it should "format a log record with threadLen=-1 and EST in config" in withLoggerConfiguration(
       """
-      utils.logging.MyFormatter.threadLen = -1
-      utils.logging.MyFormatter.timezone = UTC
-      utils.logging.MyFormatter.dateFormat = YYYY-MM-dd HH:mm:ss
+      com.github.thebridsk.utilities.logging.MyFormatter.threadLen = -1
+      com.github.thebridsk.utilities.logging.MyFormatter.timezone = UTC
+      com.github.thebridsk.utilities.logging.MyFormatter.dateFormat = YYYY-MM-dd HH:mm:ss
        """
       ) { () => {
     Thread.currentThread().setName("TestThread")
@@ -195,9 +195,9 @@ class TestLogging extends FlatSpec with MustMatchers {
     withCaptureOutput { capture => {
       withLoggerConfiguration(
         """
-        utils.logging.MyFormatter.threadLen = -1
-        utils.logging.MyFormatter.timezone = UTC
-        utils.logging.MyFormatter.dateFormat = MM-dd HH:mm:ss
+        com.github.thebridsk.utilities.logging.MyFormatter.threadLen = -1
+        com.github.thebridsk.utilities.logging.MyFormatter.timezone = UTC
+        com.github.thebridsk.utilities.logging.MyFormatter.dateFormat = MM-dd HH:mm:ss
          """
         ) { () => {
           Thread.currentThread().setName("TestThread")
@@ -228,9 +228,9 @@ class TestLogging extends FlatSpec with MustMatchers {
     withCaptureOutput { capture => {
       withLoggerConfiguration(
         """
-        utils.logging.MyFormatter.threadLen = -1
-        utils.logging.MyFormatter.timezone = UTC
-        utils.logging.MyFormatter.dateFormat = MM-dd HH:mm:ss
+        com.github.thebridsk.utilities.logging.MyFormatter.threadLen = -1
+        com.github.thebridsk.utilities.logging.MyFormatter.timezone = UTC
+        com.github.thebridsk.utilities.logging.MyFormatter.dateFormat = MM-dd HH:mm:ss
          """
         ) { () => {
           Thread.currentThread().setName("TestThread")
@@ -283,9 +283,9 @@ INFO: Testing""".replace("\n",lineend)+lineend
     val loader = ClassLoader.getSystemClassLoader
     println(ClassPath.show("SystemClassLoader ", loader))
     try {
-      val clz = loader.loadClass("utils.logging.MyFormatter")
+      val clz = loader.loadClass("com.github.thebridsk.utilities.logging.MyFormatter")
       val f = clz.getDeclaredConstructor().newInstance()
-      f.getClass().getName mustBe "utils.logging.MyFormatter"
+      f.getClass().getName mustBe "com.github.thebridsk.utilities.logging.MyFormatter"
       if (runningInEclipse) fail("Should not find MyFormatter, if running in sbt,  unset System Property RunningInEclipse")
     } catch {
       case _: ClassNotFoundException =>
@@ -303,14 +303,14 @@ INFO: Testing""".replace("\n",lineend)+lineend
     withCaptureOutput { capture => {
       withLoggerConfiguration(
         """
-        utils.logging.ConsoleHandler.level=ALL
-        utils.logging.ConsoleHandler.formatter=utils.logging.MyFormatter
-        utils.logging.MyFormatter.fakeDate = true
-        utils.logging.MyFormatter.threadLen = -1
-        utils.logging.MyFormatter.loggerNameLen = 0
-        utils.logging.MyFormatter.useMethodName = false
-        utils.logging.MyFormatter.timezone = UTC
-        utils.logging.MyFormatter.dateFormat = MM-dd HH:mm:ss
+        com.github.thebridsk.utilities.logging.ConsoleHandler.level=ALL
+        com.github.thebridsk.utilities.logging.ConsoleHandler.formatter=com.github.thebridsk.utilities.logging.MyFormatter
+        com.github.thebridsk.utilities.logging.MyFormatter.fakeDate = true
+        com.github.thebridsk.utilities.logging.MyFormatter.threadLen = -1
+        com.github.thebridsk.utilities.logging.MyFormatter.loggerNameLen = 0
+        com.github.thebridsk.utilities.logging.MyFormatter.useMethodName = false
+        com.github.thebridsk.utilities.logging.MyFormatter.timezone = UTC
+        com.github.thebridsk.utilities.logging.MyFormatter.dateFormat = MM-dd HH:mm:ss
          """
         ) { () => {
 

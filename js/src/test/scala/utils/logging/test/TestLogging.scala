@@ -1,11 +1,11 @@
-package utils.logging.test
+package com.github.thebridsk.utilities.logging.test
 
 import org.scalatest.FlatSpec
 import org.scalatest.MustMatchers
-import utils.logging.impl.LoggerImplFactory
-import utils.logging.Logger
-import utils.logging.Handler
-import utils.logging.Level
+import com.github.thebridsk.utilities.logging.impl.LoggerImplFactory
+import com.github.thebridsk.utilities.logging.Logger
+import com.github.thebridsk.utilities.logging.Handler
+import com.github.thebridsk.utilities.logging.Level
 import scala.util.matching.Regex
 
 class TestLogging extends FlatSpec with MustMatchers {
@@ -215,8 +215,8 @@ class TestLogging extends FlatSpec with MustMatchers {
   val utilsHandler = new TestHandler
 
   it should "add utilsHandler to utils logger" in {
-    Logger("utils").addHandler(utilsHandler)
-    Logger("utils").getHandlers().size mustBe 1
+    Logger[TestLogging].addHandler(utilsHandler)
+    Logger[TestLogging].getHandlers().size mustBe 1
   }
 
   it should "log to both utilsHandler and rootHandler a message from testLogger" in {

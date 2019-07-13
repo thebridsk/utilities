@@ -1,12 +1,12 @@
-package utils.logging.impl
+package com.github.thebridsk.utilities.logging.impl
 
-import utils.logging.LoggerFactory
-import utils.logging.Logger
-import utils.logging.TraceMsg
+import com.github.thebridsk.utilities.logging.LoggerFactory
+import com.github.thebridsk.utilities.logging.Logger
+import com.github.thebridsk.utilities.logging.TraceMsg
 
 import org.scalactic.source.Position
-import utils.logging.Handler
-import utils.logging.Level
+import com.github.thebridsk.utilities.logging.Handler
+import com.github.thebridsk.utilities.logging.Level
 
 trait LoggerImplFactory extends LoggerFactory {
 

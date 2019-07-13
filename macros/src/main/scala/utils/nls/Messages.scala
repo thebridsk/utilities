@@ -1,13 +1,13 @@
-package utils.nls
+package com.github.thebridsk.utilities.nls
 
 import java.util.ResourceBundle
 import java.util.MissingResourceException
-import utils.message.Message
+import com.github.thebridsk.utilities.message.Message
 import java.util.Locale
 
 object Messages {
 
-  val BUNDLE_NAME = "util.nls.messages"; //$NON-NLS-1$
+  val BUNDLE_NAME = "com.github.thebridsk.utilities.nls.messages"; //$NON-NLS-1$
 
   val RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 

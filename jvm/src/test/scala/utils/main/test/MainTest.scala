@@ -1,19 +1,19 @@
-package utils.main.test
+package com.github.thebridsk.utilities.main.test
 
 import org.scalatest.FlatSpec
 import org.scalatest.MustMatchers
-import utils.logging.Logger
-import utils.main.Subcommand
-import utils.main.Main
+import com.github.thebridsk.utilities.logging.Logger
+import com.github.thebridsk.utilities.main.Subcommand
+import com.github.thebridsk.utilities.main.Main
 import java.util.concurrent.atomic.AtomicInteger
-import utils.classpath.ClassPath
+import com.github.thebridsk.utilities.classpath.ClassPath
 import java.util.logging.{ Logger => JLogger }
-import utils.logging.Config
-import utils.logging.FileHandler
-import utils.logging.FileFormatter
+import com.github.thebridsk.utilities.logging.Config
+import com.github.thebridsk.utilities.logging.FileHandler
+import com.github.thebridsk.utilities.logging.FileFormatter
 import java.util.logging.Level
-import utils.logging.RedirectOutput
-import utils.logging.Logger
+import com.github.thebridsk.utilities.logging.RedirectOutput
+import com.github.thebridsk.utilities.logging.Logger
 
 trait Counters {
 

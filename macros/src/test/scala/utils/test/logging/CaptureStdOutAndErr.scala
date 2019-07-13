@@ -1,8 +1,8 @@
-package utils.test.logging
+package com.github.thebridsk.utilities.test.logging
 
 import java.io.PrintStream
 import java.io.ByteArrayOutputStream
-import utils.stream.TeeOutputStream
+import com.github.thebridsk.utilities.stream.TeeOutputStream
 
 object CaptureStdOutAndErr {
 

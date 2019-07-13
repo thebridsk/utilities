@@ -1,6 +1,6 @@
-package utils.logging
+package com.github.thebridsk.utilities.logging
 
-import utils.logging.Level._
+import com.github.thebridsk.utilities.logging.Level._
 
 class PrintHandler extends Handler {
 

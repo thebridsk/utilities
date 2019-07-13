@@ -1,13 +1,13 @@
 //
 // Created May 24, 2015
 //
-package utils.logging.js.test
+package com.github.thebridsk.utilities.logging.js.test
 
-import utils.logging.Logger
-import utils.logging.Level
+import com.github.thebridsk.utilities.logging.Logger
+import com.github.thebridsk.utilities.logging.Level
 import org.scalactic.source.Position
-import utils.logging.impl.LoggerImplFactory
-import utils.logging.PrintHandler
+import com.github.thebridsk.utilities.logging.impl.LoggerImplFactory
+import com.github.thebridsk.utilities.logging.PrintHandler
 
 /** @author werewolf
  *

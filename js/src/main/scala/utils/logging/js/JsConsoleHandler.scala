@@ -1,11 +1,11 @@
-package utils.logging.js
+package com.github.thebridsk.utilities.logging.js
 
 import scalajs.js.Dynamic.{global => g}
-import utils.logging.Level._
+import com.github.thebridsk.utilities.logging.Level._
 import scala.scalajs.js.Any.fromString
-import utils.logging.Handler
-import utils.logging.TraceMsg
-import utils.logging.Level
+import com.github.thebridsk.utilities.logging.Handler
+import com.github.thebridsk.utilities.logging.TraceMsg
+import com.github.thebridsk.utilities.logging.Level
 
 class JsConsoleHandler extends Handler {
 

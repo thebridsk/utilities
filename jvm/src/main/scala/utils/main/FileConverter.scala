@@ -1,4 +1,4 @@
-package utils.main
+package com.github.thebridsk.utilities.main
 
 import org.rogach.scallop.ValueConverter
 import scala.reflect.io.Path

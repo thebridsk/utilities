@@ -2,7 +2,7 @@
 // Created Apr 29, 2012
 //
 
-package utils.logging
+package com.github.thebridsk.utilities.logging
 
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -18,8 +18,8 @@ import java.util.logging.Level
 import java.util.logging.LogManager
 import java.util.logging.LogRecord
 
-import utils.classpath.ClassPath
-import utils.message.Message
+import com.github.thebridsk.utilities.classpath.ClassPath
+import com.github.thebridsk.utilities.message.Message
 
 private object MyFormatterDefaults {
   val CLASS_NAME = classOf[MyFormatter].getName();
@@ -328,7 +328,7 @@ import MyFormatterDefaults._
   *
   * For example: <br />
   * <code>
-  *   util.logging.MyFormatter.classLen=20
+  *   com.github.thebridsk.utilities.logging.MyFormatter.classLen=20
   * </code> <br />
   * (unless some clown has refactored this into a different package, in which
   * case, <i>caveat emptor</i>.)

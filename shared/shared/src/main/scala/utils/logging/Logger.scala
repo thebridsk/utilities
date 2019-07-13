@@ -1,11 +1,11 @@
-package utils.logging
+package com.github.thebridsk.utilities.logging
 
 import language.experimental.macros
 import java.util.logging.{Logger => JavaLogger}
 import scala.reflect.macros.blackbox.Context
 import scala.reflect.ClassTag
 import org.scalactic.source.Position
-import utils.logging.impl.LoggerImplFactory
+import com.github.thebridsk.utilities.logging.impl.LoggerImplFactory
 import scala.annotation.tailrec
 
 trait Logging {
@@ -93,80 +93,80 @@ abstract class Logger(val name: String, val parent: Option[Logger]) {
   }
 
   @inline
-  final def isLoggable(level: _root_.utils.logging.Level) =
+  final def isLoggable(level: com.github.thebridsk.utilities.logging.Level) =
     level.isLoggable(effectiveLevel)
 
-  def log(level: _root_.utils.logging.Level, message: String): Unit =
+  def log(level: com.github.thebridsk.utilities.logging.Level, message: String): Unit =
     macro LoggerMacro.logMessage
   def log(
-      level: _root_.utils.logging.Level,
+      level: com.github.thebridsk.utilities.logging.Level,
       message: String,
       cause: Throwable
   ): Unit = macro LoggerMacro.logMessageCause
   def log(
-      level: _root_.utils.logging.Level,
+      level: com.github.thebridsk.utilities.logging.Level,
       message: String,
       args: Any*
   ): Unit = macro LoggerMacro.logMessageArgs
 
-  def isSevereLoggable() = isLoggable(_root_.utils.logging.Level.SEVERE)
+  def isSevereLoggable() = isLoggable(com.github.thebridsk.utilities.logging.Level.SEVERE)
   def severe(message: String): Unit = macro LoggerMacro.severeMessage
   def severe(message: String, cause: Throwable): Unit =
     macro LoggerMacro.severeMessageCause
   def severe(message: String, args: Any*): Unit =
     macro LoggerMacro.severeMessageArgs
 
-  def isWarningLoggable() = isLoggable(_root_.utils.logging.Level.WARNING)
+  def isWarningLoggable() = isLoggable(com.github.thebridsk.utilities.logging.Level.WARNING)
   def warning(message: String): Unit = macro LoggerMacro.warningMessage
   def warning(message: String, cause: Throwable): Unit =
     macro LoggerMacro.warningMessageCause
   def warning(message: String, args: Any*): Unit =
     macro LoggerMacro.warningMessageArgs
 
-  def isInfoLoggable() = isLoggable(_root_.utils.logging.Level.INFO)
+  def isInfoLoggable() = isLoggable(com.github.thebridsk.utilities.logging.Level.INFO)
   def info(message: String): Unit = macro LoggerMacro.infoMessage
   def info(message: String, cause: Throwable): Unit =
     macro LoggerMacro.infoMessageCause
   def info(message: String, args: Any*): Unit =
     macro LoggerMacro.infoMessageArgs
 
-  def isConfigLoggable() = isLoggable(_root_.utils.logging.Level.CONFIG)
+  def isConfigLoggable() = isLoggable(com.github.thebridsk.utilities.logging.Level.CONFIG)
   def config(message: String): Unit = macro LoggerMacro.configMessage
   def config(message: String, cause: Throwable): Unit =
     macro LoggerMacro.configMessageCause
   def config(message: String, args: Any*): Unit =
     macro LoggerMacro.configMessageArgs
 
-  def isFineLoggable() = isLoggable(_root_.utils.logging.Level.FINE)
+  def isFineLoggable() = isLoggable(com.github.thebridsk.utilities.logging.Level.FINE)
   def fine(message: String): Unit = macro LoggerMacro.fineMessage
   def fine(message: String, cause: Throwable): Unit =
     macro LoggerMacro.fineMessageCause
   def fine(message: String, args: Any*): Unit =
     macro LoggerMacro.fineMessageArgs
 
-  def isFinerLoggable() = isLoggable(_root_.utils.logging.Level.FINER)
+  def isFinerLoggable() = isLoggable(com.github.thebridsk.utilities.logging.Level.FINER)
   def finer(message: String): Unit = macro LoggerMacro.finerMessage
   def finer(message: String, cause: Throwable): Unit =
     macro LoggerMacro.finerMessageCause
   def finer(message: String, args: Any*): Unit =
     macro LoggerMacro.finerMessageArgs
 
-  def isFinestLoggable() = isLoggable(_root_.utils.logging.Level.FINEST)
+  def isFinestLoggable() = isLoggable(com.github.thebridsk.utilities.logging.Level.FINEST)
   def finest(message: String): Unit = macro LoggerMacro.finestMessage
   def finest(message: String, cause: Throwable): Unit =
     macro LoggerMacro.finestMessageCause
   def finest(message: String, args: Any*): Unit =
     macro LoggerMacro.finestMessageArgs
 
-  def isEnteringLoggable() = isLoggable(_root_.utils.logging.Level.FINER)
+  def isEnteringLoggable() = isLoggable(com.github.thebridsk.utilities.logging.Level.FINER)
   def entering(): Unit = macro LoggerMacro.enteringNoArgs
   def entering(args: Any*): Unit = macro LoggerMacro.enteringArgs
 
-  def isExitingLoggable() = isLoggable(_root_.utils.logging.Level.FINER)
+  def isExitingLoggable() = isLoggable(com.github.thebridsk.utilities.logging.Level.FINER)
   def exiting(): Unit = macro LoggerMacro.exitingNoArg
   def exiting(arg: Any): Unit = macro LoggerMacro.exitingArg
 
-  def isThrowingLoggable() = isLoggable(_root_.utils.logging.Level.FINER)
+  def isThrowingLoggable() = isLoggable(com.github.thebridsk.utilities.logging.Level.FINER)
   def throwing(ex: Throwable): Unit = macro LoggerMacro.throwingArg
 
   def logImpl(traceMsg: TraceMsg): Unit
@@ -186,7 +186,7 @@ case class TraceMsg(
     val time: Double,
     val logger: String,
     val msgtype: TraceType,
-    val level: _root_.utils.logging.Level,
+    val level: com.github.thebridsk.utilities.logging.Level,
     val message: String = null,
     val cause: Throwable = null
 )(val args: Any*)(implicit val pos: Position) {
@@ -196,56 +196,56 @@ case class TraceMsg(
   }
 }
 
-import utils.macros.Source
+import com.github.thebridsk.utilities.macros.Source
 import scala.reflect.ClassTag
 import scala.reflect.ClassTag
 import org.scalactic.source.Position
-import utils.logging.impl.LoggerImplFactory
-import utils.logging.impl.LoggerImplFactory
+import com.github.thebridsk.utilities.logging.impl.LoggerImplFactory
+import com.github.thebridsk.utilities.logging.impl.LoggerImplFactory
 
 class LoggerMacro(override val c: Context) extends Source(c) {
 
   def logMessage(
-      level: c.Expr[_root_.utils.logging.Level],
+      level: c.Expr[com.github.thebridsk.utilities.logging.Level],
       message: c.Expr[String]
   ) = {
     import c.universe._
     q"""{if (${c.prefix}.isLoggable($level)) {
-           ${c.prefix}.logImpl( _root_.utils.logging.TraceMsg( ${c.prefix}.getTime, ${c.prefix}.name, _root_.utils.logging.LogMsgType, $level, $message)())
+           ${c.prefix}.logImpl( com.github.thebridsk.utilities.logging.TraceMsg( ${c.prefix}.getTime, ${c.prefix}.name, com.github.thebridsk.utilities.logging.LogMsgType, $level, $message)())
         }}"""
   }
 
   def logMessageCause(
-      level: c.Expr[_root_.utils.logging.Level],
+      level: c.Expr[com.github.thebridsk.utilities.logging.Level],
       message: c.Expr[String],
       cause: c.Expr[Throwable]
   ) = {
     import c.universe._
     q"""{if (${c.prefix}.isLoggable($level)) {
-            ${c.prefix}.logImpl( _root_.utils.logging.TraceMsg( ${c.prefix}.getTime, ${c.prefix}.name, _root_.utils.logging.LogMsgType, $level, $message, $cause)())
+            ${c.prefix}.logImpl( com.github.thebridsk.utilities.logging.TraceMsg( ${c.prefix}.getTime, ${c.prefix}.name, com.github.thebridsk.utilities.logging.LogMsgType, $level, $message, $cause)())
         }}"""
   }
 
   def logMessageArgs(
-      level: c.Expr[_root_.utils.logging.Level],
+      level: c.Expr[com.github.thebridsk.utilities.logging.Level],
       message: c.Expr[String],
       args: c.Expr[Any]*
   ) = {
     import c.universe._
     q"""{if (${c.prefix}.isLoggable($level)) {
-           ${c.prefix}.logImpl( _root_.utils.logging.TraceMsg( ${c.prefix}.getTime, ${c.prefix}.name, _root_.utils.logging.LogMsgType, $level, $message)( ..$args) )
+           ${c.prefix}.logImpl( com.github.thebridsk.utilities.logging.TraceMsg( ${c.prefix}.getTime, ${c.prefix}.name, com.github.thebridsk.utilities.logging.LogMsgType, $level, $message)( ..$args) )
         }}"""
   }
 
   def severeMessage(message: c.Expr[String]) = {
     import c.universe._
-    logMessage(c.Expr(q"_root_.utils.logging.Level.SEVERE"), message)
+    logMessage(c.Expr(q"com.github.thebridsk.utilities.logging.Level.SEVERE"), message)
   }
 
   def severeMessageCause(message: c.Expr[String], cause: c.Expr[Throwable]) = {
     import c.universe._
     logMessageCause(
-      c.Expr(q"_root_.utils.logging.Level.SEVERE"),
+      c.Expr(q"com.github.thebridsk.utilities.logging.Level.SEVERE"),
       message,
       cause
     )
@@ -254,7 +254,7 @@ class LoggerMacro(override val c: Context) extends Source(c) {
   def severeMessageArgs(message: c.Expr[String], args: c.Expr[Any]*) = {
     import c.universe._
     logMessageArgs(
-      c.Expr(q"_root_.utils.logging.Level.SEVERE"),
+      c.Expr(q"com.github.thebridsk.utilities.logging.Level.SEVERE"),
       message,
       args: _*
     )
@@ -262,13 +262,13 @@ class LoggerMacro(override val c: Context) extends Source(c) {
 
   def warningMessage(message: c.Expr[String]) = {
     import c.universe._
-    logMessage(c.Expr(q"_root_.utils.logging.Level.WARNING"), message)
+    logMessage(c.Expr(q"com.github.thebridsk.utilities.logging.Level.WARNING"), message)
   }
 
   def warningMessageCause(message: c.Expr[String], cause: c.Expr[Throwable]) = {
     import c.universe._
     logMessageCause(
-      c.Expr(q"_root_.utils.logging.Level.WARNING"),
+      c.Expr(q"com.github.thebridsk.utilities.logging.Level.WARNING"),
       message,
       cause
     )
@@ -277,7 +277,7 @@ class LoggerMacro(override val c: Context) extends Source(c) {
   def warningMessageArgs(message: c.Expr[String], args: c.Expr[Any]*) = {
     import c.universe._
     logMessageArgs(
-      c.Expr(q"_root_.utils.logging.Level.WARNING"),
+      c.Expr(q"com.github.thebridsk.utilities.logging.Level.WARNING"),
       message,
       args: _*
     )
@@ -285,18 +285,18 @@ class LoggerMacro(override val c: Context) extends Source(c) {
 
   def infoMessage(message: c.Expr[String]) = {
     import c.universe._
-    logMessage(c.Expr(q"_root_.utils.logging.Level.INFO"), message)
+    logMessage(c.Expr(q"com.github.thebridsk.utilities.logging.Level.INFO"), message)
   }
 
   def infoMessageCause(message: c.Expr[String], cause: c.Expr[Throwable]) = {
     import c.universe._
-    logMessageCause(c.Expr(q"_root_.utils.logging.Level.INFO"), message, cause)
+    logMessageCause(c.Expr(q"com.github.thebridsk.utilities.logging.Level.INFO"), message, cause)
   }
 
   def infoMessageArgs(message: c.Expr[String], args: c.Expr[Any]*) = {
     import c.universe._
     logMessageArgs(
-      c.Expr(q"_root_.utils.logging.Level.INFO"),
+      c.Expr(q"com.github.thebridsk.utilities.logging.Level.INFO"),
       message,
       args: _*
     )
@@ -304,13 +304,13 @@ class LoggerMacro(override val c: Context) extends Source(c) {
 
   def configMessage(message: c.Expr[String]) = {
     import c.universe._
-    logMessage(c.Expr(q"_root_.utils.logging.Level.CONFIG"), message)
+    logMessage(c.Expr(q"com.github.thebridsk.utilities.logging.Level.CONFIG"), message)
   }
 
   def configMessageCause(message: c.Expr[String], cause: c.Expr[Throwable]) = {
     import c.universe._
     logMessageCause(
-      c.Expr(q"_root_.utils.logging.Level.CONFIG"),
+      c.Expr(q"com.github.thebridsk.utilities.logging.Level.CONFIG"),
       message,
       cause
     )
@@ -319,7 +319,7 @@ class LoggerMacro(override val c: Context) extends Source(c) {
   def configMessageArgs(message: c.Expr[String], args: c.Expr[Any]*) = {
     import c.universe._
     logMessageArgs(
-      c.Expr(q"_root_.utils.logging.Level.CONFIG"),
+      c.Expr(q"com.github.thebridsk.utilities.logging.Level.CONFIG"),
       message,
       args: _*
     )
@@ -327,18 +327,18 @@ class LoggerMacro(override val c: Context) extends Source(c) {
 
   def fineMessage(message: c.Expr[String]) = {
     import c.universe._
-    logMessage(c.Expr(q"_root_.utils.logging.Level.FINE"), message)
+    logMessage(c.Expr(q"com.github.thebridsk.utilities.logging.Level.FINE"), message)
   }
 
   def fineMessageCause(message: c.Expr[String], cause: c.Expr[Throwable]) = {
     import c.universe._
-    logMessageCause(c.Expr(q"_root_.utils.logging.Level.FINE"), message, cause)
+    logMessageCause(c.Expr(q"com.github.thebridsk.utilities.logging.Level.FINE"), message, cause)
   }
 
   def fineMessageArgs(message: c.Expr[String], args: c.Expr[Any]*) = {
     import c.universe._
     logMessageArgs(
-      c.Expr(q"_root_.utils.logging.Level.FINE"),
+      c.Expr(q"com.github.thebridsk.utilities.logging.Level.FINE"),
       message,
       args: _*
     )
@@ -346,18 +346,18 @@ class LoggerMacro(override val c: Context) extends Source(c) {
 
   def finerMessage(message: c.Expr[String]) = {
     import c.universe._
-    logMessage(c.Expr(q"_root_.utils.logging.Level.FINER"), message)
+    logMessage(c.Expr(q"com.github.thebridsk.utilities.logging.Level.FINER"), message)
   }
 
   def finerMessageCause(message: c.Expr[String], cause: c.Expr[Throwable]) = {
     import c.universe._
-    logMessageCause(c.Expr(q"_root_.utils.logging.Level.FINER"), message, cause)
+    logMessageCause(c.Expr(q"com.github.thebridsk.utilities.logging.Level.FINER"), message, cause)
   }
 
   def finerMessageArgs(message: c.Expr[String], args: c.Expr[Any]*) = {
     import c.universe._
     logMessageArgs(
-      c.Expr(q"_root_.utils.logging.Level.FINER"),
+      c.Expr(q"com.github.thebridsk.utilities.logging.Level.FINER"),
       message,
       args: _*
     )
@@ -365,13 +365,13 @@ class LoggerMacro(override val c: Context) extends Source(c) {
 
   def finestMessage(message: c.Expr[String]) = {
     import c.universe._
-    logMessage(c.Expr(q"_root_.utils.logging.Level.FINEST"), message)
+    logMessage(c.Expr(q"com.github.thebridsk.utilities.logging.Level.FINEST"), message)
   }
 
   def finestMessageCause(message: c.Expr[String], cause: c.Expr[Throwable]) = {
     import c.universe._
     logMessageCause(
-      c.Expr(q"_root_.utils.logging.Level.FINEST"),
+      c.Expr(q"com.github.thebridsk.utilities.logging.Level.FINEST"),
       message,
       cause
     )
@@ -380,7 +380,7 @@ class LoggerMacro(override val c: Context) extends Source(c) {
   def finestMessageArgs(message: c.Expr[String], args: c.Expr[Any]*) = {
     import c.universe._
     logMessageArgs(
-      c.Expr(q"_root_.utils.logging.Level.FINEST"),
+      c.Expr(q"com.github.thebridsk.utilities.logging.Level.FINEST"),
       message,
       args: _*
     )
@@ -388,36 +388,36 @@ class LoggerMacro(override val c: Context) extends Source(c) {
 
   def enteringNoArgs() = {
     import c.universe._
-    q"""{if (${c.prefix}.isLoggable(_root_.utils.logging.Level.FINER)) {
-           ${c.prefix}.logImpl( _root_.utils.logging.TraceMsg( ${c.prefix}.getTime, ${c.prefix}.name, _root_.utils.logging.LogEnterType, _root_.utils.logging.Level.FINER)() )
+    q"""{if (${c.prefix}.isLoggable(com.github.thebridsk.utilities.logging.Level.FINER)) {
+           ${c.prefix}.logImpl( com.github.thebridsk.utilities.logging.TraceMsg( ${c.prefix}.getTime, ${c.prefix}.name, com.github.thebridsk.utilities.logging.LogEnterType, com.github.thebridsk.utilities.logging.Level.FINER)() )
         }}"""
   }
 
   def enteringArgs(args: c.Expr[Any]*) = {
     import c.universe._
-    q"""{if (${c.prefix}.isLoggable(_root_.utils.logging.Level.FINER)) {
-           ${c.prefix}.logImpl( _root_.utils.logging.TraceMsg( ${c.prefix}.getTime, ${c.prefix}.name, _root_.utils.logging.LogEnterType, _root_.utils.logging.Level.FINER)(..$args) )
+    q"""{if (${c.prefix}.isLoggable(com.github.thebridsk.utilities.logging.Level.FINER)) {
+           ${c.prefix}.logImpl( com.github.thebridsk.utilities.logging.TraceMsg( ${c.prefix}.getTime, ${c.prefix}.name, com.github.thebridsk.utilities.logging.LogEnterType, com.github.thebridsk.utilities.logging.Level.FINER)(..$args) )
         }}"""
   }
 
   def exitingNoArg() = {
     import c.universe._
-    q"""{if (${c.prefix}.isLoggable(_root_.utils.logging.Level.FINER)) {
-           ${c.prefix}.logImpl( _root_.utils.logging.TraceMsg( ${c.prefix}.getTime, ${c.prefix}.name, _root_.utils.logging.LogExitType, _root_.utils.logging.Level.FINER)() )
+    q"""{if (${c.prefix}.isLoggable(com.github.thebridsk.utilities.logging.Level.FINER)) {
+           ${c.prefix}.logImpl( com.github.thebridsk.utilities.logging.TraceMsg( ${c.prefix}.getTime, ${c.prefix}.name, com.github.thebridsk.utilities.logging.LogExitType, com.github.thebridsk.utilities.logging.Level.FINER)() )
         }}"""
   }
 
   def exitingArg(arg: c.Expr[Any]) = {
     import c.universe._
-    q"""{if (${c.prefix}.isLoggable(_root_.utils.logging.Level.FINER)) {
-           ${c.prefix}.logImpl( _root_.utils.logging.TraceMsg( ${c.prefix}.getTime, ${c.prefix}.name, _root_.utils.logging.LogExitType, _root_.utils.logging.Level.FINER)($arg) )
+    q"""{if (${c.prefix}.isLoggable(com.github.thebridsk.utilities.logging.Level.FINER)) {
+           ${c.prefix}.logImpl( com.github.thebridsk.utilities.logging.TraceMsg( ${c.prefix}.getTime, ${c.prefix}.name, com.github.thebridsk.utilities.logging.LogExitType, com.github.thebridsk.utilities.logging.Level.FINER)($arg) )
         }}"""
   }
 
   def throwingArg(ex: c.Expr[Throwable]) = {
     import c.universe._
-    q"""{if (${c.prefix}.isLoggable(_root_.utils.logging.Level.FINER)) {
-           ${c.prefix}.logImpl( _root_.utils.logging.TraceMsg( ${c.prefix}.getTime, ${c.prefix}.name, _root_.utils.logging.LogThrowingType, _root_.utils.logging.Level.FINER, null, $ex)() )
+    q"""{if (${c.prefix}.isLoggable(com.github.thebridsk.utilities.logging.Level.FINER)) {
+           ${c.prefix}.logImpl( com.github.thebridsk.utilities.logging.TraceMsg( ${c.prefix}.getTime, ${c.prefix}.name, com.github.thebridsk.utilities.logging.LogThrowingType, com.github.thebridsk.utilities.logging.Level.FINER, null, $ex)() )
         }}"""
   }
 

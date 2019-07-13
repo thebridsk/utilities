@@ -1,4 +1,4 @@
-package utils.message
+package com.github.thebridsk.utilities.message
 
 import java.util.logging.Logger
 import org.scalactic._
@@ -10,7 +10,7 @@ import java.util.Formatter
 import java.util.MissingResourceException
 import java.util.logging.Level
 import java.util.Arrays
-import utils.nls.Messages
+import com.github.thebridsk.utilities.nls.Messages
 
 /**
   * @constructor

@@ -12,7 +12,7 @@ object BldUtilitiesSJvm {
   lazy val `utilities-sjvm` = project.in(file("sjvm")).
     configure( commonSettings, noPublish ).
     settings(
-      organization := "com.example",
+      organization := "com.github.thebridsk",
       name := "utilities-sjvm",
       mainClass := None,
       isScalaJSProject := false,

@@ -37,10 +37,10 @@ object BldUtilities {
   )
 
   lazy val utilities: Project = project.in(file(".")).
-    configure( commonSettings, noPublish, buildInfo("com.example.utilities.version", "VersionUtilities") ).
+    configure( commonSettings, noPublish, buildInfo("com.github.thebridsk.utilities.version", "VersionUtilities") ).
     enablePlugins(GitVersioning, GitBranchPrompt).
     settings(
-      organization := "com.example",
+      organization := "com.github.thebridsk",
       name := "utilities",
       mainClass := None,
     ).
