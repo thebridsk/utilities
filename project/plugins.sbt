@@ -24,6 +24,7 @@ val vSbtDependencyGraph = "0.9.2"  // https://github.com/jrudolph/sbt-dependency
 val vSbtUpdates = "0.4.1"          // https://github.com/rtimush/sbt-updates
 val vSbtEnsime = "2.6.1"           // https://github.com/ensime/ensime-sbt
 val vSbtScalaFmt="2.0.2"           // https://github.com/scalameta/sbt-scalafmt
+val vBloop = "1.3.2"               // https://scalacenter.github.io/bloop/setup#universal
 
 val scalaJSVersion = Option(System.getenv("SCALAJS_VERSION")).getOrElse(vScalaJSDefault)
 
@@ -62,6 +63,7 @@ addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % vSbtDependencyGraph w
 
 addSbtPlugin("org.ensime" % "sbt-ensime" % vSbtEnsime withSources())
 addSbtPlugin("org.scalameta" % "sbt-scalafmt" % vSbtScalaFmt withSources())
+addSbtPlugin("ch.epfl.scala" % "sbt-bloop" % vBloop withSources())
 
 scalacOptions ++= Seq( "-unchecked", "-deprecation" )
 
