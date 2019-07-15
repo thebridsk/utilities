@@ -9,6 +9,8 @@
 //    session save
 //    reload return
 
+bloopExportJarClassifiers in Global := Some(Set("sources"))
+
 lazy val utilities = BldUtilities.utilities
 
 lazy val `utilities-jvm` = BldUtilitiesJvm.`utilities-jvm`
