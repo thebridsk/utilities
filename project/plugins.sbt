@@ -8,8 +8,8 @@ name := "project-utilities"
 
 scalaVersion := "2.12.8"
 
-val vLog4j = "1.7.26"               // https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
-val vJGit = "5.4.0.201906121030-r" // https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit.pgm
+val vLog4j = "1.7.26"              // https://github.com/qos-ch/slf4j
+val vJGit = "5.4.0.201906121030-r" // https://github.com/eclipse/jgit
 
 val vCrossProject = "0.6.0"        // https://github.com/portable-scala/sbt-crossproject
 val vPlatformDeps = "1.0.0"        // https://github.com/portable-scala/sbt-platform-deps
@@ -24,7 +24,7 @@ val vSbtDependencyGraph = "0.9.2"  // https://github.com/jrudolph/sbt-dependency
 val vSbtUpdates = "0.4.1"          // https://github.com/rtimush/sbt-updates
 val vSbtEnsime = "2.6.1"           // https://github.com/ensime/ensime-sbt
 val vSbtScalaFmt="2.0.2"           // https://github.com/scalameta/sbt-scalafmt
-val vBloop = "1.3.2"               // https://scalacenter.github.io/bloop/setup#universal
+val vBloop = "1.3.2"               // https://github.com/scalacenter/bloop
 
 val scalaJSVersion = Option(System.getenv("SCALAJS_VERSION")).getOrElse(vScalaJSDefault)
 
@@ -45,13 +45,9 @@ libraryDependencies ++= Seq(
      exclude("com.sun.jmx", "jmxri")
 )
 
-// resolvers +=
-//   "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
-
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % vCrossProject withSources())
 addSbtPlugin("org.scala-js" % "sbt-scalajs" % scalaJSVersion withSources())
 
-// addSbtPlugin("io.spray" % "sbt-revolver" % vSbtRevolver withSources())
 addSbtPlugin("com.eed3si9n" % "sbt-assembly" % vSbtAssembly withSources())
 addSbtPlugin("com.typesafe.sbt" % "sbt-git" % vSbtGit withSources())
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % vSbtSCoverage withSources())
