@@ -11,11 +11,11 @@ object BldVersion {
 
   lazy val verCrossScalaVersions = Seq("2.12.8", verScalaVersion)
 
-  lazy val vScalactic = "3.0.8"      // https://mvnrepository.com/artifact/org.scalactic/scalactic_2.12
-  lazy val vScalatest = "3.0.8"      // http://mvnrepository.com/artifact/org.scalatest/scalatest_2.11
-  lazy val vJunit = "4.12"           // http://mvnrepository.com/artifact/junit/junit
+  lazy val vScalactic = "3.0.8"      // https://github.com/scalatest/scalatest
+  lazy val vScalatest = "3.0.8"      // https://github.com/scalatest/scalatest
+  lazy val vJunit = "4.12"           // https://github.com/junit-team/junit4
 
-  lazy val vScalaArm = "2.0"         // http://mvnrepository.com/artifact/com.jsuereth/scala-arm_2.11
-  lazy val vScallop = "3.3.1"        // http://mvnrepository.com/artifact/org.rogach/scallop_2.11
+  lazy val vScalaArm = "2.0"         // https://github.com/jsuereth/scala-arm
+  lazy val vScallop = "3.3.1"        // https://github.com/scallop/scallop
 
 }
