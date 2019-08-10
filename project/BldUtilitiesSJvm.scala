@@ -22,7 +22,6 @@ object BldUtilitiesSJvm {
       ),
 
       libraryDependencies ++= sharedDeps.value,
-      libraryDependencies += scalaVersion("org.scala-lang" % "scala-compiler" % _).value,
 
       fork in Test := true,
 
