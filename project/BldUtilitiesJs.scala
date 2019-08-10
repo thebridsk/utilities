@@ -27,7 +27,6 @@ object BldUtilitiesJs {
       ),
 
       libraryDependencies ++= sharedDeps.value,
-      libraryDependencies += scalaVersion("org.scala-lang" % "scala-compiler" % _).value,
 
       // This gets rid of the jetty check which is required for the sbt runtime
       // not the application

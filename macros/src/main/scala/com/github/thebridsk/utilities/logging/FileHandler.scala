@@ -418,11 +418,11 @@ class FileHandler(pattern: String = null) extends StreamHandler {
     val pat = Pattern.compile(regex)
 
     val dirf = new File(dir)
-    val files = dirf.list(new FilenameFilter() {
+    val files = Option(dirf.list(new FilenameFilter() {
       def accept(dir1: File, name: String) = {
         pat.matcher(name).matches()
       }
-    })
+    })).getOrElse(Array())
 
     import scala.collection.JavaConversions._
     val sortedfiles = files.toList.sorted
