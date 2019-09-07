@@ -5,7 +5,6 @@ import sbtrelease.ReleasePlugin.autoImport._
 import com.typesafe.sbt.GitPlugin.autoImport._
 import com.typesafe.sbt.GitVersioning
 import com.typesafe.sbt.GitBranchPrompt
-import com.typesafe.sbteclipse.plugin.EclipsePlugin.autoImport._
 
 import BldDependencies._
 import BldCommonSettings._
@@ -52,8 +51,6 @@ object BldUtilities {
       BldUtilitiesSJvm.`utilities-sjvm`
     )
     .settings(
-
-      EclipseKeys.skipParents in ThisBuild := false,
 
       mydist := Def
         .sequential(
