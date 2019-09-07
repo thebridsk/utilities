@@ -53,7 +53,7 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-git" % vSbtGit withSources())
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % vSbtSCoverage withSources())
 addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % vSbtBuildInfo withSources())
 addSbtPlugin("com.github.gseitz" % "sbt-release" % vSbtRelease withSources())
-addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % vSbtEclipse withSources())
+// addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % vSbtEclipse withSources())
 addSbtPlugin("com.timushev.sbt" % "sbt-updates" % vSbtUpdates withSources())
 addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % vSbtDependencyGraph withSources())  // must be updated for sbt 1.0
 

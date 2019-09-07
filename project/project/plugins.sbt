@@ -14,4 +14,4 @@ val vSbtEclipse = "5.2.4"          // https://github.com/typesafehub/sbteclipse
 
 libraryDependencies += "org.slf4j" % "slf4j-log4j12" % vLog4j
 
-addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % vSbtEclipse)
+// addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % vSbtEclipse)
