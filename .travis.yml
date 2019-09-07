@@ -4,7 +4,7 @@ sudo: false
 
 language: scala
 scala:
-- 2.12.8
+- 2.12.9
 jdk:
 - openjdk8
 
@@ -12,7 +12,7 @@ branches:
   only:
   - master
   - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
-  
+
 script:
 - sbt clean distribution:travis
 
@@ -26,4 +26,3 @@ deploy:
   on:
     repo: thebridsk/utilities
     tags: true
-    
