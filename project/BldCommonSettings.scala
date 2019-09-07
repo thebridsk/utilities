@@ -11,7 +11,6 @@ import sbtbuildinfo.BuildInfoPlugin
 import sbtbuildinfo.BuildInfoPlugin.autoImport._
 
 import BldVersion._
-import com.typesafe.sbteclipse.plugin.EclipsePlugin.autoImport._
 import MyReleaseVersion._
 import XTimestamp._
 
@@ -43,7 +42,6 @@ object BldCommonSettings {
         "utf8",
         "-feature" /* , "-Xlog-implicits" */
       ),
-      EclipseKeys.withSource := true,
       testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oD"),
       // libraryDependencies += scalaVersion(
       //   "org.scala-lang" % "scala-compiler" % _

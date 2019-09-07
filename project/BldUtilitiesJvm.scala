@@ -1,7 +1,6 @@
 
 import sbt._
 import Keys._
-import com.typesafe.sbteclipse.plugin.EclipsePlugin.autoImport._
 import org.scalajs.sbtplugin.ScalaJSPlugin
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 
@@ -19,8 +18,6 @@ object BldUtilitiesJvm {
       mainClass := None,
       isScalaJSProject := false,
       libraryDependencies ++= utilitiesDeps.value,
-
-      EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.ManagedClasses,
 
       fork in Test := true,
 

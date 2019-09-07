@@ -1,7 +1,6 @@
 
 import sbt._
 import Keys._
-import com.typesafe.sbteclipse.plugin.EclipsePlugin.autoImport._
 import org.scalajs.sbtplugin.ScalaJSPlugin
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 import com.timushev.sbt.updates.UpdatesPlugin.autoImport._
@@ -21,10 +20,6 @@ object BldUtilitiesJs {
       isScalaJSProject := true,
 
       parallelExecution in Test := false,
-
-      EclipseKeys.classpathTransformerFactories ++= Seq(
-  //      MyEclipseTransformers.replaceRelativePath("/utilities-shared", "/utilities-sharedJS")
-      ),
 
       libraryDependencies ++= sharedDeps.value,
 

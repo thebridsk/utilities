@@ -1,7 +1,6 @@
 
 import sbt._
 import Keys._
-import com.typesafe.sbteclipse.plugin.EclipsePlugin.autoImport._
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 
 import BldDependencies._
@@ -16,10 +15,6 @@ object BldUtilitiesSJvm {
       name := "utilities-sjvm",
       mainClass := None,
       isScalaJSProject := false,
-
-      EclipseKeys.classpathTransformerFactories ++= Seq(
-  //      MyEclipseTransformers.replaceRelativePath("/utilities-shared", "/utilities-sharedJVM")
-      ),
 
       libraryDependencies ++= sharedDeps.value,
 
