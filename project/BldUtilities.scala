@@ -10,7 +10,6 @@ import com.typesafe.sbteclipse.plugin.EclipsePlugin.autoImport._
 import BldDependencies._
 import BldCommonSettings._
 
-import MyEclipseTransformers._
 import MyReleaseVersion._
 
 import sbtcrossproject.{crossProject, CrossType}
