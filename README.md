@@ -20,9 +20,12 @@ To create the release, execute:
 ## Prereqs
 
 - Java 1.8
-- [Scala 2.12.9](http://www.scala-lang.org/)
-- [SBT 1.0.4](http://www.scala-sbt.org/)
-- [VSCode](https://code.visualstudio.com/)
+- [Scala 2.12.10](http://www.scala-lang.org/)
+- [SBT 1.3.0](http://www.scala-sbt.org/)
+
+Optional:
+- [Visual Studio Code](https://code.visualstudio.com/)
+- [Scala Metals](https://scalameta.org/metals/)
 
 ## SBT Global Setup
 
@@ -34,10 +37,9 @@ To create the release, execute:
 - If you update SBT, you may need to clean out the `~/.sbt` directory.  Make sure you save `global.sbt`, `plugins.sbt` and any other configuration files.
 - Copy the files in `setup/sbt/0.13` to `~/.sbt/0.13`.  This has a `global.sbt`, `plugins.sbt` files with plugins that are nice to have.
 
-
 ## Setup for VSCode
 
-Install the scalametals extension.
+Install the scalametals extension.  Add sbt, Scala and Java to the path when starting VSCode.
 
 ## Travis CI
 
