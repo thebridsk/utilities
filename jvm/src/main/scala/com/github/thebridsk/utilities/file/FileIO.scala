@@ -151,13 +151,13 @@ object FileIO {
       }
       s
     } catch {
-      case e: FileNotFoundException =>
+      case e @ (_ : FileNotFoundException | _ : NoSuchFileException) =>
         try readFile(filename)
         catch {
           case e1: IOException =>
             e1.addSuppressed(e)
             throw e1
-        }
+          }
     }
   }
 
