@@ -157,7 +157,7 @@ object FileIO {
           case e1: IOException =>
             e1.addSuppressed(e)
             throw e1
-          }
+        }
     }
   }
 
