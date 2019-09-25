@@ -2,14 +2,14 @@
 
 object BldVersion {
 
-  lazy val verScalaVersion = "2.12.10"
+  lazy val verScalaVersion = "2.13.1"
   lazy val verScalaMajorMinor = {
     val i = verScalaVersion.indexOf('.')
     val i2 = verScalaVersion.indexOf('.', i+1)
     verScalaVersion.substring(0, i2)
   }
 
-  lazy val verCrossScalaVersions = Seq("2.12.10", verScalaVersion)
+  lazy val verCrossScalaVersions = Seq("2.13.1", verScalaVersion)
 
   lazy val vScalactic = "3.0.8"      // https://github.com/scalatest/scalatest
   lazy val vScalatest = "3.0.8"      // https://github.com/scalatest/scalatest

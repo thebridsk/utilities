@@ -341,7 +341,7 @@ class FileHandler(pattern: String = null) extends StreamHandler {
     * This closes the current file, renames it to include the date,
     * then opens a new file.
     */
-  def rotate() {
+  def rotate() = {
     val oldLevel = getLevel();
     setLevel(Level.OFF);
 
@@ -424,7 +424,7 @@ class FileHandler(pattern: String = null) extends StreamHandler {
       }
     })).getOrElse(Array())
 
-    import scala.collection.JavaConversions._
+    import scala.jdk.CollectionConverters._
     val sortedfiles = files.toList.sorted
 //      println(s"Found ${sortedfiles.length} log files with pattern ${pat}")
     if (sortedfiles.length > fCount) {

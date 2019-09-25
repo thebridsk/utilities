@@ -21,7 +21,7 @@ To create the release, execute:
 
 - Java 1.8
 - [Scala 2.12.10](http://www.scala-lang.org/)
-- [SBT 1.3.0](http://www.scala-sbt.org/)
+- [SBT 1.3.2](http://www.scala-sbt.org/)
 
 Optional:
 - [Visual Studio Code](https://code.visualstudio.com/)
