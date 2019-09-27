@@ -250,6 +250,11 @@ private object MyFormatterDefaults {
         case None =>
           builder.append("ClassLoader was not specified").append(sepChar)
       }
+      builder
+      .append("System Properties")
+      .append(sepChar); // .append(System.getProperty("java.class.path") ).append(sepChar);
+
+      builder.append(ClassPath.showProperties("  "));
 
       if (v != null && v.length() != 0) {
         builder.append(v).append(sepChar);
