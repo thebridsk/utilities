@@ -11,10 +11,20 @@ object ClassPath {
       loader: ClassLoader = getClass.getClassLoader
   ) = {
     val b = showClasspath(new StringBuilder, linePrefix, loader)
+    b.toString()
+  }
+
+  def showProperties( linePrefix: String = "" ) = {
+    val b = new StringBuilder
+    val boot = sys.props.get("java.class.path").getOrElse( sys.props.getOrElse("sun.boot.class.path", "<unknown>"));
+    b.append(linePrefix).append("java.class.path").append(fsCRLF)
+    val i = linePrefix+"  "
+    for (t <- boot.split(sys.props.getOrElse("path.separator", ";"))) {
+      b.append(i).append(t).append(fsCRLF);
+    }
     b.append(linePrefix).append("System properties:").append(fsCRLF)
     sys.props.foreach { e =>
-      b.append(linePrefix)
-        .append("  ")
+      b.append(i)
         .append(e._1)
         .append("=")
         .append(e._2)
@@ -44,10 +54,6 @@ object ClassPath {
       showClasspath(b, indent, parent)
     } else {
       b.append(indent).append("BootClassLoader").append(fsCRLF);
-      val boot = sys.props.getOrElse("sun.boot.class.path", "<unknown>");
-      for (t <- boot.split(sys.props.getOrElse("path.separator", ";"))) {
-        b.append(i).append(t).append(fsCRLF);
-      }
       b
     }
   }
