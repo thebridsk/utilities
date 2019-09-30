@@ -1,4 +1,4 @@
-package com.github.thebridsk.utilities.main.test
+package com.github.thebridsk.utilities.utils.main.test
 
 import org.scalatest.Finders
 import org.scalatest.FlatSpec
