@@ -1,0 +1,11 @@
+
+-Xms2048M
+-Xmx4096M
+-Xss6M
+-XX:ReservedCodeCacheSize=1024M
+
+-Dfile.encoding=UTF-8
+
+# Set the extra sbt options
+
+# -Dsbt.log.format=true
