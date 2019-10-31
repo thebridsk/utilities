@@ -9,7 +9,7 @@ name := "project-utilities"
 scalaVersion := "2.12.10"
 
 val vLog4j = "1.7.28"              // https://github.com/qos-ch/slf4j
-val vJGit = "5.5.0.201909110433-r" // https://github.com/eclipse/jgit
+val vJGit = "5.5.1.201910021850-r" // https://github.com/eclipse/jgit
 
 val vCrossProject = "0.6.1"        // https://github.com/portable-scala/sbt-crossproject
 val vPlatformDeps = "1.0.0"        // https://github.com/portable-scala/sbt-platform-deps
@@ -18,9 +18,9 @@ val vSbtAssembly = "0.14.10"        // https://github.com/sbt/sbt-assembly
 val vSbtGit = "1.0.0"              // https://github.com/sbt/sbt-git
 val vSbtSCoverage = "1.5.1"        // https://github.com/scoverage/sbt-scoverage
 val vSbtBuildInfo = "0.9.0"        // https://github.com/sbt/sbt-buildinfo
-val vSbtRelease = "1.0.11"         // https://github.com/sbt/sbt-release
+val vSbtRelease = "1.0.12"         // https://github.com/sbt/sbt-release
 val vSbtDependencyGraph = "0.9.2"  // https://github.com/jrudolph/sbt-dependency-graph
-val vSbtUpdates = "0.4.2"          // https://github.com/rtimush/sbt-updates
+val vSbtUpdates = "0.5.0"          // https://github.com/rtimush/sbt-updates
 val vSbtScalaFmt="2.0.2"           // https://github.com/scalameta/sbt-scalafmt
 val vBloop = "1.3.2"               // https://github.com/scalacenter/bloop
 
