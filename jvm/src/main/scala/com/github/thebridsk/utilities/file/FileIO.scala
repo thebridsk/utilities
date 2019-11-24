@@ -24,6 +24,10 @@ import java.util.function.Consumer
 import com.github.thebridsk.utilities.logging.Logger
 import scala.io.BufferedSource
 import java.util.logging.Level
+import java.nio.file.SimpleFileVisitor
+import java.nio.file.attribute.BasicFileAttributes
+import java.nio.file.FileVisitResult
+import java.nio.file.DirectoryNotEmptyException
 
 object FileIO {
   val log = Logger(getClass().getName)
@@ -91,6 +95,45 @@ object FileIO {
       case e: Throwable =>
         log.severe("Unable to delete file " + path, e)
         throw e
+    }
+  }
+
+  /**
+   * Recursivily deletes all files
+   * @param directory the base directory
+   * @param ext an optional extension of files to delete.  MUST NOT start with ".".
+   */
+  def deleteDirectory( directory: Path, ext: Option[String] ) = {
+    val extension = ext.map( e => "."+e )
+    if (directory.toFile().exists()) {
+      if (directory.toFile().isDirectory()) {
+        Files.walkFileTree(directory, new SimpleFileVisitor[Path]() {
+           override
+           def visitFile( file: Path, attrs: BasicFileAttributes ): FileVisitResult = {
+             val del = extension.map { e =>
+               file.toString().toLowerCase().endsWith(e)
+             }.getOrElse(true)
+             if (del) {
+//               println(s"Deleting ${file}")
+               Files.delete(file);
+             }
+             FileVisitResult.CONTINUE;
+           }
+
+           override
+           def postVisitDirectory( dir: Path, exc: IOException ): FileVisitResult = {
+//             println(s"Deleting ${dir}")
+             try {
+               Files.delete(dir);
+             } catch {
+               case x: DirectoryNotEmptyException =>
+             }
+             FileVisitResult.CONTINUE;
+           }
+        })
+      } else {
+        directory.toFile().delete()
+      }
     }
   }
 
