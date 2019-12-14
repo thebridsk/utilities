@@ -77,6 +77,7 @@ object BldUtilities {
       releaseTagComment := s"Releasing ${git.baseVersion.value}",
 
       releaseCommitMessage := s"Setting version to ${git.baseVersion.value}",
+      releaseNextCommitMessage := s"Setting version to ${git.baseVersion.value}",
 
       releaseProcess := Seq[ReleaseStep](
         checkSnapshotDependencies, // : ReleaseStep
