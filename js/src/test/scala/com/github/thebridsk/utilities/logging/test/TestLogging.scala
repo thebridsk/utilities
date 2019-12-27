@@ -1,14 +1,14 @@
 package com.github.thebridsk.utilities.logging.test
 
-import org.scalatest.FlatSpec
-import org.scalatest.MustMatchers
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.must.Matchers
 import com.github.thebridsk.utilities.logging.impl.LoggerImplFactory
 import com.github.thebridsk.utilities.logging.Logger
 import com.github.thebridsk.utilities.logging.Handler
 import com.github.thebridsk.utilities.logging.Level
 import scala.util.matching.Regex
 
-class TestLogging extends FlatSpec with MustMatchers {
+class TestLogging extends AnyFlatSpec with Matchers {
   behavior of this.getClass.getName+" in utilities-js"
 
   SystemTimeJs()

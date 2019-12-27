@@ -1,8 +1,8 @@
 package com.github.thebridsk.utilities.utils.main.test
 
 import org.scalatest.Finders
-import org.scalatest.FlatSpec
-import org.scalatest.MustMatchers
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.must.Matchers
 import org.scalatest._
 import com.github.thebridsk.utilities.logging.Config
 import com.github.thebridsk.utilities.classpath.ClassPath
@@ -48,7 +48,7 @@ object TestStartLogging {
 /**
  * Test class to start the logging system
  */
-class TestStartLogging extends FlatSpec with MustMatchers {
+class TestStartLogging extends AnyFlatSpec with Matchers {
   import TestStartLogging._
 
   behavior of "the start logging test"
