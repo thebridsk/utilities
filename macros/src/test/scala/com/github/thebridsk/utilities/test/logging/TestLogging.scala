@@ -1,7 +1,7 @@
 package com.github.thebridsk.utilities.test.logging
 
-import org.scalatest.FlatSpec
-import org.scalatest.MustMatchers
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.must.Matchers
 import java.util.logging.LogRecord
 import java.util.logging.Level
 import com.github.thebridsk.utilities.logging.MyFormatter
@@ -35,7 +35,7 @@ import TestLogging._
 import java.text.SimpleDateFormat
 import java.util.Date
 
-class TestLogging extends FlatSpec with MustMatchers {
+class TestLogging extends AnyFlatSpec with Matchers {
 
   val lineend = System.getProperty("line.separator")
 
