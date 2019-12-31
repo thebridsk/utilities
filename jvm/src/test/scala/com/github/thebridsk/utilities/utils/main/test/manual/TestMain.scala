@@ -63,7 +63,7 @@ object TestMain extends Main { // with Logging {
     0
   }
 
-  def runFun( fun: ()=>Unit) {
+  def runFun( fun: ()=>Unit) = {
     fun()
   }
 

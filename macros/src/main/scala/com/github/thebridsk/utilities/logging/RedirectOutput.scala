@@ -25,7 +25,7 @@ object RedirectOutput {
     * @param stdout The trace level to use for stdout.  If null, then {@link TraceLevel#STDOUT} is used.
     * @param stderr The trace level to use for stderr.  If null, then {@link TraceLevel#STDERR} is used.
     */
-  def traceStandardOutAndErr(stdout: Level = null, stderr: Level = null) {
+  def traceStandardOutAndErr(stdout: Level = null, stderr: Level = null) = {
 
     fsOldStdOut = System.out;
     fsOldStdErr = System.err;

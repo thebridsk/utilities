@@ -7,9 +7,9 @@ import com.github.thebridsk.utilities.logging.Level._
 
 class TestHandler extends Handler {
 
-  val buf = StringBuilder.newBuilder
+  val buf = new StringBuilder
 
-  def logIt( traceMsg: TraceMsg ) {
+  def logIt( traceMsg: TraceMsg ) = {
     if (isLoggingLevel(traceMsg.level)) {
       val s = formatter.format(traceMsg)
       traceMsg.level match {

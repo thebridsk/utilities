@@ -7,7 +7,6 @@ import java.io.BufferedReader
 import scala.io.Codec
 import scala.io.Source
 
-import resource._
 import java.io.Writer
 import java.io.OutputStreamWriter
 import java.io.FileOutputStream
@@ -24,6 +23,7 @@ import java.util.function.Consumer
 import com.github.thebridsk.utilities.logging.Logger
 import scala.io.BufferedSource
 import java.util.logging.Level
+import scala.util.Using
 import java.nio.file.SimpleFileVisitor
 import java.nio.file.attribute.BasicFileAttributes
 import java.nio.file.FileVisitResult
@@ -71,7 +71,7 @@ object FileIO {
   def writeFile(filename: File, data: String): Unit = {
     log.finest("Writing to file " + filename)
     try {
-      for (out <- managed(getWriter(filename))) {
+      Using.resource(getWriter(filename)) { out =>
         out.write(data)
         out.flush()
       }
@@ -221,8 +221,8 @@ object FileIO {
   }
 
   def onfiles(dir: File): Iterator[Path] = {
-    import scala.collection.convert.ImplicitConversionsToScala._
-    Files.list(dir).iterator()
+    import scala.jdk.CollectionConverters._
+    Files.list(dir).iterator().asScala
   }
 
   def exists(path: String) = Files.exists(path)

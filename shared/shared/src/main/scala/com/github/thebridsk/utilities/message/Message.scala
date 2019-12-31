@@ -58,7 +58,7 @@ trait MessageResolver {
   /**
     * Convert the message to a string using the locale of the resolver.
     */
-  def toNLS(msg: Message)(implicit translated: Position)
+  def toNLS(msg: Message)(implicit translated: Position): Unit
 
   /**
     * Trace the message
@@ -67,6 +67,6 @@ trait MessageResolver {
     * @param msg
     * @param logged - where the msg was logged
     */
-  def log(logger: Logger, level: Level, msg: Message)(implicit logged: Position)
+  def log(logger: Logger, level: Level, msg: Message)(implicit logged: Position): Unit
 
 }

@@ -20,7 +20,7 @@ object Messages {
       RESOURCE_BUNDLE.getString(key);
     } catch {
       case _: MissingResourceException =>
-        '!' + key + '!';
+        s"!{key}!"
     }
   }
 
@@ -29,7 +29,7 @@ object Messages {
     * @param args
     * @return the NLS message
     */
-  def getString(key: String, args: Any*) {
+  def getString(key: String, args: Any*) = {
     Message.getNLSMessage(
       RESOURCE_BUNDLE,
       BUNDLE_NAME,
@@ -45,7 +45,7 @@ object Messages {
     * @param args
     * @return the {@link Message} object.
     */
-  def get(key: String, args: Any*) {
+  def get(key: String, args: Any*) = {
     new Message(Messages.BUNDLE_NAME, key, args: _*);
   }
 

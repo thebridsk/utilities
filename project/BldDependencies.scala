@@ -19,7 +19,6 @@ object BldDependencies {
       ))
 
   val loggingDeps = Def.setting(scalatestDeps.value ++ Seq(
-      "com.jsuereth" %% "scala-arm" % vScalaArm withSources(),
       "org.scalactic" %%% "scalactic" % vScalactic withSources()
       ))
 

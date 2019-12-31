@@ -735,7 +735,7 @@ class MyFormatter(
                 f = format
 
             }
-            key + Message.getFormattedMessage(null, f, parameters: _*);
+            key + Message.getFormattedMessage(null, f, parameters.toIndexedSeq: _*);
           }
         } else {
           val b = new StringBuilder();

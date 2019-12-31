@@ -242,7 +242,7 @@ abstract class Main(val defaultLevel: Option[Level] = None)
 
   private def parseArgs(args: Array[String]): Int = {
     try {
-      editBuilder { _.args(args) }
+      editBuilder { _.args(args.toIndexedSeq) }
       verify
       showArgs(args)
       0

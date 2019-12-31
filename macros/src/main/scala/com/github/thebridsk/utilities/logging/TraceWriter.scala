@@ -115,7 +115,7 @@ class TraceWriter(
     }
   }
 
-  private def processLine(line: String) {
+  private def processLine(line: String) = {
     if (fLog.isLoggable(level)) {
       fLog.logp(level, "", "", line);
     }

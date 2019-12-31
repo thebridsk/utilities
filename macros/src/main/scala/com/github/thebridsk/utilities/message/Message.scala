@@ -11,6 +11,7 @@ import java.util.MissingResourceException
 import java.util.logging.Level
 import java.util.Arrays
 import com.github.thebridsk.utilities.nls.Messages
+import scala.util.Using
 
 /**
   * @constructor
@@ -123,7 +124,7 @@ object Message {
       msg
     } catch {
       case e: MissingResourceException =>
-        '!' + bundleName + ',' + key + args.mkString("(", ",", ")") + '!'
+        s"""!${bundleName},${key}${args.mkString("(", ",", ")")}!"""
     }
   }
 
@@ -136,9 +137,8 @@ object Message {
   def getFormattedMessage(locale: Locale, fmt: String, args: Any*) = {
 
     if (args != null && args.length > 0) {
-      import resource._
       val b: Appendable = new java.lang.StringBuilder();
-      for (f <- managed(new Formatter(b, locale))) {
+      Using.resource(new Formatter(b, locale)) { f =>
         val a = args.asInstanceOf[Seq[Object]]
         f.format(fmt, a: _*);
       }
@@ -151,7 +151,7 @@ object Message {
   /**
     * @param args
     */
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     if (args.length == 0) {
       System.out.println(
         "Syntax: " + classOf[Message].getName() + " locale key [args]"
@@ -168,7 +168,6 @@ object Message {
       for (l <- Locale.getAvailableLocales()) {
         System.out.println("  " + l.toLanguageTag() + " " + l.getDisplayName());
       }
-      return;
     }
 
     val slocale = args(0);
@@ -184,7 +183,7 @@ object Message {
       }
     val key = args(1);
     val as = args.drop(2)
-    val m = new Message(Messages.BUNDLE_NAME, key, as: _*);
+    val m = new Message(Messages.BUNDLE_NAME, key, as.toIndexedSeq: _*);
     implicit val resolver =
       if (locale == null) MessageResolver()
       else MessageResolver(locale = locale)
