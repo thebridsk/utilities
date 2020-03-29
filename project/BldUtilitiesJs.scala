@@ -17,7 +17,6 @@ object BldUtilitiesJs {
       organization := "com.github.thebridsk",
       name := "utilities-js",
       mainClass := None,
-      isScalaJSProject := true,
 
       parallelExecution in Test := false,
 

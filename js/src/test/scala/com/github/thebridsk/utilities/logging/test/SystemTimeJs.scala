@@ -26,10 +26,10 @@ object SystemTimeJs {
         val d = new Date(time)
 
         if (true) {
-          val hour = d.getHours()
-          val min = d.getMinutes()
-          val sec = d.getSeconds()
-          val milli = d.getMilliseconds()
+          val hour = d.getHours().toInt
+          val min = d.getMinutes().toInt
+          val sec = d.getSeconds().toInt
+          val milli = d.getMilliseconds().toInt
           f"$hour%d:$min%02d:$sec%02d.$milli%03d"
         } else {
 

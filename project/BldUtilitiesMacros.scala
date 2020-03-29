@@ -16,7 +16,6 @@ object BldUtilitiesMacros {
       organization := "com.github.thebridsk",
       name := "utilities-macros",
       mainClass := None,
-      isScalaJSProject := false,
       libraryDependencies ++= loggingDeps.value,
 
       fork in Test := true,

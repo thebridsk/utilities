@@ -16,7 +16,6 @@ object BldUtilitiesJvm {
       organization := "com.github.thebridsk",
       name := "utilities-jvm",
       mainClass := None,
-      isScalaJSProject := false,
       libraryDependencies ++= utilitiesDeps.value,
 
       fork in Test := true,
