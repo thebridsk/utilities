@@ -14,7 +14,6 @@ object BldUtilitiesSJvm {
       organization := "com.github.thebridsk",
       name := "utilities-sjvm",
       mainClass := None,
-      isScalaJSProject := false,
 
       libraryDependencies ++= sharedDeps.value,
 
