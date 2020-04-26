@@ -11,6 +11,8 @@
 
 bloopExportJarClassifiers in Global := Some(Set("sources"))
 
+suppressSbtShellNotification := true
+
 lazy val utilities = BldUtilities.utilities
 
 lazy val `utilities-jvm` = BldUtilitiesJvm.`utilities-jvm`

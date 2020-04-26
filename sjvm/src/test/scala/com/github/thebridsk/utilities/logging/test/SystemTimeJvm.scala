@@ -12,7 +12,7 @@ object SystemTimeJvm {
 
     val st = new SystemTime {
       def currentTimeMillis() = {
-        System.currentTimeMillis()
+        System.currentTimeMillis().toDouble
       }
 
       val fmt = new SimpleDateFormat("HH:mm:ss.SSS")
