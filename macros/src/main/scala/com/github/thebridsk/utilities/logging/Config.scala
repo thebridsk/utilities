@@ -76,6 +76,7 @@ object Config {
   def initialize(): Unit = synchronized {
     if (!initialized) {
       if (fsFileLoggingProperties.isFile()) {
+        // println(s"Initializing from file: ${fsFileLoggingProperties}")
         initializeFromFile(fsFileLoggingProperties)
       } else {
         (findProgramLoggingPropertiesResource() match {
@@ -85,17 +86,40 @@ object Config {
               case Some(is) => Some(is)
               case None     => None
             }
-        }).foreach(resource => {
+        }).map(resource => {
           val (is, name) = resource
           try {
+            // println(s"Initializing from resource: ${name}")
             initializeFrom(is, "Resource " + name)
           } finally {
             is.close()
           }
-        })
+        }).getOrElse {
+          // println(s"Unable to find logging.properties")
+        }
       }
     }
+//    showHandlerForAllLoggers()
     initialized = true
+  }
+
+  def showHandlerForAllLoggers() = {
+    val lm = LogManager.getLogManager()
+    val enum = lm.getLoggerNames()
+    while (enum.hasMoreElements()) {
+      val logger = enum.nextElement()
+      val l = lm.getLogger(logger)
+      showHandlers(l)
+    }
+  }
+
+  def showHandlers( logger: java.util.logging.Logger ) = {
+    println(s"For logger <${logger.getName()}>")
+    logger.getHandlers().foreach { h =>
+      println(s"  Handler: ${h.getClass().getName()}")
+      val f = h.getFormatter()
+      println(s"    Formatter: ${f.getClass().getName()}")
+    }
   }
 
   /**
