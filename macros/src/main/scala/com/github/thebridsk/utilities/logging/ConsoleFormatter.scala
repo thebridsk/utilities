@@ -90,4 +90,9 @@ class ConsoleFormatter(
     defShowKey = defShowKey,
     defAddHeader = defAddHeader,
     defUseThreadName = defUseThreadName
-)
+) {
+  // this is required so the LogManager can create it
+  def this() = {
+    this("HH:mm:ss")
+  }
+}

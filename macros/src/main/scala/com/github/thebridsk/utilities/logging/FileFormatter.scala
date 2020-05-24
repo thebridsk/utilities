@@ -90,4 +90,9 @@ class FileFormatter(
     defShowKey = defShowKey,
     defAddHeader = defAddHeader,
     defUseThreadName = defUseThreadName
-)
+) {
+  // this is required so the LogManager can create it
+  def this() = {
+    this("[yyyy-MM-dd HH:mm:ss:SSS zzz]")
+  }
+}

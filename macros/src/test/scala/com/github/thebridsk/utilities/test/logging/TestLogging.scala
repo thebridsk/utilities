@@ -17,6 +17,9 @@ import com.github.thebridsk.utilities.test.logging.CaptureStdOutAndErr.RunWithCa
 import com.github.thebridsk.utilities.logging.ConsoleHandler
 import com.github.thebridsk.utilities.classpath.ClassPath
 import com.github.thebridsk.utilities.logging.MsgFormatter
+import com.github.thebridsk.utilities.logging.ConsoleFormatter
+import com.github.thebridsk.utilities.logging.FileFormatter
+import com.github.thebridsk.utilities.logging.Logger
 
 object TestLogging {
 
@@ -101,11 +104,21 @@ class TestLogging extends AnyFlatSpec with Matchers {
     val record = new LogRecord(Level.INFO, "Testing")
     record.setLoggerName("Test")
 
-//    dateFmt, threadLen, loggerNameLen, useFakeDate, useResource, useMethodName, addHeader, useLevel
     val formatter = new SimpleConsoleFormatter
 
     val msg = formatter.format(record)
     msg mustBe "Testing"+lineend
+  }
+
+  it should "format a log record with console formatter" in {
+    Thread.currentThread().setName("TestThread")
+    val record = new LogRecord(Level.INFO, "Testing")
+    record.setLoggerName("Test")
+
+    val formatter = new ConsoleFormatter(defFakeDate = true)
+
+    val msg = formatter.format(record).removeTrailingCRLF()
+    msg mustBe justtime+" I TestThread Testing"
   }
 
   it should "format a log record showing level with simple console formatter" in {
@@ -113,7 +126,6 @@ class TestLogging extends AnyFlatSpec with Matchers {
     val record = new LogRecord(Level.SEVERE, "Testing")
     record.setLoggerName("Test")
 
-//    dateFmt, threadLen, loggerNameLen, useFakeDate, useResource, useMethodName, addHeader, useLevel
     val formatter = new SimpleConsoleFormatter( defFormat="%3$s %7$s" )
 
     val msg = formatter.format(record)
@@ -642,4 +654,21 @@ INFO: Testing""".replace("\n",lineend)+lineend
     msg mustBe "I Testing"
   }}
 
+  it should "show that all the formatters have a constructor with no arguments" in {
+
+    def checkConstructor[T]( cls: Class[T] ) = {
+      withClue( s"Check if ${cls.getName} has constructor with no arguments, required for LogManager to instantiate") {
+        try {
+          cls.getConstructor()
+        } catch {
+          case e: NoSuchMethodException =>
+            fail("Constructor with no arguments not found")
+        }
+      }
+    }
+
+    checkConstructor( classOf[ConsoleFormatter] )
+    checkConstructor( classOf[SimpleConsoleFormatter] )
+    checkConstructor( classOf[FileFormatter] )
+  }
 }
