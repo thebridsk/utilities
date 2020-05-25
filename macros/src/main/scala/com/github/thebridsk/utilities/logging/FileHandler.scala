@@ -141,30 +141,29 @@ class FileHandler(pattern: String = null) extends StreamHandler {
   private def configure(pattern: String) = {
     val cname = getClass().getName();
 
-    fPattern = (if (pattern != null) pattern
-                else
-                  getStringProperty(cname + ".pattern", "%h/trace.%u.%d.log"))
+    fPattern = Option(pattern)
+      .getOrElse(Config.getStringProperty(cname + ".pattern", "%h/trace.%u.%d.log"))
       .replace('\\', '/');
-    fLimit = getIntProperty(cname + ".limit", 0);
+    fLimit = Config.getIntProperty(cname + ".limit", 0);
     if (fLimit < 0) {
       fLimit = 0;
     }
-    fCount = getIntProperty(cname + ".count", 1);
+    fCount = Config.getIntProperty(cname + ".count", 1);
     if (fCount <= 0) {
       fCount = 1;
     }
-    fAppend = getBooleanProperty(cname + ".append", false);
-    setLevel(getLevelProperty(cname + ".level", Level.ALL));
-    setFilter(getClassObjectProperty(classOf[Filter], cname + ".filter", null));
+    fAppend = Config.getBooleanProperty(cname + ".append", false);
+    setLevel(Config.getLevelProperty(cname + ".level", Level.ALL));
+    setFilter(Config.getClassObjectProperty(classOf[Filter], cname + ".filter", null));
     setFormatter(
-      getClassObjectProperty(
+      Config.getClassObjectProperty(
         classOf[Formatter],
         cname + ".formatter",
         new FileFormatter()
       )
     );
     try {
-      setEncoding(getStringProperty(cname + ".encoding", null));
+      setEncoding(Config.getStringProperty(cname + ".encoding", null));
     } catch {
       case ex: Exception =>
         try {
@@ -175,78 +174,6 @@ class FileHandler(pattern: String = null) extends StreamHandler {
           // assert false;
         }
     }
-  }
-
-  private def getProperty(key: String) = {
-    val manager: LogManager = LogManager.getLogManager();
-    manager.getProperty(key);
-  }
-
-  private def getStringProperty(key: String, default: String) = {
-    val value = getProperty(key);
-    if (value != null) {
-      value;
-    } else {
-      default
-    }
-  }
-
-  private def getLevelProperty(key: String, default: Level): Level = {
-    val value = getProperty(key);
-    if (value != null) {
-      try {
-        return Level.parse(value);
-      } catch {
-        case _: IllegalArgumentException =>
-        // ignore errors, return default
-      }
-    }
-    return default
-  }
-
-  private def getBooleanProperty(key: String, default: Boolean): Boolean = {
-    val value = getProperty(key);
-    if (value != null && value.length() > 0) {
-      if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("1")) {
-        return true;
-      }
-      if (value.equalsIgnoreCase("false") || value.equalsIgnoreCase("0")) {
-        return false;
-      }
-    }
-    return default;
-  }
-
-  private def getIntProperty(key: String, default: Int): Int = {
-    def value = getProperty(key);
-    if (value != null) {
-      try {
-        return Integer.parseInt(value);
-      } catch {
-        case _: NumberFormatException =>
-        // ignore errors, use default
-      }
-    }
-    return default;
-  }
-
-  private def getClassObjectProperty[T](
-      cls: Class[T],
-      key: String,
-      default: T
-  ): T = {
-    def value = getProperty(key);
-    if (value != null) {
-      try {
-        val keyCls =
-          getClass().getClassLoader().loadClass(value).asSubclass(cls);
-        return keyCls.getDeclaredConstructor().newInstance();
-      } catch {
-        case _: Exception =>
-        // ignore errors, use default
-      }
-    }
-    return default;
   }
 
   /* (non-Javadoc)

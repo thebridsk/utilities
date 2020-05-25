@@ -69,7 +69,7 @@ case class MessageResolver(
 ) {
 
   private def rb(msg: Message) = {
-    val useClassLoader = if (loader == null) getClass.getClassLoader else loader
+    val useClassLoader = Option(loader).getOrElse( getClass.getClassLoader )
     if (control == null)
       ResourceBundle.getBundle(msg.bundle, locale, useClassLoader)
     else ResourceBundle.getBundle(msg.bundle, locale, useClassLoader, control)

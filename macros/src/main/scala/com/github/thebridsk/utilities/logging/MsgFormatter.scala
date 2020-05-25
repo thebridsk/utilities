@@ -42,12 +42,6 @@ object MsgFormatter {
 
   private val className = classOf[MsgFormatter].getName()
 
-  def getLoggingProperty( name: String ) = {
-    Option(
-      manager.getProperty( name )
-    )
-  }
-
   /**
     * @return the trace specification
     */
@@ -88,8 +82,7 @@ object MsgFormatter {
         .append("Java VM name = ")
         .append(System.getProperty("java.vm.name"))
         .append(sepChar)
-      version = System.getProperty("java.fullversion")
-      if (version == null) version = System.getProperty("java.runtime.version")
+      version = Option(System.getProperty("java.fullversion")).getOrElse( System.getProperty("java.runtime.version") )
       builder.append("Java Version = ").append(version).append(sepChar)
       // builder.append("Java Compiler = ").append(System.getProperty("java.compiler")   ).append(sepChar)
       Config.getprogramClassLoader() match {
@@ -517,15 +510,17 @@ class MsgFormatter(
   lazy val thisClassName = getClass().getName
 
   def getProp(suffix: String, default: String): String = {
-    getLoggingProperty(s"${thisClassName}.${suffix}").getOrElse {
-      getLoggingProperty(s"${className}.${suffix}").getOrElse(default)
-    }
+    Config.getStringProperty(
+      s"${thisClassName}.${suffix}",
+      Config.getStringProperty(s"${className}.${suffix}", default)
+    )
   }
 
   def getPropBoolean(suffix: String, default: Boolean): Boolean = {
-    getLoggingProperty(s"${thisClassName}.${suffix}").map(_.toBoolean).getOrElse {
-      getLoggingProperty(s"${className}.${suffix}").map(_.toBoolean).getOrElse(default)
-    }
+    Config.getBooleanProperty(
+      s"${thisClassName}.${suffix}",
+      Config.getBooleanProperty(s"${className}.${suffix}", default)
+    )
   }
 
 }
