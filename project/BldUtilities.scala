@@ -23,6 +23,33 @@ object BldUtilities {
 
   import ReleaseTransformations.{setReleaseVersion => _, setNextVersion => _, _}
 
+  val setOptimize = Command.command(
+    "setOptimize",
+    "turn on scalac optimization for all projects",
+    "turn on scalac optimization for all projects"
+  )( turnOnOptimize _)
+
+  def turnOnOptimize( state: State ) = {
+    val extracted = Project extract state
+    import extracted._
+    println("Turning on optimization in all projects")
+    //append returns state with updated Foo
+    appendWithoutSession(
+      structure.allProjectRefs.map{ p =>
+        println(s"  Turning on in {${p.build}}${p.project}")
+        scalacOptions in p ++= Seq(
+          "-opt:l:inline",
+          "-opt-inline-from:**"
+        )
+      },
+      state
+    )
+  }
+
+  lazy val releaseOptimize = ReleaseStep(
+    action = turnOnOptimize
+  )
+
   lazy val releaseCheck = { st: State =>
     println("Checking for release")
   //  sys.error("failed check for release")
@@ -51,6 +78,8 @@ object BldUtilities {
       BldUtilitiesSJvm.`utilities-sjvm`
     )
     .settings(
+
+      commands ++= Seq( setOptimize ),
 
       mydist := Def
         .sequential(
@@ -88,6 +117,7 @@ object BldUtilities {
         commitReleaseVersion, // : ReleaseStep, performs the initial git checks
         tagRelease, // : ReleaseStep
         recalculateVersion, // : ReleaseStep
+        releaseOptimize,
         publishRelease, // : ReleaseStep, custom
         setNextVersion, // : ReleaseStep
         commitNextVersion // : ReleaseStep

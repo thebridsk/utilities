@@ -254,7 +254,7 @@ object MyReleaseVersion {
       val currentBranch = extracted.get(gitCurrentBranch)
       if (currentBranch != releaseFromBranch)
         sys.error(
-          s"""Must be on ${releaseFromBranch} branch to release, use releaseFromBranch=${currentBranch} env var"""
+          s"""Must be on ${releaseFromBranch} branch to release, use ReleaseFromBranch=${currentBranch} env var"""
         )
       st
     }
