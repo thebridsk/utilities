@@ -149,8 +149,7 @@ object Config {
       val is = fsProgramClassLoader
         .getOrElse(getClass.getClassLoader)
         .getResourceAsStream(resource)
-      if (is == null) None
-      else Some((is, resource))
+      Option(is).map((_, resource))
     } catch {
       case _: Exception => None
     }
@@ -217,8 +216,7 @@ object Config {
       loader: ClassLoader = null
   ): Unit = synchronized {
     val l = {
-      if (loader != null) loader
-      else fsProgramClassLoader.getOrElse(getClass.getClassLoader)
+      Option( loader ).getOrElse( fsProgramClassLoader.getOrElse(getClass.getClassLoader) )
     }
 
     val is = l.getResourceAsStream(resource)
@@ -337,6 +335,73 @@ object Config {
     } else {
       fqname.substring(0, classIndex + 1).replace('.', '/');
     }
+  }
+
+  def getProperty(key: String) = {
+    val manager: LogManager = LogManager.getLogManager();
+    manager.getProperty(key);
+  }
+
+  def getStringProperty(key: String, default: => String) = {
+    Option( getProperty(key) ).getOrElse(default)
+  }
+
+  def getLevelProperty(key: String, default: => Level): Level = {
+    val value = getProperty(key);
+    if (value != null) {
+      try {
+        return Level.parse(value);
+      } catch {
+        case _: IllegalArgumentException =>
+        // ignore errors, return default
+      }
+    }
+    return default
+  }
+
+  def getBooleanProperty(key: String, default: => Boolean): Boolean = {
+    val value = getProperty(key);
+    if (value != null && value.length() > 0) {
+      if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("1")) {
+        return true;
+      }
+      if (value.equalsIgnoreCase("false") || value.equalsIgnoreCase("0")) {
+        return false;
+      }
+    }
+    return default;
+  }
+
+  def getIntProperty(key: String, default: => Int): Int = {
+    def value = getProperty(key);
+    if (value != null) {
+      try {
+        return Integer.parseInt(value);
+      } catch {
+        case _: NumberFormatException =>
+        // ignore errors, use default
+      }
+    }
+    return default;
+  }
+
+  def getClassObjectProperty[T](
+      cls: Class[T],
+      key: String,
+      default: => T
+  ): T = {
+    def value = getProperty(key);
+    if (value != null) {
+      try {
+        val keyCls =
+          getClass().getClassLoader().loadClass(value).asSubclass(cls);
+        return keyCls.getDeclaredConstructor().newInstance();
+      } catch {
+        case _: Exception =>
+        // ignore errors, use default
+      }
+    }
+    return default;
   }
 
 }
