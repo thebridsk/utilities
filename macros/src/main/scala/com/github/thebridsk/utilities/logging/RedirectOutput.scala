@@ -15,7 +15,7 @@ object RedirectOutput {
   private var fsTraceOut: TraceOutputStream = null;
   private var fsTraceErr: TraceOutputStream = null;
 
-  private def getLevel(l: Level, default: Level) = if (l == null) default else l
+  private def getLevel(l: Level, default: Level) = Option(l).getOrElse(default)
 
   /**
     * Capture and trace standard out and standard error calls.

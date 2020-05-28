@@ -117,7 +117,7 @@ class TraceOutputStream(
 
   private def processLine(line: String) = {
     if (fLog.isLoggable(level)) {
-      fLog.logp(level, "", "", line);
+      fLog.logp(level, "", "", "%s", line);
     }
   }
 

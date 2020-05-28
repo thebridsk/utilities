@@ -14,7 +14,7 @@ branches:
   - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
 
 script:
-- sbt clean distribution:travis
+- sbt setOptimize clean distribution:travis
 
 deploy:
   provider: releases
