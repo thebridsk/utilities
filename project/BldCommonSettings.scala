@@ -88,10 +88,6 @@ object BldCommonSettings {
         }
 
       }).evaluated,
-      // libraryDependencies += scalaVersion(
-      //   "org.scala-lang" % "scala-compiler" % _
-      // ).value
-      //  EclipseKeys.useProjectId := true,
     )
 
   /**
