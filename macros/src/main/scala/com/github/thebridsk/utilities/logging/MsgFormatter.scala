@@ -1,9 +1,10 @@
 package com.github.thebridsk.utilities.logging
 
 import java.util.{ logging => jul }
-import java.{ text => jt, util => ju, lang => jl, io => ji }
+import java.{ text => jt, time => jtime, util => ju, lang => jl, io => ji }
 import com.github.thebridsk.utilities.classpath.ClassPath
 import com.github.thebridsk.utilities.message.Message
+import java.time.Instant
 
 object MsgFormatterDefaults {
 
@@ -288,11 +289,15 @@ class MsgFormatter(
   lazy val useThreadName = getPropBoolean( propUseThreadName, defUseThreadName)
 
   lazy val dateFmt = {
-    val df = new jt.SimpleDateFormat( dateFormat )
-    if (timezone != null) {
-      df.setTimeZone(ju.TimeZone.getTimeZone(timezone))
-    }
-    df
+    val df = jtime.format.DateTimeFormatter.ofPattern( dateFormat )
+    if (timezone != null) df.withZone( jtime.ZoneId.of(timezone) )
+    else df
+
+    // val df = new jt.SimpleDateFormat( dateFormat )
+    // if (timezone != null) {
+    //   df.setTimeZone(ju.TimeZone.getTimeZone(timezone))
+    // }
+    // df
   }
 
   def getShortName( fullname: String ) = {
@@ -339,7 +344,7 @@ class MsgFormatter(
       }
     val timestamp =
       dateFmt.format(
-        new ju.Date( if (fakeDate) 0 else record.getMillis() )
+        Instant.ofEpochMilli( if (fakeDate) 0 else record.getMillis() )
       )
 
     val msg = formatMessage(record)

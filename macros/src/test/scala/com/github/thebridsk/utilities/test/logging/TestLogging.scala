@@ -47,8 +47,8 @@ class TestLogging extends AnyFlatSpec with Matchers {
 
   behavior of "MyFormatter in utilities-macros"
 
-  val fulldate = new SimpleDateFormat("MM-dd HH:mm:ss").format( new Date(0))
-  val justtime = new SimpleDateFormat("HH:mm:ss").format( new Date(0))
+  // val fulldate = new SimpleDateFormat("MM-dd HH:mm:ss").format( new Date(0))
+  // val justtime = new SimpleDateFormat("HH:mm:ss").format( new Date(0))
 
   it should "format a log record" in {
     Thread.currentThread().setName("TestThread")
