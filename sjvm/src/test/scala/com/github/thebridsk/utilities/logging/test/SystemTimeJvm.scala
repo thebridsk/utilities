@@ -5,10 +5,11 @@ import com.github.thebridsk.utilities.logging.impl.LoggerImplFactory
 import java.text.DateFormat
 import java.util.Date
 import java.time.format.DateTimeFormatter
+import java.time.ZoneId
 
 object SystemTimeJvm {
 
-  val fmt = DateTimeFormatter.ofPattern("HH:mm:ss.SSS")
+  val fmt = DateTimeFormatter.ofPattern("HH:mm:ss.SSS").withZone(ZoneId.systemDefault())
 
   def apply() = {
 

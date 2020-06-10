@@ -267,7 +267,7 @@ import MsgFormatter._
   * @param defUseThreadName
   */
 class MsgFormatter(
-  defDateFormat: String = defaultDateFormat,
+  defDateFormat: String,
   defTimezone: String = defaultTimezone,
   defFormat: String = defaultFormat,
   defFakeDate: Boolean = defaultFakeDate,
@@ -277,6 +277,8 @@ class MsgFormatter(
   defAddHeader: Boolean = defaultAddHeader,
   defUseThreadName: Boolean = defaultUseThreadName,
 ) extends jul.Formatter {
+
+  def this() = this(defaultDateFormat)
 
   lazy val dateFormat = getProp( propDateFormat, defDateFormat)
   lazy val timezone = getProp( propTimezone, defTimezone)
@@ -288,17 +290,15 @@ class MsgFormatter(
   lazy val addHeader = getPropBoolean( propAddHeader, defAddHeader)
   lazy val useThreadName = getPropBoolean( propUseThreadName, defUseThreadName)
 
-  lazy val dateFmt = {
-    val df = jtime.format.DateTimeFormatter.ofPattern( dateFormat )
-    if (timezone != null) df.withZone( jtime.ZoneId.of(timezone) )
-    else df
-
-    // val df = new jt.SimpleDateFormat( dateFormat )
-    // if (timezone != null) {
-    //   df.setTimeZone(ju.TimeZone.getTimeZone(timezone))
-    // }
-    // df
-  }
+  lazy val dateFmt =
+    jtime.format.DateTimeFormatter.ofPattern( dateFormat )
+        .withZone(
+          if (timezone != null) {
+            jtime.ZoneId.of(timezone)
+          } else {
+            jtime.ZoneId.systemDefault()
+          }
+        )
 
   def getShortName( fullname: String ) = {
     val sc = fullname.substring(fullname.lastIndexOf('.') + 1)

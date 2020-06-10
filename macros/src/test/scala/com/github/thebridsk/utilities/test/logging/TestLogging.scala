@@ -4,7 +4,6 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers
 import java.util.logging.LogRecord
 import java.util.logging.Level
-import com.github.thebridsk.utilities.logging.MyFormatter
 import java.util.TimeZone
 import com.github.thebridsk.utilities.logging.SimpleConsoleFormatter
 import java.io.StringReader
@@ -20,6 +19,9 @@ import com.github.thebridsk.utilities.logging.MsgFormatter
 import com.github.thebridsk.utilities.logging.ConsoleFormatter
 import com.github.thebridsk.utilities.logging.FileFormatter
 import com.github.thebridsk.utilities.logging.Logger
+import java.time.format.DateTimeFormatter
+import java.time.ZoneId
+import java.time.Instant
 
 object TestLogging {
 
@@ -45,59 +47,10 @@ class TestLogging extends AnyFlatSpec with Matchers {
 
   val runningInEclipse = sys.props.get("RunningInEclipse").map(s=>true).getOrElse(false)
 
-  behavior of "MyFormatter in utilities-macros"
+  behavior of "logging formatters in utilities-macros"
 
-  // val fulldate = new SimpleDateFormat("MM-dd HH:mm:ss").format( new Date(0))
-  // val justtime = new SimpleDateFormat("HH:mm:ss").format( new Date(0))
-
-  it should "format a log record" in {
-    Thread.currentThread().setName("TestThread")
-    val record = new LogRecord(Level.INFO, "Testing")
-    record.setLoggerName("Test")
-
-//    dateFmt, threadLen, loggerNameLen, useFakeDate, useResource, useMethodName, addHeader, useLevel
-    val formatter = new MyFormatter("MM-dd HH:mm:ss",10,10,true,false,false,false,true)
-
-    val msg = formatter.format(record).removeTrailingCRLF()
-    msg must fullyMatch regex ( fulldate+""" \d{10} Test       I Testing""" )
-  }
-
-  it should "format an entry log record" in {
-    Thread.currentThread().setName("TestThread")
-    val record = new LogRecord(Level.FINER, "ENTRY {Testing}")
-    record.setLoggerName("Test")
-
-//    dateFmt, threadLen, loggerNameLen, useFakeDate, useResource, useMethodName, addHeader, useLevel
-    val formatter = new MyFormatter("MM-dd HH:mm:ss",10,10,true,false,false,false,true)
-
-    val msg = formatter.format(record).removeTrailingCRLF()
-    msg must fullyMatch regex ( fulldate+""" \d{10} Test       > ENTRY \{Testing\}""" )
-  }
-
-  it should "format a log record with parameters" in {
-    Thread.currentThread().setName("TestThread")
-    val record = new LogRecord(Level.INFO, "Testing %s=%d")
-    record.setParameters(Array[Object]("arg",1.asInstanceOf[Object]))
-    record.setLoggerName("Test")
-
-//    dateFmt, threadLen, loggerNameLen, useFakeDate, useResource, useMethodName, addHeader, useLevel
-    val formatter = new MyFormatter("HH:mm:ss",10,10,true,false,false,false,true)
-
-    val msg = formatter.format(record).removeTrailingCRLF()
-    msg must fullyMatch regex ( justtime+""" \d{10} Test       I Testing arg=1""" )
-  }
-
-  it should "format a log record with shorter thread and logger names" in {
-    Thread.currentThread().setName("TestThread")
-    val record = new LogRecord(Level.INFO, "Testing")
-    record.setLoggerName("Test")
-
-//    dateFmt, threadLen, loggerNameLen, useFakeDate, useResource, useMethodName, addHeader, useLevel
-    val formatter = new MyFormatter("MM-dd HH:mm:ss",5,8,true,false,false,false,true)
-
-    val msg = formatter.format(record).removeTrailingCRLF()
-    msg must fullyMatch regex ( fulldate+""" \d{5} Test     I Testing""" )
-  }
+  val fulldate = DateTimeFormatter.ofPattern("MM-dd HH:mm:ss").withZone(ZoneId.systemDefault()).format( Instant.ofEpochMilli(0) )
+  val justtime = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.systemDefault()).format( Instant.ofEpochMilli(0) )
 
   it should "format a log record with simple console formatter" in {
     Thread.currentThread().setName("TestThread")
@@ -150,54 +103,6 @@ class TestLogging extends AnyFlatSpec with Matchers {
   }
 
 
-  it should "format a log record with empty in config" in withLoggerConfiguration(
-      """"""
-      ) { () => {
-    Thread.currentThread().setName("TestThread")
-    val record = new LogRecord(Level.INFO, "Testing")
-    record.setLoggerName("Test")
-
-//    dateFmt, threadLen, loggerNameLen, useFakeDate, useResource, useMethodName, addHeader, useLevel
-    val formatter = new MyFormatter("MM-dd HH:mm:ss",10,10,true,false,false,false,true)
-
-    val msg = formatter.format(record).removeTrailingCRLF()
-    msg must fullyMatch regex ( fulldate+""" \d{10} Test       I Testing""" )
-  }}
-
-  it should "format a log record with threadLen=-1 in config" in withLoggerConfiguration(
-      """
-      com.github.thebridsk.utilities.logging.MyFormatter.threadLen = -1
-       """
-      ) { () => {
-    Thread.currentThread().setName("TestThread")
-    val record = new LogRecord(Level.INFO, "Testing")
-    record.setLoggerName("Test")
-
-//    dateFmt, threadLen, loggerNameLen, useFakeDate, useResource, useMethodName, addHeader, useLevel
-    val formatter = new MyFormatter("MM-dd HH:mm:ss",10,10,true,false,false,false,true)
-
-    val msg = formatter.format(record)
-    msg mustBe fulldate+" TestThread Test       I Testing"+lineend
-  }}
-
-  it should "format a log record with threadLen=-1 and EST in config" in withLoggerConfiguration(
-      """
-      com.github.thebridsk.utilities.logging.MyFormatter.threadLen = -1
-      com.github.thebridsk.utilities.logging.MyFormatter.timezone = UTC
-      com.github.thebridsk.utilities.logging.MyFormatter.dateFormat = YYYY-MM-dd HH:mm:ss
-       """
-      ) { () => {
-    Thread.currentThread().setName("TestThread")
-    val record = new LogRecord(Level.INFO, "Testing")
-    record.setLoggerName("Test")
-
-//    dateFmt, threadLen, loggerNameLen, useFakeDate, useResource, useMethodName, addHeader, useLevel
-    val formatter = new MyFormatter(null,10,10,true,false,false,false,true)
-
-    val msg = formatter.format(record)
-    msg mustBe "1970-01-01 00:00:00 TestThread Test       I Testing"+lineend
-  }}
-
   behavior of "ConsoleHandler in utilities-macros"
 
   def withCaptureOutput( f: RunWithCapture ): Unit = {
@@ -208,9 +113,9 @@ class TestLogging extends AnyFlatSpec with Matchers {
     withCaptureOutput { capture => {
       withLoggerConfiguration(
         """
-        com.github.thebridsk.utilities.logging.MyFormatter.threadLen = -1
-        com.github.thebridsk.utilities.logging.MyFormatter.timezone = UTC
-        com.github.thebridsk.utilities.logging.MyFormatter.dateFormat = MM-dd HH:mm:ss
+        com.github.thebridsk.utilities.logging.MsgFormatter.format = %1$s %2$-10s %4$-10s %3$s %7$s
+        com.github.thebridsk.utilities.logging.MsgFormatter.timezone = UTC
+        com.github.thebridsk.utilities.logging.MsgFormatter.dateFormat = MM-dd HH:mm:ss
          """
         ) { () => {
           Thread.currentThread().setName("TestThread")
@@ -218,7 +123,15 @@ class TestLogging extends AnyFlatSpec with Matchers {
           record.setLoggerName("Test")
 
       //    dateFmt, threadLen, loggerNameLen, useFakeDate, useResource, useMethodName, addHeader, useLevel
-          val formatter = new MyFormatter(null,10,10,true,false,false,false,true)
+          val formatter = new MsgFormatter(
+            "HH:mm:ss",
+            defFakeDate = true,
+            defFmtMsg = true,
+            defUseResource = true,
+            defShowKey = false,
+            defAddHeader = false,
+            defUseThreadName = true
+          )
 
           val handler = new ConsoleHandler
           handler.setFormatter(formatter)
@@ -241,9 +154,9 @@ class TestLogging extends AnyFlatSpec with Matchers {
     withCaptureOutput { capture => {
       withLoggerConfiguration(
         """
-        com.github.thebridsk.utilities.logging.MyFormatter.threadLen = -1
-        com.github.thebridsk.utilities.logging.MyFormatter.timezone = UTC
-        com.github.thebridsk.utilities.logging.MyFormatter.dateFormat = MM-dd HH:mm:ss
+        com.github.thebridsk.utilities.logging.MsgFormatter.format = %1$s %2$-10s %4$-10s %3$s %7$s
+        com.github.thebridsk.utilities.logging.MsgFormatter.timezone = UTC
+        com.github.thebridsk.utilities.logging.MsgFormatter.dateFormat = MM-dd HH:mm:ss
          """
         ) { () => {
           Thread.currentThread().setName("TestThread")
@@ -251,7 +164,15 @@ class TestLogging extends AnyFlatSpec with Matchers {
           record.setLoggerName("Test")
 
       //    dateFmt, threadLen, loggerNameLen, useFakeDate, useResource, useMethodName, addHeader, useLevel
-          val formatter = new MyFormatter(null,10,10,true,false,false,false,true)
+          val formatter = new MsgFormatter(
+            "HH:mm:ss",
+            defFakeDate = true,
+            defFmtMsg = true,
+            defUseResource = true,
+            defShowKey = false,
+            defAddHeader = false,
+            defUseThreadName = true
+          )
 
           val handler = new ConsoleHandler
 
@@ -296,59 +217,23 @@ INFO: Testing""".replace("\n",lineend)+lineend
     val loader = ClassLoader.getSystemClassLoader
     println(ClassPath.show("SystemClassLoader ", loader))
     try {
-      val clz = loader.loadClass("com.github.thebridsk.utilities.logging.MyFormatter")
+      val clz = loader.loadClass("com.github.thebridsk.utilities.logging.MsgFormatter")
       val f = clz.getDeclaredConstructor().newInstance()
-      f.getClass().getName mustBe "com.github.thebridsk.utilities.logging.MyFormatter"
-      if (runningInEclipse) fail("Should not find MyFormatter, if running in sbt,  unset System Property RunningInEclipse")
+      f.getClass().getName mustBe "com.github.thebridsk.utilities.logging.MsgFormatter"
+      if (runningInEclipse) fail("Should not find MsgFormatter, if running in sbt,  unset System Property RunningInEclipse")
     } catch {
       case _: ClassNotFoundException =>
         // this is what we are expecting under eclipse and sbt
-        if (!runningInEclipse) fail("Failed to find MyFormatter, if running in eclipse, set System Property RunningInEclipse to anything")
+        if (!runningInEclipse) fail("Failed to find MsgFormatter, if running in eclipse, set System Property RunningInEclipse to anything")
       case x: Exception =>
-        println("Exception loading myformatter: "+x)
+        println("Exception loading MsgFormatter: "+x)
         x.printStackTrace(System.out)
         throw x
     }
 
   }
 
-  it should "print log record to stdout with MyFormatter" in {
-    withCaptureOutput { capture => {
-      withLoggerConfiguration(
-        """
-        com.github.thebridsk.utilities.logging.ConsoleHandler.level=ALL
-        com.github.thebridsk.utilities.logging.ConsoleHandler.formatter=com.github.thebridsk.utilities.logging.MyFormatter
-        com.github.thebridsk.utilities.logging.MyFormatter.fakeDate = true
-        com.github.thebridsk.utilities.logging.MyFormatter.threadLen = -1
-        com.github.thebridsk.utilities.logging.MyFormatter.loggerNameLen = 0
-        com.github.thebridsk.utilities.logging.MyFormatter.useMethodName = false
-        com.github.thebridsk.utilities.logging.MyFormatter.timezone = UTC
-        com.github.thebridsk.utilities.logging.MyFormatter.dateFormat = MM-dd HH:mm:ss
-         """
-        ) { () => {
-
-          Thread.currentThread().setName("ThreadName")
-          val record = new LogRecord(Level.INFO, "TestingMessage")
-          record.setLoggerName("LoggerName")
-
-      //    dateFmt, threadLen, loggerNameLen, useFakeDate, useResource, useMethodName, addHeader, useLevel
-          val formatter = new MyFormatter(null,10,10,true,false,false,false,true)
-
-          val handler = new ConsoleHandler
-          handler.setFormatter(formatter)
-
-          handler.publish(record)
-
-          val expected = "01-01 00:00:00 ThreadName I TestingMessage"+lineend
-
-          val got = capture.getStdout()
-//          capture.oldStdOut.println( "got: "+got)
-          got mustBe expected
-        }}
-    }}
-  }
-
-  behavior of "MyFormatter in utilities-macros"
+  behavior of "MsgFormatter in utilities-macros"
 
   it should "format a log record with MsgFormatter" in {
     Thread.currentThread().setName("TestThread")
