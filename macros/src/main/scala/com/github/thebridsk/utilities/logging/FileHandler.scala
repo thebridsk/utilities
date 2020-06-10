@@ -5,7 +5,6 @@ import java.io.File
 import java.io.FileOutputStream
 import java.nio.channels.FileChannel
 import java.io.IOException
-import java.text.SimpleDateFormat
 import com.github.thebridsk.utilities.stream.MeteredOutputStream
 import java.util.ArrayList
 import java.util.Arrays
@@ -21,6 +20,9 @@ import java.util.logging.ErrorManager
 import java.util.Date
 import java.io.FilenameFilter
 import java.util.regex.Pattern
+import java.time.format.DateTimeFormatter
+import java.time.Instant
+import java.time.ZoneId
 
 /**
   * Simple file logging <tt>Handler</tt>.
@@ -35,7 +37,7 @@ import java.util.regex.Pattern
   * By default buffering is enabled in the IO libraries but each log record is
   * flushed out when it is complete.
   * <p>
-  * By default the {@link MyFormatter} class is used for formatting.
+  * By default the {@link FileFormatter} class is used for formatting.
   * <p>
   * <b>Configuration:</b> By default each <tt>FileHandler</tt> is initialized
   * using the following <tt>LogManager</tt> configuration properties. If
@@ -100,7 +102,7 @@ class FileHandler(pattern: String = null) extends StreamHandler {
 
   private val MAX_UNIQUE = 100;
 
-  private val fSDF = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss.SSS");
+  private val fSDF = DateTimeFormatter.ofPattern("yyyy.MM.dd.HH.mm.ss.SSS").withZone( ZoneId.systemDefault() );
   private val dateRegex = """\d\d\d\d\.\d\d\.\d\d\.\d\d\.\d\d\.\d\d\.\d\d\d"""
 
   private var fUnique = -1;
@@ -233,7 +235,7 @@ class FileHandler(pattern: String = null) extends StreamHandler {
       d = new Date();
     }
     lastDate = d;
-    fSDF.format(d)
+    fSDF.format( Instant.ofEpochMilli( d.getTime() ))
   }
 
   private def openFiles(): Unit = {

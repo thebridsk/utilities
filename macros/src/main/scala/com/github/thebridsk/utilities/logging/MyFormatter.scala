@@ -7,7 +7,6 @@ package com.github.thebridsk.utilities.logging
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.HashMap
 import java.util.ResourceBundle
@@ -20,6 +19,9 @@ import java.util.logging.LogRecord
 
 import com.github.thebridsk.utilities.classpath.ClassPath
 import com.github.thebridsk.utilities.message.Message
+import java.time.format.DateTimeFormatter
+import java.time.ZoneId
+import java.time.Instant
 
 private object MyFormatterDefaults {
   val CLASS_NAME = classOf[MyFormatter].getName();
@@ -391,19 +393,22 @@ class MyFormatter(
     }
   }
 
-  private val dateFmt: DateFormat = new SimpleDateFormat(
-    getProp(fsPropDateFmt, dateFmtDef)
-  )
+  private val dateFmt = {
+    val d = DateTimeFormatter.ofPattern(
+      getProp(fsPropDateFmt, dateFmtDef)
+    )
 
-  // Read the timezone override.
-  {
+    // Read the timezone override.
+
     // Get the timezone override. First try the class that we
     // constructed.
     val timeZoneStr = getProp(fsPropTimeZone, null);
     // If we have it, set it. If we don't have it, let it default to
     // local.
     if (null != timeZoneStr) {
-      dateFmt.setTimeZone(TimeZone.getTimeZone(timeZoneStr));
+      d.withZone( ZoneId.of(timeZoneStr))
+    } else {
+      d
     }
   }
 
@@ -478,7 +483,7 @@ class MyFormatter(
 
   private def getLinePrefix(record: LogRecord): String = {
 
-    val dateStr = dateFmt.format(getDate(record));
+    val dateStr = dateFmt.format( Instant.ofEpochMilli( getDate(record).getTime() ));
     val retVal = if (dateStr.length() > 0) dateStr + " " else "";
 
     val threadStr =
