@@ -65,7 +65,8 @@ object BldUtilities {
       .run(dependencyUpdates)
       .run("reload plugins")
       .run(dependencyUpdates)
-      .run("reload return")
+      // .run("reload return")
+    state
   }
 
   lazy val releaseOptimize = ReleaseStep(
