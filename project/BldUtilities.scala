@@ -2,6 +2,7 @@
 import sbt._
 import Keys._
 import sbtrelease.ReleasePlugin.autoImport._
+import com.timushev.sbt.updates.UpdatesPlugin.autoImport._
 import com.typesafe.sbt.GitPlugin.autoImport._
 import com.typesafe.sbt.GitVersioning
 import com.typesafe.sbt.GitBranchPrompt
@@ -46,6 +47,27 @@ object BldUtilities {
     )
   }
 
+  implicit class WrapState( val state: State ) extends AnyVal {
+    def run[T]( key: TaskKey[T] ) = {
+      releaseStepTask(key)(state)
+    }
+    def run( command: String ) = {
+      releaseStepCommandAndRemaining(command)(state)
+    }
+  }
+
+  val updateCheck = Command.command(
+    "updateCheck",
+    "Check for updates",
+    "Check for updates"
+  ) { state =>
+    state
+      .run(dependencyUpdates)
+      .run("reload plugins")
+      .run(dependencyUpdates)
+      .run("reload return")
+  }
+
   lazy val releaseOptimize = ReleaseStep(
     action = turnOnOptimize
   )
@@ -79,7 +101,7 @@ object BldUtilities {
     )
     .settings(
 
-      commands ++= Seq( setOptimize ),
+      commands ++= Seq( setOptimize, updateCheck ),
 
       mydist := Def
         .sequential(
