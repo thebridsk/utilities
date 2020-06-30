@@ -282,6 +282,14 @@ object MyReleaseVersion {
       val extracted = Project.extract(st)
       extracted.runTask(key,st)._2
     }
+
+    // def run[T]( key: TaskKey[T] ) = {
+    //   releaseStepTask(key)(st)
+    // }
+
+    def run( command: String ) = {
+      releaseStepCommandAndRemaining(command)(st)
+    }
   }
 
   def gitStatus: ReleaseStep = { st: State =>
@@ -303,6 +311,14 @@ object MyReleaseVersion {
         sys.error(
           s"""Must be on ${releaseFromBranch} branch to release, use ReleaseFromBranch=${currentBranch} env var"""
         )
+      (try {
+        val commitid = st.gitExpectError("rev-parse", "-q", "--verify", releaseBranch)
+        Some(s"Branch $releaseBranch should not exist, found at commit id: $commitid")
+      } catch {
+        case x: RuntimeException =>
+          st.log.debug(s"Branch $releaseBranch does not exist")
+          None
+      }).map( e => scala.sys.error(e))
       st
     }
   )
@@ -324,6 +340,7 @@ object MyReleaseVersion {
   def gitPushReleaseBranch: ReleaseStep = ReleaseStep(
     // action
     { st: State =>
+      st.log.debug( s"Running: git push -u origin $releaseBranch")
       st.git("push", "-u", "origin", releaseBranch)
       st
     },
@@ -335,6 +352,13 @@ object MyReleaseVersion {
 
   def getTagFromVersion( v: String ) = s"v$v"
 
+  /**
+    * A release step to push the tag to GitHub.
+    *
+    * The command myrelease-with-defaults must be used to do a release.
+    * This command issues the command "release with-defaults"
+    *
+    */
   def gitPushReleaseTag: ReleaseStep = ReleaseStep(
     // action
     { st: State =>
@@ -342,36 +366,43 @@ object MyReleaseVersion {
         .get(ReleaseKeys.versions)
         .getOrElse(
           sys.error(
-            "No versions are set! Was this release part executed before inquireVersions?"
+            "No versions are set! Was this release executed before running release-inquire-versions?"
           )
         )
       val tagName = getTagFromVersion(vs._1)
+      st.log.debug( s"Running: git push origin $tagName")
       st.git("push", "origin", tagName)
       st
     },
     // check
     { st: State =>
-      // The following does not work.  the ReleaseKeys.version is not set until
-      // the inquireVersions action is executed.
-      //
-      // val vs = st
-      //   .get(ReleaseKeys.versions)
-      //   .getOrElse(
-      //     sys.error(
-      //       "No versions are set! Was this release part executed before inquireVersions?"
-      //     )
-      //   )
-      // val tagName = getTagFromVersion(vs._1)
-      // (try {
-      //   val commitid = st.gitExpectError("rev-parse", "-q", "--verify", tagName)
-      //   Some(s"Tag $tagName should not exist, found at commit id: $commitid")
-      // } catch {
-      //   case x: RuntimeException =>
-      //     st.log.debug(s"Tag $tagName does not exist")
-      //     None
-      // }).map( e => scala.sys.error(e))
+      val vs = inquireVersions.action(st)   // ugly hack
+        .get(ReleaseKeys.versions)
+        .getOrElse(
+          sys.error(
+            "No versions are set! Was this release executed before running release-inquire-versions?"
+          )
+        )
+      val tagName = getTagFromVersion(vs._1)
+      (try {
+        val commitid = st.gitExpectError("rev-parse", "-q", "--verify", tagName)
+        Some(s"Tag $tagName should not exist, found at commit id: $commitid")
+      } catch {
+        case x: RuntimeException =>
+          st.log.debug(s"Tag $tagName does not exist")
+          None
+      }).map( e => scala.sys.error(e))
 
       st
     }
   )
+
+  val releaseWithDefaults = Command.command(
+    "myrelease-with-defaults",
+    "run the 'release with-defaults' command",
+    "run the 'release with-defaults' command"
+  ) { st =>
+    st.run( "release with-defaults" )
+  }
+
 }
