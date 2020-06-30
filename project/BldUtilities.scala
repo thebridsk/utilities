@@ -129,7 +129,7 @@ object BldUtilities {
       //
       // need to update release tag and comment
       //
-      releaseTagName := "v" + git.baseVersion.value,
+      releaseTagName := getTagFromVersion( git.baseVersion.value ),
 
       releaseTagComment := s"Releasing ${git.baseVersion.value}",
 
@@ -146,10 +146,10 @@ object BldUtilities {
         recalculateVersion,
         releaseOptimize,
         publishRelease,  // runs a clean build and test
+        gitPushReleaseTag,  // pushing tag must happen before setNextVersion
         setNextVersion,
         commitNextVersion,
         gitPushReleaseBranch,
-        gitPushReleaseTag
       )
 
     )

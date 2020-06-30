@@ -333,6 +333,8 @@ object MyReleaseVersion {
     }
   )
 
+  def getTagFromVersion( v: String ) = s"v$v"
+
   def gitPushReleaseTag: ReleaseStep = ReleaseStep(
     // action
     { st: State =>
@@ -342,7 +344,14 @@ object MyReleaseVersion {
     },
     // check
     { st: State =>
-      val tagName = st.runTask(releaseTagName)
+      val vs = st
+        .get(ReleaseKeys.versions)
+        .getOrElse(
+          sys.error(
+            "No versions are set! Was this release part executed before inquireVersions?"
+          )
+        )
+      val tagName = getTagFromVersion(vs._1)
       (try {
         val commitid = st.gitExpectError("rev-parse", "-q", "--verify", tagName)
         Some(s"Tag $tagName should not exist, found at commit id: $commitid")
