@@ -1,4 +1,3 @@
-
 import sbt._
 import sbtrelease.Versions
 import sbtrelease.Utilities._
@@ -8,7 +7,7 @@ import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations.{
   setReleaseVersion => _,
   setNextVersion => _,
   _
- }
+}
 
 import com.typesafe.sbt.SbtGit.GitKeys._
 import com.typesafe.sbt.SbtGit.git
@@ -17,38 +16,40 @@ import sbt.Keys._
 import sbtrelease.Vcs
 import sbt.SettingKey
 
+import sys.process.ProcessLogger
+
 /**
- * <code><pre>
- * import ReleaseTransformations.{ setReleaseVersion=>_, setNextVersion=>_, _ }
- * import MyReleaseVersion._
- *
- * val root = project.
- *   settings( versionSetting )
- *
- * enablePlugins(GitVersioning)
- *
- * releaseUseGlobalVersion := false
- * releaseTagName := "v"+git.baseVersion.value
- * releaseTagComment := s"Releasing ${git.baseVersion.value}"
- * releaseCommitMessage := s"Setting version to ${git.baseVersion.value}"
- * releaseNextCommitMessage := s"Setting version to ${git.baseVersion.value}"
- *
- * releaseProcess := Seq[ReleaseStep](
- *     checkSnapshotDependencies,
- *     inquireVersions,
- *     setReleaseVersion,
- *     commitReleaseVersion,
- *     tagRelease,
- *     recalculateVersion,
- *     ...    // clean build test assembly
- *     setNextVersion,
- *     commitNextVersion,
- *     recalculateVersion,
- *     pushChanges
- *   )
- *
- * </pre></code>
- */
+  * <code><pre>
+  * import ReleaseTransformations.{ setReleaseVersion=>_, setNextVersion=>_, _ }
+  * import MyReleaseVersion._
+  *
+  * val root = project.
+  *   settings( versionSetting )
+  *
+  * enablePlugins(GitVersioning)
+  *
+  * releaseUseGlobalVersion := false
+  * releaseTagName := "v"+git.baseVersion.value
+  * releaseTagComment := s"Releasing ${git.baseVersion.value}"
+  * releaseCommitMessage := s"Setting version to ${git.baseVersion.value}"
+  * releaseNextCommitMessage := s"Setting version to ${git.baseVersion.value}"
+  *
+  * releaseProcess := Seq[ReleaseStep](
+  *     checkSnapshotDependencies,
+  *     inquireVersions,
+  *     setReleaseVersion,
+  *     commitReleaseVersion,
+  *     tagRelease,
+  *     recalculateVersion,
+  *     ...    // clean build test assembly
+  *     setNextVersion,
+  *     commitNextVersion,
+  *     recalculateVersion,
+  *     pushChanges
+  *   )
+  *
+  * </pre></code>
+  */
 object MyReleaseVersion {
 
   //
@@ -66,28 +67,28 @@ object MyReleaseVersion {
   private val globalVersionString = "git.baseVersion in ThisBuild := \"%s\""
   private val versionString = "git.baseVersion := \"%s\""
   private def setVersion(selectVersion: Versions => String): ReleaseStep = { st: State =>
-    val vs = st
-      .get(ReleaseKeys.versions)
-      .getOrElse(
-        sys.error(
-          "No versions are set! Was this release part executed before inquireVersions?"
+      val vs = st
+        .get(ReleaseKeys.versions)
+        .getOrElse(
+          sys.error(
+            "No versions are set! Was this release part executed before inquireVersions?"
+          )
         )
+      val selected = selectVersion(vs)
+
+      st.log.info("Setting version to '%s'." format selected)
+      import sbtrelease.Utilities._
+      val useGlobal = st.extract.get(releaseUseGlobalVersion)
+      val versionStr = (if (useGlobal) globalVersionString else versionString) format selected
+      writeVersion(st, versionStr)
+
+      reapply(
+        Seq(
+          if (useGlobal) git.baseVersion := selected
+          else git.baseVersion := selected
+        ),
+        st
       )
-    val selected = selectVersion(vs)
-
-    st.log.info("Setting version to '%s'." format selected)
-    import sbtrelease.Utilities._
-    val useGlobal = st.extract.get(releaseUseGlobalVersion)
-    val versionStr = (if (useGlobal) globalVersionString else versionString) format selected
-    writeVersion(st, versionStr)
-
-    reapply(
-      Seq(
-        if (useGlobal) git.baseVersion := selected
-        else git.baseVersion := selected
-      ),
-      st
-    )
   }
 
   private def writeVersion(st: State, versionString: String) {
@@ -97,55 +98,55 @@ object MyReleaseVersion {
   }
 
   val versionSetting = Seq(
-      version := {
-        val v = version.value
-        val n = name.value
-        val headCommit = gitHeadCommit.value
-        val curBranch = gitCurrentBranch.value
-        val uncommittedChanges = gitUncommittedChanges.value
+    version := {
+      val v = version.value
+      val n = name.value
+      val headCommit = gitHeadCommit.value
+      val curBranch = gitCurrentBranch.value
+      val uncommittedChanges = gitUncommittedChanges.value
 
-        // hack to determine if this is a JS project
+      // hack to determine if this is a JS project
 //        val isScalaJSx = SettingKey[Boolean]("scalaJSUseMainModuleInitializer").?.value.isDefined
 
-        val crossVersion = Keys.crossVersion.value
-        val isScalaJS = crossVersion == org.scalajs.sbtplugin.ScalaJSCrossVersion.binary
+      val crossVersion = Keys.crossVersion.value
+      val isScalaJS = crossVersion == org.scalajs.sbtplugin.ScalaJSCrossVersion.binary
 
 //        val isScalaJS = isScalaJSProject.value
-        val js = if (isScalaJS) " JS" else ""
+      val js = if (isScalaJS) " JS" else ""
 //        println(s"""Original version for ${n+js}: ${v}""")
-        val v1 =
-          if (v contains headCommit.getOrElse("Unknown")) v
-          else
-            v + "-" + headCommit.getOrElse("Unknown") + (if (uncommittedChanges)
-                                                           "-SNAPSHOT"
-                                                         else "")
+      val v1 =
+        if (v contains headCommit.getOrElse("Unknown")) v
+        else
+          v + "-" + headCommit.getOrElse("Unknown") + (if (uncommittedChanges)
+                                                         "-SNAPSHOT"
+                                                       else "")
 //        println("v1 is "+v1+" in "+ n+js)
-        val v2 =
-          if (v1.endsWith(curBranch) || curBranch == releaseBranch) v1
-          else if (headCommit.map(_ == curBranch).getOrElse(false))
-            v1 + "-DANGER-HEAD"
-          else v1 + "-" + curBranch
+      val v2 =
+        if (v1.endsWith(curBranch) || curBranch == releaseBranch) v1
+        else if (headCommit.map(_ == curBranch).getOrElse(false))
+          v1 + "-DANGER-HEAD"
+        else v1 + "-" + curBranch
 //        println("v2 is "+v2+" in "+ n+js)
-        val v3 = v2.replaceAll("[\\/]", "_")
-        println(
-          s"Version is $v3 in $n$js"
-          // + " $crossVersion ${org.scalajs.sbtplugin.ScalaJSCrossVersion.binary}"
-        )
-        v3
-      },
-      isSnapshot := {
-        val ver = version.value
-        snapshotVersion = ver.contains("-SNAPSHOT") || ver.contains("DANGER-HEAD")
-        snapshotVersion
-      }
+      val v3 = v2.replaceAll("[\\/]", "_")
+      println(
+        s"Version is $v3 in $n$js"
+        // + " $crossVersion ${org.scalajs.sbtplugin.ScalaJSCrossVersion.binary}"
+      )
+      v3
+    },
+    isSnapshot := {
+      val ver = version.value
+      snapshotVersion = ver.contains("-SNAPSHOT") || ver.contains("DANGER-HEAD")
+      snapshotVersion
+    }
   )
 
   private var snapshotVersion = false
 
   /**
-   * Is the current version a SNAPSHOT version.
-   * This is ONLY valid after version setting is used in build.
-   */
+    * Is the current version a SNAPSHOT version.
+    * This is ONLY valid after version setting is used in build.
+    */
   def isSnapshotVersion = snapshotVersion
 
   lazy val setReleaseVersion: ReleaseStep = setVersion(_._1)
@@ -219,6 +220,12 @@ object MyReleaseVersion {
 
   }
 
+  private def toProcessLogger(st: State): ProcessLogger = new ProcessLogger {
+    override def err(s: => String): Unit = st.log.info(s)
+    override def out(s: => String): Unit = st.log.info(s)
+    override def buffer[T](f: => T): T = st.log.buffer(f)
+  }
+
   private def vcs(st: State): Vcs = {
     st.extract
       .get(releaseVcs)
@@ -229,23 +236,63 @@ object MyReleaseVersion {
       )
   }
 
+  private implicit class WrapState( val st: State ) extends AnyVal {
+
+    /**
+      * Throws exception if status code is non zero
+      * @param args
+      * @return the output
+      */
+    def git( args: String* ): String = {
+      val cmd = vcs(st)
+      st.log.info(s"Running git ${args.mkString(" ")}")
+      try {
+        val stdout = cmd.cmd(args: _*) !! toProcessLogger(st)
+        st.log.info(stdout)
+        stdout
+      } catch {
+        case x: RuntimeException =>
+          st.log.error(s"git error: ${x}")
+          throw x
+      }
+
+    }
+
+    /**
+      * Throws exception if status code is non zero
+      * @param args
+      * @return the output
+      */
+    def gitExpectError( args: String* ): String = {
+      val cmd = vcs(st)
+      st.log.info(s"Running git ${args.mkString(" ")}")
+      try {
+        val stdout = cmd.cmd(args: _*) !! toProcessLogger(st)
+        st.log.error(s"Expecting error, got: ${stdout}")
+        stdout
+      } catch {
+        case x: RuntimeException =>
+          st.log.info(s"git error, expected: ${x}")
+          throw x
+      }
+
+    }
+
+    def runTask[T]( key: TaskKey[T] ): T = {
+      val extracted = Project.extract(st)
+      extracted.runTask(key,st)._2
+    }
+  }
+
   def gitStatus: ReleaseStep = { st: State =>
-    val gitcmd = vcs(st)
-    gitcmd
-      .cmd("status")
-      .lineStream
-      .foreach(line => st.log.info(s"""Git: ${line}"""))
+    st.git("status")
     recalculateVersion.action(st)
   }
 
   def gitMakeReleaseBranch: ReleaseStep = ReleaseStep(
     // action
     { st: State =>
-      val gitcmd = vcs(st)
-      gitcmd
-        .cmd("checkout", "-B", releaseBranch)
-        .lineStream
-        .foreach(line => st.log.info(s"""gitMakeReleaseBranch: ${line}"""))
+      st.git("checkout", "-B", releaseBranch)
       recalculateVersion.action(st)
     },
     // check
@@ -263,32 +310,9 @@ object MyReleaseVersion {
   def gitMergeReleaseMaster: ReleaseStep = ReleaseStep(
     // action
     { st: State =>
-      val gitcmd = vcs(st)
-      gitcmd
-        .cmd("checkout", "master")
-        .lineStream
-        .foreach(
-          line =>
-            st.log.info(s"""gitMergeReleaseMaster checkout master: ${line}""")
-          )
-      gitcmd
-        .cmd("merge", releaseBranch)
-        .lineStream
-        .foreach(
-          line =>
-            st.log.info(
-              s"""gitMergeReleaseMaster merge ${releaseBranch}: ${line}"""
-            )
-        )
-      gitcmd
-        .cmd("branch", "--delete", "--force", releaseBranch)
-        .lineStream
-        .foreach(
-          line =>
-            st.log.info(
-              s"""gitMergeReleaseMaster branch -d ${releaseBranch}: ${line}"""
-            )
-        )
+      st.git("checkout", "master")
+      st.git("merge", releaseBranch)
+      st.git("branch", "--delete", "--force", releaseBranch)
       recalculateVersion.action(st)
     },
     // check
@@ -300,20 +324,34 @@ object MyReleaseVersion {
   def gitPushReleaseBranch: ReleaseStep = ReleaseStep(
     // action
     { st: State =>
-      val gitcmd = vcs(st)
-      gitcmd
-        .cmd("push", "-u", "origin", releaseBranch)
-        .lineStream
-        .foreach(
-          line =>
-            st.log.info(
-              s"""gitMergeReleaseMaster push -u origin ${releaseBranch}: ${line}"""
-            )
-        )
+      st.git("push", "-u", "origin", releaseBranch)
       st
     },
     // check
     { st: State =>
+      st
+    }
+  )
+
+  def gitPushReleaseTag: ReleaseStep = ReleaseStep(
+    // action
+    { st: State =>
+      val tagName = st.runTask(releaseTagName)
+      st.git("push", "origin", tagName)
+      st
+    },
+    // check
+    { st: State =>
+      val tagName = st.runTask(releaseTagName)
+      (try {
+        val commitid = st.gitExpectError("rev-parse", "-q", "--verify", tagName)
+        Some(s"Tag $tagName should not exist, found at commit id: $commitid")
+      } catch {
+        case x: RuntimeException =>
+          st.log.debug(s"Tag $tagName does not exist")
+          None
+      }).map( e => scala.sys.error(e))
+
       st
     }
   )

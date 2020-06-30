@@ -18,6 +18,8 @@ object BldUtilities {
 
   lazy val Distribution = config("distribution") describedAs ("tasks for creating a distribution.")
 
+  val mydistnoclean = taskKey[Unit]("Make a build for distribution, no clean") in Distribution
+
   val mydist = taskKey[Unit]("Make a build for distribution") in Distribution
 
   val travis = taskKey[Unit]("The build done in Travis CI") in Distribution
@@ -104,18 +106,21 @@ object BldUtilities {
 
       commands ++= Seq( setOptimize, updateCheck ),
 
+      mydistnoclean := {
+        val x = (test in Test).all(rootfilter).value
+        val y = (packageBin in Compile in BldUtilitiesJvm.`utilities-jvm`).value
+      },
+
       mydist := Def
         .sequential(
           clean.all(rootfilter),
-          (test in Test).all(rootfilter),
-          packageBin in Compile in BldUtilitiesJvm.`utilities-jvm`
+          mydistnoclean
         )
         .value,
 
       travis := Def.sequential(
           clean.all(rootfilter),
-          (test in Test).all(rootfilter),
-          packageBin in Compile in BldUtilitiesJvm.`utilities-jvm`
+          mydistnoclean
         )
         .value,
 
@@ -132,22 +137,19 @@ object BldUtilities {
       releaseNextCommitMessage := s"Setting version to ${git.baseVersion.value}",
 
       releaseProcess := Seq[ReleaseStep](
-        checkSnapshotDependencies, // : ReleaseStep
+        checkSnapshotDependencies,
         gitMakeReleaseBranch,
-        inquireVersions, // : ReleaseStep
-      //  runTest,                                // : ReleaseStep
-        setReleaseVersion, // : ReleaseStep
-        commitReleaseVersion, // : ReleaseStep, performs the initial git checks
-        tagRelease, // : ReleaseStep
-        recalculateVersion, // : ReleaseStep
+        inquireVersions,
+        setReleaseVersion,
+        commitReleaseVersion,
+        tagRelease,
+        recalculateVersion,
         releaseOptimize,
-        publishRelease, // : ReleaseStep, custom
-        setNextVersion, // : ReleaseStep
-        commitNextVersion // : ReleaseStep
-      //  gitPushReleaseBranch
-      //  gitMergeReleaseMaster,
-      //  recalculateVersion,                     // : ReleaseStep
-      //  pushChanges                             // : ReleaseStep, also checks that an upstream branch is properly configured
+        publishRelease,  // runs a clean build and test
+        setNextVersion,
+        commitNextVersion,
+        gitPushReleaseBranch,
+        gitPushReleaseTag
       )
 
     )
