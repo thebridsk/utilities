@@ -338,12 +338,6 @@ object MyReleaseVersion {
   def gitPushReleaseTag: ReleaseStep = ReleaseStep(
     // action
     { st: State =>
-      val tagName = st.runTask(releaseTagName)
-      st.git("push", "origin", tagName)
-      st
-    },
-    // check
-    { st: State =>
       val vs = st
         .get(ReleaseKeys.versions)
         .getOrElse(
@@ -352,14 +346,30 @@ object MyReleaseVersion {
           )
         )
       val tagName = getTagFromVersion(vs._1)
-      (try {
-        val commitid = st.gitExpectError("rev-parse", "-q", "--verify", tagName)
-        Some(s"Tag $tagName should not exist, found at commit id: $commitid")
-      } catch {
-        case x: RuntimeException =>
-          st.log.debug(s"Tag $tagName does not exist")
-          None
-      }).map( e => scala.sys.error(e))
+      st.git("push", "origin", tagName)
+      st
+    },
+    // check
+    { st: State =>
+      // The following does not work.  the ReleaseKeys.version is not set until
+      // the inquireVersions action is executed.
+      //
+      // val vs = st
+      //   .get(ReleaseKeys.versions)
+      //   .getOrElse(
+      //     sys.error(
+      //       "No versions are set! Was this release part executed before inquireVersions?"
+      //     )
+      //   )
+      // val tagName = getTagFromVersion(vs._1)
+      // (try {
+      //   val commitid = st.gitExpectError("rev-parse", "-q", "--verify", tagName)
+      //   Some(s"Tag $tagName should not exist, found at commit id: $commitid")
+      // } catch {
+      //   case x: RuntimeException =>
+      //     st.log.debug(s"Tag $tagName does not exist")
+      //     None
+      // }).map( e => scala.sys.error(e))
 
       st
     }

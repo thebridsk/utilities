@@ -146,10 +146,10 @@ object BldUtilities {
         recalculateVersion,
         releaseOptimize,
         publishRelease,  // runs a clean build and test
-        gitPushReleaseTag,  // pushing tag must happen before setNextVersion
         setNextVersion,
         commitNextVersion,
         gitPushReleaseBranch,
+        gitPushReleaseTag,
       )
 
     )
