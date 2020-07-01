@@ -366,7 +366,7 @@ object MyReleaseVersion {
         .get(ReleaseKeys.versions)
         .getOrElse(
           sys.error(
-            "No versions are set! Was this release executed before running release-inquire-versions?"
+            "No versions are set! Was this release executed with release with-defaults?"
           )
         )
       val tagName = getTagFromVersion(vs._1)
@@ -380,7 +380,7 @@ object MyReleaseVersion {
         .get(ReleaseKeys.versions)
         .getOrElse(
           sys.error(
-            "No versions are set! Was this release executed before running release-inquire-versions?"
+            "No versions are set! Was this release executed with release with-defaults?"
           )
         )
       val tagName = getTagFromVersion(vs._1)
