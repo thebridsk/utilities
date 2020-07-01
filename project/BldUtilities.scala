@@ -1,6 +1,7 @@
 
 import sbt._
 import Keys._
+import sbtrelease.ReleasePlugin
 import sbtrelease.ReleasePlugin.autoImport._
 import com.timushev.sbt.updates.UpdatesPlugin.autoImport._
 import com.typesafe.sbt.GitPlugin.autoImport._
@@ -104,7 +105,9 @@ object BldUtilities {
     )
     .settings(
 
-      commands ++= Seq( setOptimize, updateCheck ),
+      ReleasePlugin.extraReleaseCommands,
+
+      commands ++= Seq( setOptimize, updateCheck, releaseWithDefaults ),
 
       mydistnoclean := {
         val x = (test in Test).all(rootfilter).value
@@ -136,6 +139,8 @@ object BldUtilities {
       releaseCommitMessage := s"Setting version to ${git.baseVersion.value}",
       releaseNextCommitMessage := s"Setting version to ${git.baseVersion.value}",
 
+      // This release process will only work if the command "release with-defaults" or
+      // "myrelease-with-defaults" is used.
       releaseProcess := Seq[ReleaseStep](
         checkSnapshotDependencies,
         gitMakeReleaseBranch,
