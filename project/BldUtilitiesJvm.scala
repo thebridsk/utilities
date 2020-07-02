@@ -10,6 +10,8 @@ import BldCommonSettings._
 object BldUtilitiesJvm {
 
   lazy val `utilities-jvm` = project.in(file("jvm")).
+    dependsOn(BldUtilitiesMacros.`utilities-macros`).
+    settings( buildInfoCommonSettings: _* ).
     configure( commonSettings, buildInfo("com.github.thebridsk.utilities.version", "VersionUtilities") ).
     disablePlugins(ScalaJSPlugin).
     settings(
@@ -23,8 +25,6 @@ object BldUtilitiesJvm {
       // include the macro classes and resources in the main jar
       mappings in (Compile, packageBin) ++= mappings.in(BldUtilitiesMacros.`utilities-macros`, Compile, packageBin).value,
       mappings in (Compile, packageSrc) ++= mappings.in(BldUtilitiesMacros.`utilities-macros`, Compile, packageSrc).value
-    ).
-    settings( buildInfoCommonSettings: _* ).
-    dependsOn(BldUtilitiesMacros.`utilities-macros`)
+    )
 
 }
