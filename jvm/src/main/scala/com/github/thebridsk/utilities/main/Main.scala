@@ -43,10 +43,10 @@ abstract class Main(val defaultLevel: Option[Level] = None)
 
   override def onError(e: Throwable): Unit = e match {
     case Help("") =>
-      builder.printHelp
+      builder.printHelp()
       throw new ExitException(99)
     case Help(subname) =>
-      builder.findSubbuilder(subname).get.printHelp
+      builder.findSubbuilder(subname).get.printHelp()
       throw new ExitException(99)
     case Version =>
       builder.vers.foreach(println)
@@ -54,10 +54,10 @@ abstract class Main(val defaultLevel: Option[Level] = None)
     case ScallopException(message) =>
       if (System.console() == null) {
         // no colors on output
-        println("[%s] Error: %s" format (printedName, message))
+        println(s"[$printedName] Error: $message")
       } else {
         println(
-          "[\u001b[31m%s\u001b[0m] Error: %s" format (printedName, message)
+          s"[\u001b[31m${printedName}\u001b[0m] Error: ${message}"
         )
       }
       throw new ExitException(1)
@@ -243,7 +243,7 @@ abstract class Main(val defaultLevel: Option[Level] = None)
   private def parseArgs(args: Array[String]): Int = {
     try {
       editBuilder { _.args(args.toIndexedSeq) }
-      verify
+      verify()
       showArgs(args)
       0
     } catch {

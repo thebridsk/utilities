@@ -79,7 +79,7 @@ abstract class Logger(val name: String, val parent: Option[Logger]) {
   def addHandler(handler: Handler) = handlers = handler :: handlers
   def removeHandler(handler: Handler) = handlers = handlers.filter(_ != handler)
   @volatile
-  def getHandlers() = handlers
+  def getHandlers = handlers
 
   @tailrec
   final protected def logToHandlersAndParent(traceMsg: TraceMsg): Unit = {
@@ -171,7 +171,7 @@ abstract class Logger(val name: String, val parent: Option[Logger]) {
 
   def logImpl(traceMsg: TraceMsg): Unit
 
-  def getTime(): Double
+  def getTime: Double
 }
 
 sealed trait TraceType {

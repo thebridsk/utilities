@@ -118,7 +118,7 @@ class MainTest extends AnyFlatSpec with Matchers {
 
 //  println( ClassPath.show("", getClass.getClassLoader) )
 
-  val testlog = Logger[MainTest]
+  val testlog = Logger[MainTest]()
 
   behavior of "Main class"
 

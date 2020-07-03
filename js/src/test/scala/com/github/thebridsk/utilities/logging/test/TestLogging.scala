@@ -16,10 +16,10 @@ class TestLogging extends AnyFlatSpec with Matchers {
   LoggerImplFactory.init()
 
   it should "have a root logger with a level of INFO" in {
-    val handlers = Logger("").getHandlers()
+    val handlers = Logger("").getHandlers
     handlers.size mustBe 0
     LoggerImplFactory.init(rootHandler)
-    Logger("").getHandlers().size mustBe 1
+    Logger("").getHandlers.size mustBe 1
     val rl = Logger("")
     rl.getLevel match {
       case Some(l) => l mustBe Level.INFO
@@ -29,7 +29,7 @@ class TestLogging extends AnyFlatSpec with Matchers {
   }
 
   it should "have a root handler with a level of ALL" in {
-    Logger("").getHandlers().find( l => l.isInstanceOf[TestHandler]) match {
+    Logger("").getHandlers.find( l => l.isInstanceOf[TestHandler]) match {
       case Some(h: TestHandler) if h==rootHandler =>
         h.level mustBe Level.ALL
       case Some(h) =>
@@ -39,7 +39,7 @@ class TestLogging extends AnyFlatSpec with Matchers {
     }
   }
 
-  val testLogger = Logger[TestLogging]
+  val testLogger = Logger[TestLogging]()
 
   it should "have a test logger with a level of None" in {
     testLogger.getLevel match {
@@ -58,7 +58,7 @@ class TestLogging extends AnyFlatSpec with Matchers {
   def test( result: Option[String], loggingFun: =>Unit )(implicit handler: TestHandler) = {
     handler.clear()
     loggingFun
-    val res = handler.getLog()
+    val res = handler.getLog
     result match {
       case Some(r) =>
         val pattern = new Regex("""\d\d?:\d\d:\d\d.\d\d\d """+r)
@@ -215,8 +215,8 @@ class TestLogging extends AnyFlatSpec with Matchers {
   val utilsHandler = new TestHandler
 
   it should "add utilsHandler to utils logger" in {
-    Logger[TestLogging].addHandler(utilsHandler)
-    Logger[TestLogging].getHandlers().size mustBe 1
+    Logger[TestLogging]().addHandler(utilsHandler)
+    Logger[TestLogging]().getHandlers.size mustBe 1
   }
 
   it should "log to both utilsHandler and rootHandler a message from testLogger" in {
@@ -224,8 +224,8 @@ class TestLogging extends AnyFlatSpec with Matchers {
     utilsHandler.clear()
     testLogger.info("Going to both")
     val loggedmsg = """\d\d?:\d\d:\d\d.\d\d\d I TestLogging\.scala\:\d+ Going to both\n"""
-    rootHandler.getLog() must fullyMatch regex loggedmsg
-    utilsHandler.getLog() must fullyMatch regex loggedmsg
+    rootHandler.getLog must fullyMatch regex loggedmsg
+    utilsHandler.getLog must fullyMatch regex loggedmsg
   }
 
   it should "log only to rootHandler a message from test2Logger" in {
@@ -234,13 +234,13 @@ class TestLogging extends AnyFlatSpec with Matchers {
     test2logger.info("Going to rootHandler")
     val loggedmsg = """\d\d?:\d\d:\d\d.\d\d\d I TestLogging\.scala\:\d+ Going to rootHandler\n"""
     rootHandler.getLog must fullyMatch regex loggedmsg
-    utilsHandler.getLog() mustBe ""
+    utilsHandler.getLog mustBe ""
   }
 
   it should "clean up" in {
     Logger("").removeHandler(rootHandler)
-    Logger("").getHandlers().size mustBe 0
+    Logger("").getHandlers.size mustBe 0
     Logger("utils").removeHandler(utilsHandler)
-    Logger("utils").getHandlers().size mustBe 0
+    Logger("utils").getHandlers.size mustBe 0
   }
 }

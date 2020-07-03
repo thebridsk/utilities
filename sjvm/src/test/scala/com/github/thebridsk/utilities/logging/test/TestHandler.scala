@@ -37,7 +37,7 @@ class TestHandler extends Handler {
     buf ++= msg ++= "\n"
   }
 
-  def getLog() = buf.toString()
+  def getLog = buf.toString()
 
   def clear() = buf.clear()
 }

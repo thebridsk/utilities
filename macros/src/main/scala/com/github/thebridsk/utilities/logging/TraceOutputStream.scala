@@ -72,7 +72,7 @@ class TraceOutputStream(
           val c = b(i);
           if (c == '\n' || c == '\r') {
             foundcrlf = true;
-            break;
+            break()
           }
         }
       }
