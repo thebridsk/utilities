@@ -19,6 +19,8 @@ object BldUtilities {
 
   lazy val Distribution = config("distribution") describedAs ("tasks for creating a distribution.")
 
+  val myclean = taskKey[Unit]("clean") in Distribution
+
   val mydistnoclean = taskKey[Unit]("Make a build for distribution, no clean") in Distribution
 
   val mydist = taskKey[Unit]("Make a build for distribution") in Distribution
@@ -116,10 +118,14 @@ object BldUtilities {
 
       mydist := Def
         .sequential(
-          clean.all(rootfilter),
+          myclean,
           mydistnoclean
         )
         .value,
+
+      myclean := {
+        val x = clean.all(rootfilter).value
+      },
 
       travis := Def.sequential(
           clean.all(rootfilter),
