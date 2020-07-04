@@ -395,7 +395,7 @@ class FileHandler(pattern: String = null) extends StreamHandler {
           i += 1;
           if (i >= len) {
             // ignore an isolated % at end of string
-            break;
+            break()
           }
           c = pattern.charAt(i);
           c match {

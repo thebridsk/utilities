@@ -426,15 +426,15 @@ class MsgFormatter(
               while (!found) {
                 lastI = format.indexOf("{", lastI)
                 if (lastI < 0) {
-                  break
+                  break()
                 }
                 lastI += 1
                 if (lastI >= len) {
-                  break
+                  break()
                 }
                 if (Character.isDigit(format.charAt(lastI))) {
                   found = true
-                  break
+                  break()
                 }
               }
             }

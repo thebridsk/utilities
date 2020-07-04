@@ -124,7 +124,7 @@ class LoggerImpl(
     var resource: String = null
 ) extends Logger(name, parent) {
 
-  def getTime(): Double = LoggerImplFactory.getTime()
+  def getTime: Double = LoggerImplFactory.getTime()
 
   def logImpl(traceMsg: TraceMsg): Unit = {
     if (isLoggable(traceMsg.level)) {

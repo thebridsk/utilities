@@ -115,7 +115,7 @@ object Config {
 
   def showHandlers( logger: java.util.logging.Logger ) = {
     println(s"For logger <${logger.getName()}>")
-    logger.getHandlers().foreach { h =>
+    logger.getHandlers.foreach { h =>
       println(s"  Handler: ${h.getClass().getName()}")
       val f = h.getFormatter()
       println(s"    Formatter: ${f.getClass().getName()}")
@@ -269,7 +269,7 @@ object Config {
     */
   def setLevelOnConsoleHandler(level: Level) = {
     val root = JLogger.getLogger("");
-    for (h <- root.getHandlers()) {
+    for (h <- root.getHandlers) {
       if (h.isInstanceOf[ConsoleHandler]) {
         h.asInstanceOf[ConsoleHandler].setLevel(level);
       }

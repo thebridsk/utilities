@@ -20,10 +20,10 @@ class TestLoggingToConsole extends AnyFlatSpec with Matchers {
   val consoleHandler = new PrintHandler
 
   it should "have a root logger with a level of INFO" in {
-    val handlers = Logger("").getHandlers()
+    val handlers = Logger("").getHandlers
     handlers.size mustBe 0
     LoggerImplFactory.init(rootHandler,consoleHandler)
-    Logger("").getHandlers().size mustBe 2
+    Logger("").getHandlers.size mustBe 2
     val rl = Logger("")
     rl.getLevel match {
       case Some(l) => l mustBe Level.INFO
@@ -33,7 +33,7 @@ class TestLoggingToConsole extends AnyFlatSpec with Matchers {
   }
 
   it should "have a root handler with a level of ALL" in {
-    val handlers = Logger("").getHandlers()
+    val handlers = Logger("").getHandlers
     handlers.size mustBe 2
     handlers.find( l => l.isInstanceOf[PrintHandler]) match {
       case Some(h: PrintHandler) if h==consoleHandler =>
@@ -57,7 +57,7 @@ class TestLoggingToConsole extends AnyFlatSpec with Matchers {
     }
   }
 
-  val testLogger = Logger[TestLoggingToConsole]
+  val testLogger = Logger[TestLoggingToConsole]()
 
   it should "have a test logger with a level of None" in {
     testLogger.getLevel match {
@@ -76,7 +76,7 @@ class TestLoggingToConsole extends AnyFlatSpec with Matchers {
   def test( result: Option[String], loggingFun: Function0[Unit] )(implicit handler: TestHandler) = {
     handler.clear()
     loggingFun()
-    val res = handler.getLog()
+    val res = handler.getLog
     result match {
       case Some(r) =>
         val pattern = new Regex("""\d\d?:\d\d:\d\d.\d\d\d """+r)
@@ -134,6 +134,6 @@ class TestLoggingToConsole extends AnyFlatSpec with Matchers {
   it should "clean up" in {
     Logger("").removeHandler(rootHandler)
     Logger("").removeHandler(consoleHandler)
-    Logger("").getHandlers().size mustBe 0
+    Logger("").getHandlers.size mustBe 0
   }
 }
