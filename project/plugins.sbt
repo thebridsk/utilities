@@ -9,7 +9,7 @@ name := "project-utilities"
 scalaVersion := "2.12.11"
 
 val vLog4j = "1.7.30"              // https://github.com/qos-ch/slf4j
-val vJGit = "5.8.0.202006091008-r" // https://github.com/eclipse/jgit
+val vJGit = "5.8.1.202007141445-r" // https://github.com/eclipse/jgit
 
 val vCrossProject = "1.0.0"        // https://github.com/portable-scala/sbt-crossproject
 val vPlatformDeps = "1.0.0"        // https://github.com/portable-scala/sbt-platform-deps
