@@ -74,13 +74,15 @@ class TestLogging extends AnyFlatSpec with Matchers {
     }
   }
 
+  class ExceptionForTest extends Exception( "ExceptionForTest" )
+
   it should "log at the SEVERE level" in {
     testLogger.isSevereLoggable() mustBe true
 
-    test( Some( """E TestLogging\.scala\:80 Hello\n"""), ()=>testLogger.severe("Hello") )
+    test( Some( """E TestLogging\.scala\:82 Hello\n"""), ()=>testLogger.severe("Hello") )
     test( Some( """E TestLogging\.scala\:\d+ Hello world\n"""), ()=>testLogger.severe("Hello %s", "world") )
     test( Some( """E TestLogging\.scala\:\d+ Hello world for 2\n"""), ()=>testLogger.severe("Hello %s for %d", "world",2) )
-    test( Some( """E TestLogging\.scala\:\d+ Got exception: java.lang.NullPointerException\s+at[\s\S.]*"""), ()=>testLogger.severe("Got exception: ", new NullPointerException) )
+    test( Some( """E TestLogging\.scala\:\d+ Got exception: com\.github\.thebridsk\.utilities\.logging\.test\.TestLogging\$ExceptionForTest\: ExceptionForTest\s+at[\s\S.]*"""), ()=>testLogger.severe("Got exception: ", new ExceptionForTest) )
   }
 
   it should "log at the WARNING level" in {
@@ -89,7 +91,7 @@ class TestLogging extends AnyFlatSpec with Matchers {
     test( Some( """W TestLogging\.scala\:\d+ Hello\n"""), ()=>testLogger.warning("Hello") )
     test( Some( """W TestLogging\.scala\:\d+ Hello world\n"""), ()=>testLogger.warning("Hello %s", "world") )
     test( Some( """W TestLogging\.scala\:\d+ Hello world for 2\n"""), ()=>testLogger.warning("Hello %s for %d", "world",2) )
-    test( Some( """W TestLogging\.scala\:\d+ Got exception: java.lang.NullPointerException\s+at[\s\S.]*"""), ()=>testLogger.warning("Got exception: ", new NullPointerException) )
+    test( Some( """W TestLogging\.scala\:\d+ Got exception: com\.github\.thebridsk\.utilities\.logging\.test\.TestLogging\$ExceptionForTest\: ExceptionForTest\s+at[\s\S.]*"""), ()=>testLogger.warning("Got exception: ", new ExceptionForTest) )
 
   }
 
@@ -99,7 +101,7 @@ class TestLogging extends AnyFlatSpec with Matchers {
     test( Some( """I TestLogging\.scala\:\d+ Hello\n"""), ()=>testLogger.info("Hello") )
     test( Some( """I TestLogging\.scala\:\d+ Hello world\n"""), ()=>testLogger.info("Hello %s", "world") )
     test( Some( """I TestLogging\.scala\:\d+ Hello world for 2\n"""), ()=>testLogger.info("Hello %s for %d", "world",2) )
-    test( Some( """I TestLogging\.scala\:\d+ Got exception: java.lang.NullPointerException\s+at[\s\S.]*"""), ()=>testLogger.info("Got exception: ", new NullPointerException) )
+    test( Some( """I TestLogging\.scala\:\d+ Got exception: com\.github\.thebridsk\.utilities\.logging\.test\.TestLogging\$ExceptionForTest\: ExceptionForTest\s+at[\s\S.]*"""), ()=>testLogger.info("Got exception: ", new ExceptionForTest) )
 
   }
 
@@ -135,12 +137,12 @@ class TestLogging extends AnyFlatSpec with Matchers {
     test( Some( """C TestLogging\.scala\:\d+ Hello\n"""), ()=>testLogger.config("Hello") )
     test( Some( """C TestLogging\.scala\:\d+ Hello world\n"""), ()=>testLogger.config("Hello %s", "world") )
     test( Some( """C TestLogging\.scala\:\d+ Hello world for 2\n"""), ()=>testLogger.config("Hello %s for %d", "world",2) )
-    test( Some( """C TestLogging\.scala\:\d+ Got exception: java.lang.NullPointerException\s+at[\s\S.]*"""), ()=>testLogger.config("Got exception: ", new NullPointerException) )
+    test( Some( """C TestLogging\.scala\:\d+ Got exception: com\.github\.thebridsk\.utilities\.logging\.test\.TestLogging\$ExceptionForTest\: ExceptionForTest\s+at[\s\S.]*"""), ()=>testLogger.config("Got exception: ", new ExceptionForTest) )
 
     test( Some( """1 TestLogging\.scala\:\d+ Hello\n"""), ()=>testLogger.fine("Hello") )
     test( Some( """1 TestLogging\.scala\:\d+ Hello world\n"""), ()=>testLogger.fine("Hello %s", "world") )
     test( Some( """1 TestLogging\.scala\:\d+ Hello world for 2\n"""), ()=>testLogger.fine("Hello %s for %d", "world",2) )
-    test( Some( """1 TestLogging\.scala\:\d+ Got exception: java.lang.NullPointerException\s+at[\s\S.]*"""), ()=>testLogger.fine("Got exception: ", new NullPointerException) )
+    test( Some( """1 TestLogging\.scala\:\d+ Got exception: com\.github\.thebridsk\.utilities\.logging\.test\.TestLogging\$ExceptionForTest\: ExceptionForTest\s+at[\s\S.]*"""), ()=>testLogger.fine("Got exception: ", new ExceptionForTest) )
 
     testLogger.isFinerLoggable() mustBe false
     testLogger.isFinestLoggable() mustBe false
@@ -167,12 +169,12 @@ class TestLogging extends AnyFlatSpec with Matchers {
     test( Some( """2 TestLogging\.scala\:\d+ Hello\n"""), ()=>testLogger.finer("Hello") )
     test( Some( """2 TestLogging\.scala\:\d+ Hello world\n"""), ()=>testLogger.finer("Hello %s", "world") )
     test( Some( """2 TestLogging\.scala\:\d+ Hello world for 2\n"""), ()=>testLogger.finer("Hello %s for %d", "world",2) )
-    test( Some( """2 TestLogging\.scala\:\d+ Got exception: java.lang.NullPointerException\s+at[\s\S.]*"""), ()=>testLogger.finer("Got exception: ", new NullPointerException) )
+    test( Some( """2 TestLogging\.scala\:\d+ Got exception: com\.github\.thebridsk\.utilities\.logging\.test\.TestLogging\$ExceptionForTest\: ExceptionForTest\s+at[\s\S.]*"""), ()=>testLogger.finer("Got exception: ", new ExceptionForTest) )
 
     test( Some( """3 TestLogging\.scala\:\d+ Hello\n"""), ()=>testLogger.finest("Hello") )
     test( Some( """3 TestLogging\.scala\:\d+ Hello world\n"""), ()=>testLogger.finest("Hello %s", "world") )
     test( Some( """3 TestLogging\.scala\:\d+ Hello world for 2\n"""), ()=>testLogger.finest("Hello %s for %d", "world",2) )
-    test( Some( """3 TestLogging\.scala\:\d+ Got exception: java.lang.NullPointerException\s+at[\s\S.]*"""), ()=>testLogger.finest("Got exception: ", new NullPointerException) )
+    test( Some( """3 TestLogging\.scala\:\d+ Got exception: com\.github\.thebridsk\.utilities\.logging\.test\.TestLogging\$ExceptionForTest\: ExceptionForTest\s+at[\s\S.]*"""), ()=>testLogger.finest("Got exception: ", new ExceptionForTest) )
 
   }
 
@@ -201,7 +203,7 @@ class TestLogging extends AnyFlatSpec with Matchers {
     rootHandler.isLoggingLevel(Level.FINER) mustBe true
     test( Some( """2 TestLogging\.scala\:\d+ Enter \n"""), ()=>testLogger.entering() )
     test( Some( """2 TestLogging\.scala\:\d+ Exit \n"""), ()=>testLogger.exiting() )
-    test( Some( """2 TestLogging\.scala\:\d+ Throwing exception: java.lang.NullPointerException\s+at[\s\S.]*"""), ()=>testLogger.throwing( new NullPointerException ) )
+    test( Some( """2 TestLogging\.scala\:\d+ Throwing exception: com\.github\.thebridsk\.utilities\.logging\.test\.TestLogging\$ExceptionForTest\: ExceptionForTest\s+at[\s\S.]*"""), ()=>testLogger.throwing( new ExceptionForTest ) )
   }
 
   it should "log ENTRY and EXIT with arguments" in {

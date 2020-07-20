@@ -47,6 +47,8 @@ import ReturnOptions._
 import java.io.File
 import java.io.FilenameFilter
 
+class ExceptionForTest( msg: String ) extends Exception( msg )
+
 class ExampleSubcommand( name: String,
                          val counter: AtomicInteger,
                          returnOptions: Options = optionOk
@@ -55,18 +57,18 @@ class ExampleSubcommand( name: String,
   override
   def init() = {
     initCount = counter.incrementAndGet()
-    returnOptions.initrc.getOrElse( throw new Exception("from init"))
+    returnOptions.initrc.getOrElse( throw new ExceptionForTest("from init"))
   }
 
   def executeSubcommand() = {
     executeCount = counter.incrementAndGet()
-    returnOptions.executerc.getOrElse( throw new Exception("from executerc"))
+    returnOptions.executerc.getOrElse( throw new ExceptionForTest("from executerc"))
   }
 
   override
   def cleanup() = {
     cleanupCount = counter.incrementAndGet()
-    if (!returnOptions.cleanupreturn) throw new Exception("from cleanup")
+    if (!returnOptions.cleanupreturn) throw new ExceptionForTest("from cleanup")
   }
 }
 
@@ -77,18 +79,18 @@ class SimpleMain( returnOptions: Options = optionOk ) extends Main with Counters
   override
   def init() = {
     initCount = counter.incrementAndGet()
-    returnOptions.initrc.getOrElse( throw new Exception("from init"))
+    returnOptions.initrc.getOrElse( throw new ExceptionForTest("from init"))
   }
 
   def execute() = {
     executeCount = counter.incrementAndGet()
-    returnOptions.executerc.getOrElse( throw new Exception("from executerc"))
+    returnOptions.executerc.getOrElse( throw new ExceptionForTest("from executerc"))
   }
 
   override
   def cleanup() = {
     cleanupCount = counter.incrementAndGet()
-    if (!returnOptions.cleanupreturn) throw new Exception("from cleanup")
+    if (!returnOptions.cleanupreturn) throw new ExceptionForTest("from cleanup")
   }
 }
 
