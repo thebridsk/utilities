@@ -13,6 +13,8 @@ import BldCommonSettings._
 
 import MyReleaseVersion._
 
+import scalafix.sbt.ScalafixPlugin.autoImport._
+
 import sbtcrossproject.{crossProject, CrossType}
 
 object BldUtilities {
@@ -28,6 +30,27 @@ object BldUtilities {
   val travis = taskKey[Unit]("The build done in Travis CI") in Distribution
 
   import ReleaseTransformations.{setReleaseVersion => _, setNextVersion => _, _}
+
+  val setSemanticDB = Command.command(
+    "setSemanticDB",
+    "turn on setSemanticDB",
+    "turn on setSemanticDB"
+  ) { state: State =>
+    val extracted = Project extract state
+    import extracted._
+    println("Turning on SemanticDB")
+    appendWithoutSession(
+      semanticdbEnabled in ThisBuild := true,
+      state
+    )
+  }
+
+  inThisBuild(
+    List(
+      semanticdbEnabled := false,
+      semanticdbVersion := scalafixSemanticdb.revision,
+    )
+  )
 
   val setOptimize = Command.command(
     "setOptimize",
@@ -109,7 +132,7 @@ object BldUtilities {
 
       ReleasePlugin.extraReleaseCommands,
 
-      commands ++= Seq( setOptimize, updateCheck, releaseWithDefaults ),
+      commands ++= Seq( setOptimize, updateCheck, releaseWithDefaults, setSemanticDB ),
 
       mydistnoclean := {
         val x = (test in Test).all(rootfilter).value

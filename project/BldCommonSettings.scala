@@ -10,6 +10,8 @@ import org.scalajs.sbtplugin.ScalaJSCrossVersion
 import sbtbuildinfo.BuildInfoPlugin
 import sbtbuildinfo.BuildInfoPlugin.autoImport._
 
+import scalafix.sbt.ScalafixPlugin.autoImport._
+
 import BldVersion._
 import MyReleaseVersion._
 import XTimestamp._
@@ -45,13 +47,23 @@ object BldCommonSettings {
     _.settings(versionSetting).settings(
       scalaVersion := verScalaVersion,
       crossScalaVersions := verCrossScalaVersions,
-      scalacOptions := Seq(
+      scalacOptions := List(
         "-unchecked",
         "-deprecation",
         "-encoding",
         "utf8",
-        "-feature" /* , "-Xlog-implicits" */
-      ),
+        "-feature",
+        "-Wunused:imports",   // required by `RemoveUnused` rule
+//        "-Xlog-implicits",
+      ) ::: {
+        if (semanticdbEnabled.value) List("-Yrangepos")  // required by SemanticDB compiler plugin
+        else List()
+      },
+      libraryDependencies ++= {
+        if (semanticdbEnabled.value) List(compilerPlugin(scalafixSemanticdb))
+        else List()
+      },
+
       testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oDG"),
       testClass in Test := (Def.inputTaskDyn {
         import complete.DefaultParsers._
