@@ -1,7 +1,5 @@
 package com.github.thebridsk.utilities.logging
 
-import java.util.logging.StreamHandler
-import java.io.FilterOutputStream
 import java.io.OutputStream
 import java.util.logging.LogRecord
 import java.io.ByteArrayOutputStream

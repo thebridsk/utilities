@@ -1,7 +1,6 @@
 package com.github.thebridsk.utilities.message
 
 import java.util.logging.Logger
-import org.scalactic._
 import org.scalactic.source.Position
 import java.util.Locale
 import java.util.ResourceBundle
@@ -9,7 +8,6 @@ import java.util.ResourceBundle.Control
 import java.util.Formatter
 import java.util.MissingResourceException
 import java.util.logging.Level
-import java.util.Arrays
 import com.github.thebridsk.utilities.nls.Messages
 import scala.util.Using
 

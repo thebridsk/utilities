@@ -2,8 +2,6 @@ package com.github.thebridsk.utilities.logging.test
 
 import com.github.thebridsk.utilities.logging.impl.SystemTime
 import com.github.thebridsk.utilities.logging.impl.LoggerImplFactory
-import java.text.DateFormat
-import java.util.Date
 import java.time.format.DateTimeFormatter
 import java.time.ZoneId
 

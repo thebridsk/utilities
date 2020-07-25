@@ -1,9 +1,5 @@
 package com.github.thebridsk.utilities.file
 
-import java.io.Reader
-import java.io.FileInputStream
-import java.io.InputStreamReader
-import java.io.BufferedReader
 import scala.io.Codec
 import scala.io.Source
 
@@ -18,11 +14,8 @@ import java.nio.file.FileSystems
 import java.nio.file.StandardCopyOption
 import java.nio.file.NoSuchFileException
 import java.io.IOException
-import java.util.function.Predicate
-import java.util.function.Consumer
 import com.github.thebridsk.utilities.logging.Logger
 import scala.io.BufferedSource
-import java.util.logging.Level
 import scala.util.Using
 import java.nio.file.SimpleFileVisitor
 import java.nio.file.attribute.BasicFileAttributes

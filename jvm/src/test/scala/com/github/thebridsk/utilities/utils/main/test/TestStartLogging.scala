@@ -1,12 +1,9 @@
 package com.github.thebridsk.utilities.utils.main.test
 
-import org.scalatest.Finders
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers
-import org.scalatest._
 import com.github.thebridsk.utilities.logging.Config
 import com.github.thebridsk.utilities.classpath.ClassPath
-import java.util.logging.LogManager
 import java.util.logging.Logger
 import com.github.thebridsk.utilities.logging.FileHandler
 import com.github.thebridsk.utilities.logging.FileFormatter

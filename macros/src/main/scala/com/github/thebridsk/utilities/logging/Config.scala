@@ -1,9 +1,8 @@
 package com.github.thebridsk.utilities.logging
 
-import java.util.logging.{Logger => JLogger, FileHandler => JFileHandler}
+import java.util.logging.{Logger => JLogger}
 import java.util.regex.Pattern
 import java.util.logging.Level
-import java.io.IOException
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream

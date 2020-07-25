@@ -4,10 +4,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers
 import java.util.logging.LogRecord
 import java.util.logging.Level
-import java.util.TimeZone
 import com.github.thebridsk.utilities.logging.SimpleConsoleFormatter
-import java.io.StringReader
-import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.io.ByteArrayOutputStream
 import java.io.ByteArrayInputStream
@@ -18,14 +15,13 @@ import com.github.thebridsk.utilities.classpath.ClassPath
 import com.github.thebridsk.utilities.logging.MsgFormatter
 import com.github.thebridsk.utilities.logging.ConsoleFormatter
 import com.github.thebridsk.utilities.logging.FileFormatter
-import com.github.thebridsk.utilities.logging.Logger
 import java.time.format.DateTimeFormatter
 import java.time.ZoneId
 import java.time.Instant
 
 object TestLogging {
 
-  implicit class CrLfRemover( val s: String ) extends AnyVal {
+  implicit class CrLfRemover( private val s: String ) extends AnyVal {
     def removeTrailingCRLF(): String = {
       if (s == null || s.length() == 0) return s
       val l = s.length()
@@ -38,8 +34,6 @@ object TestLogging {
 }
 
 import TestLogging._
-import java.text.SimpleDateFormat
-import java.util.Date
 
 class TestLogging extends AnyFlatSpec with Matchers {
 

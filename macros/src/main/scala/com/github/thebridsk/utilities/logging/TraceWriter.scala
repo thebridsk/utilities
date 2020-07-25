@@ -1,10 +1,6 @@
 package com.github.thebridsk.utilities.logging
 
-import java.io.FilterOutputStream
-import java.io.ByteArrayOutputStream
 import java.util.logging.{Logger => JLogger}
-import scala.util.matching.Regex
-import java.util.regex.Matcher
 import java.io.FilterWriter
 import java.io.CharArrayWriter
 import java.util.logging.Level

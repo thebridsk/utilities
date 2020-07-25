@@ -2,7 +2,6 @@ package com.github.thebridsk.utilities.main
 
 import org.rogach.scallop.ValueConverter
 import scala.reflect.io.Path
-import java.io.File
 import scala.reflect.io.Directory
 
 object Converters {

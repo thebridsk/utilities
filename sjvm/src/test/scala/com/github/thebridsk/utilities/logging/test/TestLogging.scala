@@ -4,7 +4,6 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers
 import com.github.thebridsk.utilities.logging.impl.LoggerImplFactory
 import com.github.thebridsk.utilities.logging.Logger
-import com.github.thebridsk.utilities.logging.Handler
 import com.github.thebridsk.utilities.logging.Level
 import scala.util.matching.Regex
 import org.scalactic.source.Position
@@ -54,7 +53,6 @@ class TestLogging extends AnyFlatSpec with Matchers {
     testLogger.getEffectiveLevel mustBe Level.INFO
   }
 
-  import scala.language.postfixOps
 
   def test( result: Option[String], loggingFun: Function0[Unit] )(implicit handler: TestHandler, pos: Position) = {
     handler.clear()
@@ -79,7 +77,7 @@ class TestLogging extends AnyFlatSpec with Matchers {
   it should "log at the SEVERE level" in {
     testLogger.isSevereLoggable() mustBe true
 
-    test( Some( """E TestLogging\.scala\:82 Hello\n"""), ()=>testLogger.severe("Hello") )
+    test( Some( """E TestLogging\.scala\:80 Hello\n"""), ()=>testLogger.severe("Hello") )
     test( Some( """E TestLogging\.scala\:\d+ Hello world\n"""), ()=>testLogger.severe("Hello %s", "world") )
     test( Some( """E TestLogging\.scala\:\d+ Hello world for 2\n"""), ()=>testLogger.severe("Hello %s for %d", "world",2) )
     test( Some( """E TestLogging\.scala\:\d+ Got exception: com\.github\.thebridsk\.utilities\.logging\.test\.TestLogging\$ExceptionForTest\: ExceptionForTest\s+at[\s\S.]*"""), ()=>testLogger.severe("Got exception: ", new ExceptionForTest) )

@@ -125,8 +125,7 @@ class Source(val c: Context) {
     * The classname of where it is used
     * @return a Tree for the classname
     */
-  def macroClassName: c.Tree = {
-    import c._, universe._;
+  def macroClassName: c.Tree = {;
     getFullClassName(getClassSymbol)
   }
 
@@ -134,8 +133,7 @@ class Source(val c: Context) {
     * The method name of where it is used
     * @return a Tree for the method name
     */
-  def macroMethodName: c.Tree = {
-    import c._, universe._;
+  def macroMethodName: c.Tree = {;
     getMethodName(getMethodSymbol)
   }
 

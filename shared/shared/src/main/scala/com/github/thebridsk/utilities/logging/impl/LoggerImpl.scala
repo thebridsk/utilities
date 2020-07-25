@@ -4,7 +4,6 @@ import com.github.thebridsk.utilities.logging.LoggerFactory
 import com.github.thebridsk.utilities.logging.Logger
 import com.github.thebridsk.utilities.logging.TraceMsg
 
-import org.scalactic.source.Position
 import com.github.thebridsk.utilities.logging.Handler
 import com.github.thebridsk.utilities.logging.Level
 

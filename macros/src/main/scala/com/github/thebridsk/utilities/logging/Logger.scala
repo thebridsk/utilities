@@ -1,6 +1,5 @@
 package com.github.thebridsk.utilities.logging
 
-import language.experimental.macros
 import java.util.logging.{Logger => JavaLogger}
 import scala.reflect.macros.blackbox.Context
 import scala.reflect.ClassTag
@@ -108,8 +107,6 @@ class Logger private (name: String, resource: String) {
 }
 
 import com.github.thebridsk.utilities.macros.Source
-import scala.reflect.ClassTag
-import scala.reflect.ClassTag
 
 class LoggerMacro(override val c: Context) extends Source(c) {
 

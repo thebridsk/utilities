@@ -1,12 +1,10 @@
 package com.github.thebridsk.utilities.main.logging
 
 import org.rogach.scallop.ScallopConf
-import java.io.File
 import java.util.logging.Level
 import org.rogach.scallop.ValueConverter
 import com.github.thebridsk.utilities.logging.Config
 
-import com.github.thebridsk.utilities.main.Converters._
 
 class ConfigArguments(
     val cmdline: ScallopConf,

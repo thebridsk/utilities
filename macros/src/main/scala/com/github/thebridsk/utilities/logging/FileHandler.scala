@@ -3,11 +3,8 @@ package com.github.thebridsk.utilities.logging
 import java.util.logging.StreamHandler
 import java.io.File
 import java.io.FileOutputStream
-import java.nio.channels.FileChannel
 import java.io.IOException
 import com.github.thebridsk.utilities.stream.MeteredOutputStream
-import java.util.ArrayList
-import java.util.Arrays
 import java.util.logging.LogManager
 import java.util.logging.Level
 import java.util.logging.Filter
@@ -353,7 +350,6 @@ class FileHandler(pattern: String = null) extends StreamHandler {
       }
     })).getOrElse(Array())
 
-    import scala.jdk.CollectionConverters._
     val sortedfiles = files.toList.sorted
 //      println(s"Found ${sortedfiles.length} log files with pattern ${pat}")
     if (sortedfiles.length > fCount) {

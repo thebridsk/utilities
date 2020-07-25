@@ -1,7 +1,5 @@
 package com.github.thebridsk.utilities.logging
 
-import language.experimental.macros
-import java.util.logging.{Logger => JavaLogger}
 import scala.reflect.macros.blackbox.Context
 import scala.reflect.ClassTag
 import org.scalactic.source.Position
@@ -197,11 +195,6 @@ case class TraceMsg(
 }
 
 import com.github.thebridsk.utilities.macros.Source
-import scala.reflect.ClassTag
-import scala.reflect.ClassTag
-import org.scalactic.source.Position
-import com.github.thebridsk.utilities.logging.impl.LoggerImplFactory
-import com.github.thebridsk.utilities.logging.impl.LoggerImplFactory
 
 class LoggerMacro(override val c: Context) extends Source(c) {
 

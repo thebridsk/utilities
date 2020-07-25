@@ -1,7 +1,7 @@
 package com.github.thebridsk.utilities.logging
 
 import java.util.{ logging => jul }
-import java.{ text => jt, time => jtime, util => ju, lang => jl, io => ji }
+import java.{ time => jtime, util => ju, io => ji }
 import com.github.thebridsk.utilities.classpath.ClassPath
 import com.github.thebridsk.utilities.message.Message
 import java.time.Instant

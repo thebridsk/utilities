@@ -2,7 +2,6 @@ package com.github.thebridsk.utilities.classpath
 
 import scala.annotation.tailrec
 import java.net.URLClassLoader
-import java.util.StringTokenizer
 
 object ClassPath {
 

@@ -8,7 +8,6 @@ import com.github.thebridsk.utilities.logging.Logging
 import com.github.thebridsk.utilities.macros.Source._
 import java.util.logging.Level
 import com.github.thebridsk.utilities.main.Main
-import org.rogach.scallop.ScallopConf
 import com.github.thebridsk.utilities.classpath.ClassPath
 
 class TestMacros extends Logging {

@@ -5,7 +5,6 @@ package com.github.thebridsk.utilities.logging.js.test
 
 import com.github.thebridsk.utilities.logging.Logger
 import com.github.thebridsk.utilities.logging.Level
-import org.scalactic.source.Position
 import com.github.thebridsk.utilities.logging.impl.LoggerImplFactory
 import com.github.thebridsk.utilities.logging.PrintHandler
 
