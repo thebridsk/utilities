@@ -6,7 +6,7 @@ import scala.scalajs.js.Date
 
 object SystemTimeJs {
 
-  def apply() = {
+  def apply(): Unit = {
 
     val st = new SystemTime {
       def currentTimeMillis() = {

@@ -8,12 +8,12 @@ object ClassPath {
   def show(
       linePrefix: String = "",
       loader: ClassLoader = getClass.getClassLoader
-  ) = {
+  ): String = {
     val b = showClasspath(new StringBuilder, linePrefix, loader)
     b.toString()
   }
 
-  def showProperties( linePrefix: String = "" ) = {
+  def showProperties( linePrefix: String = "" ): String = {
     val b = new StringBuilder
     val boot = sys.props.get("java.class.path").getOrElse( sys.props.getOrElse("sun.boot.class.path", "<unknown>"));
     b.append(linePrefix).append("java.class.path").append(fsCRLF)

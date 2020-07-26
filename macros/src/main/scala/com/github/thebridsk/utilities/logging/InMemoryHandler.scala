@@ -18,7 +18,7 @@ class InMemoryHandler extends MyStreamHandler {
     new  ByteArrayOutputStream(10*1024)
   setOutputStream(fOut);
 
-  override def publish(record: LogRecord) = synchronized {
+  override def publish(record: LogRecord): Unit = synchronized {
     super.publish(record);
   }
 
@@ -35,11 +35,11 @@ class InMemoryHandler extends MyStreamHandler {
     return super.isLoggable(record);
   }
 
-  def getLog() = synchronized {
+  def getLog(): String = synchronized {
     fOut.toString()
   }
 
-  def clear() = synchronized {
+  def clear(): Unit = synchronized {
     fOut = new  ByteArrayOutputStream(10*1024)
     setOutputStream(fOut);
   }

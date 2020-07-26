@@ -4,9 +4,10 @@ import java.util.logging.{Logger => JLogger}
 import java.io.FilterWriter
 import java.io.CharArrayWriter
 import java.util.logging.Level
+import scala.util.matching.Regex
 
 object TraceWriter {
-  val fsLines = "\\r\\n|\\r|\\n".r
+  val fsLines: Regex = "\\r\\n|\\r|\\n".r
 
   private object StackRetriever extends SecurityManager {
 
@@ -87,11 +88,11 @@ class TraceWriter(
     }
   }
 
-  override def close() = out.close()
+  override def close(): Unit = out.close()
 
   private def fOut = out.asInstanceOf[CharArrayWriter]
 
-  def reset() = fOut.reset()
+  def reset(): Unit = fOut.reset()
 
   override def flush(): Unit = {
     if (!isFromLogging()) {

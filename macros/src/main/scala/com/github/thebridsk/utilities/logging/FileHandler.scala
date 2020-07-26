@@ -119,8 +119,8 @@ class FileHandler(pattern: String = null) extends StreamHandler {
 
   private var fOldFiles: List[File] = List()
 
-  def setLimit(l: Long) = { fLimit = l }
-  def setCount(c: Int) = { fCount = c }
+  def setLimit(l: Long): Unit = { fLimit = l }
+  def setCount(c: Int): Unit = { fCount = c }
 
   myCheckAccess();
   configure(pattern);
@@ -267,7 +267,7 @@ class FileHandler(pattern: String = null) extends StreamHandler {
     * This closes the current file, renames it to include the date,
     * then opens a new file.
     */
-  def rotate() = {
+  def rotate(): Unit = {
     val oldLevel = getLevel();
     setLevel(Level.OFF);
 

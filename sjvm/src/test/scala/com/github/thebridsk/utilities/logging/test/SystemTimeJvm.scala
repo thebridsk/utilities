@@ -7,9 +7,9 @@ import java.time.ZoneId
 
 object SystemTimeJvm {
 
-  val fmt = DateTimeFormatter.ofPattern("HH:mm:ss.SSS").withZone(ZoneId.systemDefault())
+  val fmt: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS").withZone(ZoneId.systemDefault())
 
-  def apply() = {
+  def apply(): Unit = {
 
     val st = new SystemTime {
       def currentTimeMillis() = {

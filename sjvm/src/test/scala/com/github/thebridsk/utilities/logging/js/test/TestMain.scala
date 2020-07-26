@@ -17,7 +17,7 @@ object TestMain {
   LoggerImplFactory.getLogger("").addHandler(new PrintHandler)
   LoggerImplFactory.getLogger("").setLevel(Level.ALL)
 
-  val logger = Logger( "TestMain" )
+  val logger: Logger = Logger( "TestMain" )
 
   def main(args: Array[String]): Unit = {
     testLogging()
@@ -86,7 +86,7 @@ object TestMain {
     "world"
   }
 
-  val tracefun = {
+  val tracefun: Unit = {
     logger.info( "Hello from tracefun" )
   }
 

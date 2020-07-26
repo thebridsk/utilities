@@ -16,7 +16,7 @@ class ConsoleHandlerToErrAndOut extends ConsoleHandler {
 
   private var fUsingStdErr = false;
 
-  override def publish(record: LogRecord) = synchronized {
+  override def publish(record: LogRecord): Unit = synchronized {
     val l = record.getLevel();
     val toerr = Level.SEVERE.equals(l) || Level.WARNING.equals(l);
 

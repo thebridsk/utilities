@@ -14,7 +14,7 @@ class TestLoggingToConsole extends AnyFlatSpec with Matchers {
   SystemTimeJs()
   LoggerImplFactory.init()
 
-  implicit val rootHandler = new TestHandler
+  implicit val rootHandler: TestHandler = new TestHandler
 
   val consoleHandler = new PrintHandler
 
@@ -56,7 +56,7 @@ class TestLoggingToConsole extends AnyFlatSpec with Matchers {
     }
   }
 
-  val testLogger = Logger[TestLoggingToConsole]()
+  val testLogger: Logger = Logger[TestLoggingToConsole]()
 
   it should "have a test logger with a level of None" in {
     testLogger.getLevel match {
@@ -71,7 +71,7 @@ class TestLoggingToConsole extends AnyFlatSpec with Matchers {
   }
 
 
-  def test( result: Option[String], loggingFun: Function0[Unit] )(implicit handler: TestHandler) = {
+  def test( result: Option[String], loggingFun: Function0[Unit] )(implicit handler: TestHandler): Any = {
     handler.clear()
     loggingFun()
     val res = handler.getLog

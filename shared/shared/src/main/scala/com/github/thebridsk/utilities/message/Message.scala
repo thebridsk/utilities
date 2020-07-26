@@ -17,7 +17,7 @@ case class Message(bundle: String, key: String, args: Any*)(
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
-  override def toString() = {
+  override def toString(): String = {
     val loc = created.fileName + ":" + created.lineNumber
 
     "{Message bundle=" + bundle + ", key=" + key + ", args=" +
@@ -30,7 +30,7 @@ case class Message(bundle: String, key: String, args: Any*)(
     * @param translated - where the msg was converted to string
     * @return the message
     */
-  def toNLS()(implicit resolver: MessageResolver, translated: Position) = {
+  def toNLS()(implicit resolver: MessageResolver, translated: Position): Unit = {
     resolver.toNLS(this)(translated)
   }
 
@@ -44,7 +44,7 @@ case class Message(bundle: String, key: String, args: Any*)(
   def log(
       logger: Logger,
       level: Level
-  )(implicit resolver: MessageResolver, logged: Position) = {
+  )(implicit resolver: MessageResolver, logged: Position): Unit = {
     resolver.log(logger, level, this)(logged)
   }
 }

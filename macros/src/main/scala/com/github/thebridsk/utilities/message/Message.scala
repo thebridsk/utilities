@@ -24,7 +24,7 @@ case class Message(bundle: String, key: String, args: Any*)(
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
-  override def toString() = {
+  override def toString(): String = {
     val loc = created.fileName + ":" + created.lineNumber
 
     "{Message bundle=" + bundle + ", key=" + key + ", args=" +
@@ -36,7 +36,7 @@ case class Message(bundle: String, key: String, args: Any*)(
     * @param resolver
     * @return the message
     */
-  def toNLS(implicit resolver: MessageResolver) = resolver.toNLS(this)
+  def toNLS(implicit resolver: MessageResolver): String = resolver.toNLS(this)
 
   /**
     * Trace the message
@@ -47,7 +47,7 @@ case class Message(bundle: String, key: String, args: Any*)(
     */
   def log(logger: Logger, level: Level, clsname: String, methodname: String)(
       implicit resolver: MessageResolver
-  ) = {
+  ): Unit = {
     resolver.log(logger, level, clsname, methodname, this)
   }
 }
@@ -73,7 +73,7 @@ case class MessageResolver(
     else ResourceBundle.getBundle(msg.bundle, locale, useClassLoader, control)
   }
 
-  def toNLS(msg: Message) = {
+  def toNLS(msg: Message): String = {
     Message.getNLSMessage(rb(msg), msg.bundle, locale, msg.key, msg.args: _*)
   }
 
@@ -90,14 +90,14 @@ case class MessageResolver(
       clsname: String,
       methodname: String,
       msg: Message
-  ) = {
+  ): Unit = {
     logger.logrb(level, clsname, methodname, rb(msg), msg.key, msg.args);
   }
 
 }
 
 object Message {
-  val fsLog =
+  val fsLog: Logger =
     Logger.getLogger(classOf[Message].getName(), null /* resource bundle */ );
 
   /**
@@ -114,7 +114,7 @@ object Message {
       locale: Locale,
       key: String,
       args: Any*
-  ) = {
+  ): String = {
     try {
       val fmt = rb.getString(key)
       val msg = getFormattedMessage(locale, fmt, args: _*)
@@ -132,7 +132,7 @@ object Message {
     * @param args
     * @return the formatted message
     */
-  def getFormattedMessage(locale: Locale, fmt: String, args: Any*) = {
+  def getFormattedMessage(locale: Locale, fmt: String, args: Any*): String = {
 
     if (args != null && args.length > 0) {
       val b: Appendable = new java.lang.StringBuilder();

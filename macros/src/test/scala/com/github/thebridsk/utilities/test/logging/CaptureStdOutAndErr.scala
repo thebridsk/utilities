@@ -37,12 +37,12 @@ object CaptureStdOutAndErr {
         stderr = null
       }
 
-      def getStdout() = {
+      def getStdout(): String = {
         System.out.flush()
         stdout.toString()
       }
 
-      def getStderr() = {
+      def getStderr(): String = {
         System.err.flush()
         stderr.toString()
       }
@@ -50,7 +50,7 @@ object CaptureStdOutAndErr {
 
     type RunWithCapture = Run => Unit
 
-    def runWithCapture( f: CaptureStdOutAndErr.RunWithCapture ) = {
+    def runWithCapture( f: CaptureStdOutAndErr.RunWithCapture ): Unit = {
 
       val run = new CaptureStdOutAndErr.Run()
       try {

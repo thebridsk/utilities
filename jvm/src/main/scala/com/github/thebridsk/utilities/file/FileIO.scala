@@ -23,11 +23,11 @@ import java.nio.file.FileVisitResult
 import java.nio.file.DirectoryNotEmptyException
 
 object FileIO {
-  val log = Logger(getClass().getName)
+  val log: Logger = Logger(getClass().getName)
 
   import scala.language.implicitConversions
 
-  implicit val utf8 = Codec.UTF8
+  implicit val utf8: Codec = Codec.UTF8
 
   implicit def getPath(filename: String): Path =
     FileSystems.getDefault.getPath(filename)
@@ -42,7 +42,7 @@ object FileIO {
   val newsuffix = ".new"
   val newsuffixForPattern = "\\.new"
 
-  def newfilename(filename: String) = filename + newsuffix
+  def newfilename(filename: String): String = filename + newsuffix
 
   def readFile(filename: File): String = {
     log.finest("Reading to file " + filename)
@@ -96,7 +96,7 @@ object FileIO {
    * @param directory the base directory
    * @param ext an optional extension of files to delete.  MUST NOT start with ".".
    */
-  def deleteDirectory( directory: Path, ext: Option[String] ) = {
+  def deleteDirectory( directory: Path, ext: Option[String] ): Unit = {
     val extension = ext.map( e => "."+e )
     if (directory.toFile().exists()) {
       if (directory.toFile().isDirectory()) {
@@ -218,7 +218,7 @@ object FileIO {
     Files.list(dir).iterator().asScala
   }
 
-  def exists(path: String) = Files.exists(path)
+  def exists(path: String): Boolean = Files.exists(path)
 
-  def mktree(path: Path) = Files.createDirectories(path)
+  def mktree(path: Path): Path = Files.createDirectories(path)
 }

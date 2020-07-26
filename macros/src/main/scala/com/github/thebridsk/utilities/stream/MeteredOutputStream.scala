@@ -21,14 +21,14 @@ class MeteredOutputStream(out: OutputStream, initialcount: Long = 0)
     currentsize += len;
   }
 
-  override def flush() = out.flush()
+  override def flush(): Unit = out.flush()
 
-  override def close() = out.close()
+  override def close(): Unit = out.close()
 
   /**
     * @return the count
     */
-  def getCurrentSize() = {
+  def getCurrentSize(): Long = {
     currentsize;
   }
 

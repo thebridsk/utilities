@@ -9,6 +9,7 @@ import com.github.thebridsk.utilities.macros.Source._
 import java.util.logging.Level
 import com.github.thebridsk.utilities.main.Main
 import com.github.thebridsk.utilities.classpath.ClassPath
+import org.rogach.scallop.ScallopOption
 
 class TestMacros extends Logging {
 
@@ -41,13 +42,13 @@ object TestMain extends Main { // with Logging {
 
   val version = "0.2"
 
-  val optionDef = toggle("def", descrYes="enable def", descrNo="disable def")
-  val optionA = toggle("abc", descrYes="enable abc")
-  val optionXyz = opt[String]("xyz", short='x', descr="val is the xyz option", argName="val")
+  val optionDef: ScallopOption[Boolean] = toggle("def", descrYes="enable def", descrNo="disable def")
+  val optionA: ScallopOption[Boolean] = toggle("abc", descrYes="enable abc")
+  val optionXyz: ScallopOption[String] = opt[String]("xyz", short='x', descr="val is the xyz option", argName="val")
 
-  val runFunFunction = () => logger.info("Hello from runFunFunction")
+  val runFunFunction: () => Unit = () => logger.info("Hello from runFunFunction")
 
-  def execute() = {
+  def execute(): Int = {
     println(ClassPath.show("", getClass.getClassLoader))
     testLogging()
     if (optionXyz.isSupplied) {
@@ -62,7 +63,7 @@ object TestMain extends Main { // with Logging {
     0
   }
 
-  def runFun( fun: ()=>Unit) = {
+  def runFun( fun: ()=>Unit): Unit = {
     fun()
   }
 
@@ -127,7 +128,7 @@ object TestMain extends Main { // with Logging {
     "world"
   }
 
-  val tracefun = {
+  val tracefun: Unit = {
     logger.info("Hello from tracefun")
   }
 

@@ -25,19 +25,19 @@ trait Counters {
 object ReturnOptions {
   case class Options( initrc: Option[Int] = Some(0), executerc: Option[Int] = Some(0), cleanupreturn: Boolean = true )
 
-  val optionOk = Options()
-  val optionInit1 = Options(Some(1))
-  val optionInit2 = Options(Some(2))
-  val optionInitEx = Options(None)
+  val optionOk: Options = Options()
+  val optionInit1: Options = Options(Some(1))
+  val optionInit2: Options = Options(Some(2))
+  val optionInitEx: Options = Options(None)
 
-  val optionExec1 = Options(Some(0), Some(1))
-  val optionExec2 = Options(Some(0), Some(2))
-  val optionExecEx = Options(Some(0), None )
+  val optionExec1: Options = Options(Some(0), Some(1))
+  val optionExec2: Options = Options(Some(0), Some(2))
+  val optionExecEx: Options = Options(Some(0), None )
 
-  val optionCleanEx = Options(Some(0), Some(0), false)
-  val optionExec1CleanEx = Options(Some(0), Some(1), false)
-  val optionExecExCleanEx = Options(Some(0), None, false)
-  val optionInit1CleanEx = Options(Some(1), Some(0), false)
+  val optionCleanEx: Options = Options(Some(0), Some(0), false)
+  val optionExec1CleanEx: Options = Options(Some(0), Some(1), false)
+  val optionExecExCleanEx: Options = Options(Some(0), None, false)
+  val optionInit1CleanEx: Options = Options(Some(1), Some(0), false)
 }
 
 import ReturnOptions._
@@ -52,18 +52,18 @@ class ExampleSubcommand( name: String,
                          ) extends Subcommand(name) with Counters {
 
   override
-  def init() = {
+  def init(): Int = {
     initCount = counter.incrementAndGet()
     returnOptions.initrc.getOrElse( throw new ExceptionForTest("from init"))
   }
 
-  def executeSubcommand() = {
+  def executeSubcommand(): Int = {
     executeCount = counter.incrementAndGet()
     returnOptions.executerc.getOrElse( throw new ExceptionForTest("from executerc"))
   }
 
   override
-  def cleanup() = {
+  def cleanup(): Unit = {
     cleanupCount = counter.incrementAndGet()
     if (!returnOptions.cleanupreturn) throw new ExceptionForTest("from cleanup")
   }
@@ -74,18 +74,18 @@ class SimpleMain( returnOptions: Options = optionOk ) extends Main with Counters
   val counter = new AtomicInteger(0)
 
   override
-  def init() = {
+  def init(): Int = {
     initCount = counter.incrementAndGet()
     returnOptions.initrc.getOrElse( throw new ExceptionForTest("from init"))
   }
 
-  def execute() = {
+  def execute(): Int = {
     executeCount = counter.incrementAndGet()
     returnOptions.executerc.getOrElse( throw new ExceptionForTest("from executerc"))
   }
 
   override
-  def cleanup() = {
+  def cleanup(): Unit = {
     cleanupCount = counter.incrementAndGet()
     if (!returnOptions.cleanupreturn) throw new ExceptionForTest("from cleanup")
   }
@@ -93,9 +93,9 @@ class SimpleMain( returnOptions: Options = optionOk ) extends Main with Counters
 
 object MainTest {
 
-  val testlog = Logger[MainTest]()
+  val testlog: Logger = Logger[MainTest]()
 
-  def startTestLogging() = {
+  def startTestLogging(): Unit = {
     val logfilenameprefix = "logs/unittestLoggingTest"
     val handler = new FileHandler(s"${logfilenameprefix}.%d.%u.log")
     handler.setLimit(10000)
@@ -117,7 +117,7 @@ class MainTest extends AnyFlatSpec with Matchers {
 
 //  println( ClassPath.show("", getClass.getClassLoader) )
 
-  val testlog = Logger[MainTest]()
+  val testlog: Logger = Logger[MainTest]()
 
   behavior of "Main class"
 
@@ -203,7 +203,7 @@ class MainTest extends AnyFlatSpec with Matchers {
 
   behavior of "Main class with subcommand"
 
-  def mainWithSubcommands( mainOptions: Options = optionOk, testOptions: Options = optionOk) = {
+  def mainWithSubcommands( mainOptions: Options = optionOk, testOptions: Options = optionOk): (SimpleMain, ExampleSubcommand) = {
     val m = new SimpleMain(mainOptions)
     val t = new ExampleSubcommand("test",m.counter,testOptions)
     m.addSubcommand(t)
@@ -322,7 +322,7 @@ class MainTest extends AnyFlatSpec with Matchers {
 
   behavior of "Main class with nested subcommands"
 
-  def mainWith2Subcommands( mainOptions: Options = optionOk, testOptions: Options = optionOk, test2Options: Options = optionOk) = {
+  def mainWith2Subcommands( mainOptions: Options = optionOk, testOptions: Options = optionOk, test2Options: Options = optionOk): (SimpleMain, ExampleSubcommand, ExampleSubcommand) = {
     val m = new SimpleMain(mainOptions)
     val t = new ExampleSubcommand("test",m.counter,testOptions)
     val t2 = new ExampleSubcommand("again",m.counter,test2Options)

@@ -11,14 +11,14 @@ import scala.collection.mutable.TreeSet
 import com.github.thebridsk.utilities.nls.Messages
 
 object Config {
-  val fsLog = JLogger.getLogger(classOf[Config].getName(), Messages.BUNDLE_NAME);
+  val fsLog: JLogger = JLogger.getLogger(classOf[Config].getName(), Messages.BUNDLE_NAME);
 
   /**
     * The default logging.properties filename.
     */
   val fsLoggingProperties = "logging.properties";
   val fsFileLoggingProperties = new File(fsLoggingProperties);
-  val fsDefaultLoggingProperties = "com/github/thebridsk/utilties/logging/" + fsLoggingProperties
+  val fsDefaultLoggingProperties: String = "com/github/thebridsk/utilties/logging/" + fsLoggingProperties
 
   private[Config] var fsProgramName: Option[String] = None;
   private[Config] var fsProgramVersion: Option[String] = None;
@@ -35,7 +35,7 @@ object Config {
     * <li>level
     * </ol>
     */
-  val fsTraceSpec = Pattern.compile("([^=]+)=([^:]+):?");
+  val fsTraceSpec: Pattern = Pattern.compile("([^=]+)=([^:]+):?");
 
   def isInitialized = initialized
 
@@ -102,7 +102,7 @@ object Config {
     initialized = true
   }
 
-  def showHandlerForAllLoggers() = {
+  def showHandlerForAllLoggers(): Unit = {
     val lm = LogManager.getLogManager()
     val enum = lm.getLoggerNames()
     while (enum.hasMoreElements()) {
@@ -112,7 +112,7 @@ object Config {
     }
   }
 
-  def showHandlers( logger: java.util.logging.Logger ) = {
+  def showHandlers( logger: java.util.logging.Logger ): Unit = {
     println(s"For logger <${logger.getName()}>")
     logger.getHandlers.foreach { h =>
       println(s"  Handler: ${h.getClass().getName()}")
@@ -256,7 +256,7 @@ object Config {
     * @throws SecurityException
     * @throws IOException
     */
-  def setLogFile(logfilename: String) = {
+  def setLogFile(logfilename: String): Unit = {
     val h = new FileHandler(logfilename);
     val root = JLogger.getLogger("");
     root.addHandler(h);
@@ -266,7 +266,7 @@ object Config {
     * Set the level on all console handlers on the root logger
     * @param level
     */
-  def setLevelOnConsoleHandler(level: Level) = {
+  def setLevelOnConsoleHandler(level: Level): Unit = {
     val root = JLogger.getLogger("");
     for (h <- root.getHandlers) {
       if (h.isInstanceOf[ConsoleHandler]) {
@@ -290,21 +290,21 @@ object Config {
   /**
     * @return the program name
     */
-  def getProgramName() = {
+  def getProgramName(): Option[String] = {
     fsProgramName;
   }
 
   /**
     * @return the program version
     */
-  def getProgramVersion() = {
+  def getProgramVersion(): Option[String] = {
     fsProgramVersion;
   }
 
   /**
     * @return the classloader for the program
     */
-  def getprogramClassLoader() = {
+  def getprogramClassLoader(): Option[ClassLoader] = {
     fsProgramClassLoader;
   }
 
@@ -336,12 +336,12 @@ object Config {
     }
   }
 
-  def getProperty(key: String) = {
+  def getProperty(key: String): String = {
     val manager: LogManager = LogManager.getLogManager();
     manager.getProperty(key);
   }
 
-  def getStringProperty(key: String, default: => String) = {
+  def getStringProperty(key: String, default: => String): String = {
     Option( getProperty(key) ).getOrElse(default)
   }
 
@@ -431,7 +431,7 @@ class Config() {
     * Example:
     * *=WARNING:com.example=INFO:com.example.donttrace=OFF
     */
-  def setTraceSpec(spec: String) = synchronized {
+  def setTraceSpec(spec: String): Unit = synchronized {
     val saveLevel = fsLog.getLevel();
     try {
       fsLog.setLevel(Level.FINE);

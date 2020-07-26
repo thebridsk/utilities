@@ -4,7 +4,7 @@ import com.github.thebridsk.utilities.logging.Level._
 
 class PrintHandler extends Handler {
 
-  def logIt(traceMsg: TraceMsg) = {
+  def logIt(traceMsg: TraceMsg): Unit = {
     if (isLoggingLevel(traceMsg.level)) {
       val s = formatter.format(traceMsg)
       traceMsg.level match {
@@ -19,16 +19,16 @@ class PrintHandler extends Handler {
     }
   }
 
-  def error(msg: String) = {
+  def error(msg: String): Unit = {
     println(msg)
   }
-  def warning(msg: String) = {
+  def warning(msg: String): Unit = {
     println(msg)
   }
-  def info(msg: String) = {
+  def info(msg: String): Unit = {
     println(msg)
   }
-  def debug(msg: String) = {
+  def debug(msg: String): Unit = {
     println(msg)
   }
 

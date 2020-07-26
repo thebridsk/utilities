@@ -23,7 +23,7 @@ class TeeOutputStream(streams: OutputStream*) extends OutputStream {
     * @return the stream, null if index is out of range
     * @throws IOException
     */
-  def getStream(i: Int, closeOthers: Boolean) = {
+  def getStream(i: Int, closeOthers: Boolean): OutputStream = {
     var ret: OutputStream = null;
     if (closeOthers) {
       for (j <- 0 to streams.length) {

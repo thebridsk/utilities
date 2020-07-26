@@ -25,12 +25,12 @@ object DefaultFormatter extends Formatter {
     }
   }
 
-  def getPrefix(traceMsg: TraceMsg) = {
+  def getPrefix(traceMsg: TraceMsg): String = {
     import traceMsg._
     LoggerImplFactory.formatTime(time) + " " + level.short + " " + pos.fileName + ":" + pos.lineNumber
   }
 
-  def getMsg(traceMsg: TraceMsg) = {
+  def getMsg(traceMsg: TraceMsg): String = {
     import traceMsg._
     if (args.length == 0) message
     else {
@@ -39,7 +39,7 @@ object DefaultFormatter extends Formatter {
     }
   }
 
-  def getException(e: Throwable) = {
+  def getException(e: Throwable): String = {
     val out = new StringWriter
     val pw = new PrintWriter(out)
     e.printStackTrace(pw)

@@ -12,7 +12,7 @@ class TestLogging extends AnyFlatSpec with Matchers {
   behavior of this.getClass.getName+" in utilities-jvm"
 
   SystemTimeJvm()
-  implicit val rootHandler = new TestHandler
+  implicit val rootHandler: TestHandler = new TestHandler
   LoggerImplFactory.init()
 
   it should "have a root logger with a level of INFO" in {
@@ -39,7 +39,7 @@ class TestLogging extends AnyFlatSpec with Matchers {
     }
   }
 
-  val testLogger = Logger[TestLogging]()
+  val testLogger: Logger = Logger[TestLogging]()
 
   it should "have a test logger with a level of None" in {
     testLogger.getLevel match {
@@ -54,7 +54,7 @@ class TestLogging extends AnyFlatSpec with Matchers {
   }
 
 
-  def test( result: Option[String], loggingFun: Function0[Unit] )(implicit handler: TestHandler, pos: Position) = {
+  def test( result: Option[String], loggingFun: Function0[Unit] )(implicit handler: TestHandler, pos: Position): Any = {
     handler.clear()
     loggingFun()
     val res = handler.getLog
@@ -211,7 +211,7 @@ class TestLogging extends AnyFlatSpec with Matchers {
     test( Some( """2 TestLogging\.scala\:\d+ Exit goodbye\n"""), ()=>testLogger.exiting("goodbye") )
   }
 
-  val test2logger = Logger("comm.Sending")
+  val test2logger: Logger = Logger("comm.Sending")
 
   val utilsHandler = new TestHandler
 

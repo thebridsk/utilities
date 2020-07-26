@@ -19,21 +19,21 @@ class EatCloseOutputStream(
     eatClose: Boolean = false
 ) extends FilterOutputStream(out) {
 
-  override def close() = {
+  override def close(): Unit = {
     if (!eatClose) {
       super.close();
     }
   }
 
-  override def write(b: Array[Byte], off: Int, len: Int) = {
+  override def write(b: Array[Byte], off: Int, len: Int): Unit = {
     out.write(b, off, len);
   }
 
-  override def write(b: Array[Byte]) = {
+  override def write(b: Array[Byte]): Unit = {
     out.write(b, 0, b.length);
   }
 
-  override def write(b: Int) = {
+  override def write(b: Int): Unit = {
     out.write(b);
   }
 }
@@ -52,7 +52,7 @@ class ConsoleHandler extends MyStreamHandler {
     new EatCloseOutputStream(System.out, "out", true);
   setOutputStream(fOut);
 
-  override def publish(record: LogRecord) = synchronized {
+  override def publish(record: LogRecord): Unit = synchronized {
     super.publish(record);
     flush();
   }

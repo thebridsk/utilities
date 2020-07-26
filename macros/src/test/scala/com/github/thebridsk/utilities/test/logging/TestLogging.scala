@@ -37,14 +37,14 @@ import TestLogging._
 
 class TestLogging extends AnyFlatSpec with Matchers {
 
-  val lineend = System.getProperty("line.separator")
+  val lineend: String = System.getProperty("line.separator")
 
-  val runningInEclipse = sys.props.get("RunningInEclipse").map(s=>true).getOrElse(false)
+  val runningInEclipse: Boolean = sys.props.get("RunningInEclipse").map(s=>true).getOrElse(false)
 
   behavior of "logging formatters in utilities-macros"
 
-  val fulldate = DateTimeFormatter.ofPattern("MM-dd HH:mm:ss").withZone(ZoneId.systemDefault()).format( Instant.ofEpochMilli(0) )
-  val justtime = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.systemDefault()).format( Instant.ofEpochMilli(0) )
+  val fulldate: String = DateTimeFormatter.ofPattern("MM-dd HH:mm:ss").withZone(ZoneId.systemDefault()).format( Instant.ofEpochMilli(0) )
+  val justtime: String = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.systemDefault()).format( Instant.ofEpochMilli(0) )
 
   it should "format a log record with simple console formatter" in {
     Thread.currentThread().setName("TestThread")

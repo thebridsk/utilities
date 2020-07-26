@@ -3,6 +3,7 @@ package com.github.thebridsk.utilities.main
 import org.rogach.scallop.ValueConverter
 import scala.reflect.io.Path
 import scala.reflect.io.Directory
+import scala.reflect.runtime.universe
 
 object Converters {
   implicit object PathConverter extends ValueConverter[Path] {
@@ -19,7 +20,7 @@ object Converters {
         case _   => Left("provide filename") // error when parsing
       }
 
-    val tag = scala.reflect.runtime.universe.typeTag[Path] // some magic to make typing work
+    val tag: universe.TypeTag[Path] = universe.typeTag[Path] // some magic to make typing work
     val argType = org.rogach.scallop.ArgType.SINGLE
   }
 
@@ -39,7 +40,7 @@ object Converters {
         case _   => Left("provide filename") // error when parsing
       }
 
-    val tag = scala.reflect.runtime.universe.typeTag[Directory] // some magic to make typing work
+    val tag: universe.TypeTag[Directory] = universe.typeTag[Directory] // some magic to make typing work
     val argType = org.rogach.scallop.ArgType.SINGLE
   }
 }

@@ -139,9 +139,9 @@ object MsgFormatter {
       logString: String,
       msgtype: MsgType = Normal
   ) {
-    def isNormal = msgtype == Normal
-    def isEntry = msgtype == Entry
-    def isExit = msgtype == Exit
+    def isNormal: Boolean = msgtype == Normal
+    def isEntry: Boolean = msgtype == Entry
+    def isExit: Boolean = msgtype == Exit
   }
 
   private val fsLevels = scala.collection.mutable.Map[jul.Level, MessageType]()
@@ -163,7 +163,7 @@ object MsgFormatter {
   private val fsExit = MessageType(jul.Level.FINER, "<", Exit)
   private val fsThrowing = MessageType(jul.Level.FINER, "T")
   private val fsFiner = MessageType(jul.Level.FINER, "2")
-  val fsUnknown = MessageType(null, "?")
+  val fsUnknown: MessageType = MessageType(null, "?")
 
   def mapLevelToType(record: jul.LogRecord): MessageType = {
     val level = record.getLevel()
@@ -207,7 +207,7 @@ object MsgFormatter {
     else false
   }
 
-  val fsNewLine = System.getProperty("line.separator");
+  val fsNewLine: String = System.getProperty("line.separator");
 
 }
 
@@ -280,17 +280,17 @@ class MsgFormatter(
 
   def this() = this(defaultDateFormat)
 
-  lazy val dateFormat = getProp( propDateFormat, defDateFormat)
-  lazy val timezone = getProp( propTimezone, defTimezone)
-  lazy val traceFormat = getProp( propFormat, defFormat)
-  lazy val fakeDate = getPropBoolean( propFakeDate, defFakeDate)
-  lazy val fmtMsg = getPropBoolean( propFmtMsg, defFmtMsg)
-  lazy val useResource = getPropBoolean( propUseResource, defUseResource)
-  lazy val showKey = getPropBoolean( propShowKey, defShowKey)
-  lazy val addHeader = getPropBoolean( propAddHeader, defAddHeader)
-  lazy val useThreadName = getPropBoolean( propUseThreadName, defUseThreadName)
+  lazy val dateFormat: String = getProp( propDateFormat, defDateFormat)
+  lazy val timezone: String = getProp( propTimezone, defTimezone)
+  lazy val traceFormat: String = getProp( propFormat, defFormat)
+  lazy val fakeDate: Boolean = getPropBoolean( propFakeDate, defFakeDate)
+  lazy val fmtMsg: Boolean = getPropBoolean( propFmtMsg, defFmtMsg)
+  lazy val useResource: Boolean = getPropBoolean( propUseResource, defUseResource)
+  lazy val showKey: Boolean = getPropBoolean( propShowKey, defShowKey)
+  lazy val addHeader: Boolean = getPropBoolean( propAddHeader, defAddHeader)
+  lazy val useThreadName: Boolean = getPropBoolean( propUseThreadName, defUseThreadName)
 
-  lazy val dateFmt =
+  lazy val dateFmt: jtime.format.DateTimeFormatter =
     jtime.format.DateTimeFormatter.ofPattern( dateFormat )
         .withZone(
           if (timezone != null) {
@@ -300,7 +300,7 @@ class MsgFormatter(
           }
         )
 
-  def getShortName( fullname: String ) = {
+  def getShortName( fullname: String ): String = {
     val sc = fullname.substring(fullname.lastIndexOf('.') + 1)
     val shortClass =
       if (sc.length() == 0) {
@@ -393,7 +393,7 @@ class MsgFormatter(
     * @param record
     * @return the formatted string
     */
-  def formatMessage(mt: MessageType, record: jul.LogRecord) = synchronized {
+  def formatMessage(mt: MessageType, record: jul.LogRecord): String = synchronized {
     var format = record.getMessage()
     var key = ""
     var bundle: ju.ResourceBundle = null
@@ -512,7 +512,7 @@ class MsgFormatter(
     ""
   }
 
-  lazy val thisClassName = getClass().getName
+  lazy val thisClassName: String = getClass().getName
 
   def getProp(suffix: String, default: String): String = {
     Config.getStringProperty(

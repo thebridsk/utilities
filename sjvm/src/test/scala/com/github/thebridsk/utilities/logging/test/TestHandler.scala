@@ -9,7 +9,7 @@ class TestHandler extends Handler {
 
   val buf = new StringBuilder
 
-  def logIt( traceMsg: TraceMsg ) = {
+  def logIt( traceMsg: TraceMsg ): Unit = {
     if (isLoggingLevel(traceMsg.level)) {
       val s = formatter.format(traceMsg)
       traceMsg.level match {
@@ -24,20 +24,20 @@ class TestHandler extends Handler {
     }
   }
 
-  def error( msg: String ) = {
+  def error( msg: String ): Unit = {
     buf ++= msg ++= "\n"
   }
-  def warning( msg: String ) = {
+  def warning( msg: String ): Unit = {
     buf ++= msg ++= "\n"
   }
-  def info( msg: String ) = {
+  def info( msg: String ): Unit = {
     buf ++= msg ++= "\n"
   }
-  def debug( msg: String ) = {
+  def debug( msg: String ): Unit = {
     buf ++= msg ++= "\n"
   }
 
-  def getLog = buf.toString()
+  def getLog: String = buf.toString()
 
-  def clear() = buf.clear()
+  def clear(): Unit = buf.clear()
 }
