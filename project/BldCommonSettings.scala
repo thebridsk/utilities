@@ -53,6 +53,7 @@ object BldCommonSettings {
         "-encoding",
         "utf8",
         "-feature",
+        // "-Ywarn-adapted-args", // required by `NoAutoTupling` rule
         "-Wunused:imports",   // required by `RemoveUnused` rule
 //        "-Xlog-implicits",
       ) ::: {

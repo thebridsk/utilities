@@ -8,6 +8,7 @@ import com.typesafe.sbt.GitPlugin.autoImport._
 import com.typesafe.sbt.GitVersioning
 import com.typesafe.sbt.GitBranchPrompt
 
+import BldVersion._
 import BldDependencies._
 import BldCommonSettings._
 
@@ -45,8 +46,10 @@ object BldUtilities {
     )
   }
 
-  inThisBuild(
+  def init = inThisBuild(
     List(
+      scalaVersion := verScalaVersion,
+      scalafixScalaBinaryVersion := CrossVersion.binaryScalaVersion(verScalaVersion),
       semanticdbEnabled := false,
       semanticdbVersion := scalafixSemanticdb.revision,
     )
