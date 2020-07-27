@@ -4,7 +4,6 @@ import com.github.thebridsk.utilities.logging.Logging
 
 import java.util.logging.Level
 
-
 import com.github.thebridsk.utilities.logging.Config
 import org.rogach.scallop.ScallopConf
 import org.rogach.scallop.exceptions.Help

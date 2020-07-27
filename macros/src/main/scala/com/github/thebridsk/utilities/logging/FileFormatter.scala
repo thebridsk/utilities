@@ -4,7 +4,6 @@
 
 package com.github.thebridsk.utilities.logging
 
-
 /**
   * A formatter for logging
   *
@@ -46,6 +45,11 @@ package com.github.thebridsk.utilities.logging
   *   useThreadName=<boolean>
   *               If true, use the thread name, the default
   *               otherwise use the thread id
+  *   addException=<enum>
+  *               how to show exception in trace message, valid values(default: long):
+  *                 none  - don't show exception at all
+  *                 short - only show exception toString
+  *                 long  - show exception with stack trace
   *
   * @constructor
   * @param defDateFormat
@@ -57,11 +61,11 @@ package com.github.thebridsk.utilities.logging
   * @param defShowKey
   * @param defAddHeader
   * @param defUseThreadName
+  * @param defAddException
   */
 class FileFormatter(
     defDateFormat: String = "[yyyy-MM-dd HH:mm:ss:SSS zzz]",
     defTimezone: String = MsgFormatterDefaults.defaultTimezone,
-
     // 1 - timestamp (String)
     // 2 - thread (String if useThreadName==true, otherwise Long)
     // 3 - level (String)
@@ -72,25 +76,25 @@ class FileFormatter(
     // 8 - short classname (String)
     // 9 - short loggername (String)
     defFormat: String = "%1$s %2$s %9$-20s %3$s %5$s.%6$s %7$s",
-
     defFakeDate: Boolean = false,
     defFmtMsg: Boolean = true,
     defUseResource: Boolean = true,
     defShowKey: Boolean = false,
     defAddHeader: Boolean = true,
     defUseThreadName: Boolean = true,
-
+    defAddException: String = "long"
 ) extends MsgFormatter(
-    defDateFormat = defDateFormat,
-    defTimezone = defTimezone,
-    defFormat = defFormat,
-    defFakeDate = defFakeDate,
-    defFmtMsg = defFmtMsg,
-    defUseResource = defUseResource,
-    defShowKey = defShowKey,
-    defAddHeader = defAddHeader,
-    defUseThreadName = defUseThreadName
-) {
+      defDateFormat = defDateFormat,
+      defTimezone = defTimezone,
+      defFormat = defFormat,
+      defFakeDate = defFakeDate,
+      defFmtMsg = defFmtMsg,
+      defUseResource = defUseResource,
+      defShowKey = defShowKey,
+      defAddHeader = defAddHeader,
+      defUseThreadName = defUseThreadName,
+      defAddException = defAddException
+    ) {
   // this is required so the LogManager can create it
   def this() = {
     this("[yyyy-MM-dd HH:mm:ss:SSS zzz]")

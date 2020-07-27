@@ -92,38 +92,47 @@ object FileIO {
   }
 
   /**
-   * Recursivily deletes all files
-   * @param directory the base directory
-   * @param ext an optional extension of files to delete.  MUST NOT start with ".".
-   */
-  def deleteDirectory( directory: Path, ext: Option[String] ): Unit = {
-    val extension = ext.map( e => "."+e )
+    * Recursivily deletes all files
+    * @param directory the base directory
+    * @param ext an optional extension of files to delete.  MUST NOT start with ".".
+    */
+  def deleteDirectory(directory: Path, ext: Option[String]): Unit = {
+    val extension = ext.map(e => "." + e)
     if (directory.toFile().exists()) {
       if (directory.toFile().isDirectory()) {
-        Files.walkFileTree(directory, new SimpleFileVisitor[Path]() {
-           override
-           def visitFile( file: Path, attrs: BasicFileAttributes ): FileVisitResult = {
-             val del = extension.map { e =>
-               file.toString().toLowerCase().endsWith(e)
-             }.getOrElse(true)
-             if (del) {
+        Files.walkFileTree(
+          directory,
+          new SimpleFileVisitor[Path]() {
+            override def visitFile(
+                file: Path,
+                attrs: BasicFileAttributes
+            ): FileVisitResult = {
+              val del = extension
+                .map { e =>
+                  file.toString().toLowerCase().endsWith(e)
+                }
+                .getOrElse(true)
+              if (del) {
 //               println(s"Deleting ${file}")
-               Files.delete(file);
-             }
-             FileVisitResult.CONTINUE;
-           }
+                Files.delete(file);
+              }
+              FileVisitResult.CONTINUE;
+            }
 
-           override
-           def postVisitDirectory( dir: Path, exc: IOException ): FileVisitResult = {
+            override def postVisitDirectory(
+                dir: Path,
+                exc: IOException
+            ): FileVisitResult = {
 //             println(s"Deleting ${dir}")
-             try {
-               Files.delete(dir);
-             } catch {
-               case x: DirectoryNotEmptyException =>
-             }
-             FileVisitResult.CONTINUE;
-           }
-        })
+              try {
+                Files.delete(dir);
+              } catch {
+                case x: DirectoryNotEmptyException =>
+              }
+              FileVisitResult.CONTINUE;
+            }
+          }
+        )
       } else {
         directory.toFile().delete()
       }
@@ -187,7 +196,7 @@ object FileIO {
       }
       s
     } catch {
-      case e @ (_ : FileNotFoundException | _ : NoSuchFileException) =>
+      case e @ (_: FileNotFoundException | _: NoSuchFileException) =>
         try readFile(filename)
         catch {
           case e1: IOException =>

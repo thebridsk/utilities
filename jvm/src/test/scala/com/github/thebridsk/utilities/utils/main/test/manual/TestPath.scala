@@ -7,6 +7,6 @@ object TestPath {
   def main(args: Array[String]): Unit = {
     val f = new File("logs/test.log")
     val p = f.getParent
-    println("Parent "+p)
+    println("Parent " + p)
   }
 }

@@ -30,7 +30,10 @@ case class Message(bundle: String, key: String, args: Any*)(
     * @param translated - where the msg was converted to string
     * @return the message
     */
-  def toNLS()(implicit resolver: MessageResolver, translated: Position): Unit = {
+  def toNLS()(
+      implicit resolver: MessageResolver,
+      translated: Position
+  ): Unit = {
     resolver.toNLS(this)(translated)
   }
 
@@ -67,6 +70,8 @@ trait MessageResolver {
     * @param msg
     * @param logged - where the msg was logged
     */
-  def log(logger: Logger, level: Level, msg: Message)(implicit logged: Position): Unit
+  def log(logger: Logger, level: Level, msg: Message)(
+      implicit logged: Position
+  ): Unit
 
 }

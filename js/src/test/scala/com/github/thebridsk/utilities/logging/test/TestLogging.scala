@@ -6,9 +6,10 @@ import com.github.thebridsk.utilities.logging.impl.LoggerImplFactory
 import com.github.thebridsk.utilities.logging.Logger
 import com.github.thebridsk.utilities.logging.Level
 import scala.util.matching.Regex
+import org.scalactic.source.Position
 
 class TestLogging extends AnyFlatSpec with Matchers {
-  behavior of this.getClass.getName+" in utilities-js"
+  behavior of this.getClass.getName + " in utilities-js"
 
   SystemTimeJs()
   implicit val rootHandler: TestHandler = new TestHandler
@@ -28,11 +29,11 @@ class TestLogging extends AnyFlatSpec with Matchers {
   }
 
   it should "have a root handler with a level of ALL" in {
-    Logger("").getHandlers.find( l => l.isInstanceOf[TestHandler]) match {
-      case Some(h: TestHandler) if h==rootHandler =>
+    Logger("").getHandlers.find(l => l.isInstanceOf[TestHandler]) match {
+      case Some(h: TestHandler) if h == rootHandler =>
         h.level mustBe Level.ALL
       case Some(h) =>
-        fail("Unknown handler returned: "+h.getClass.getName )
+        fail("Unknown handler returned: " + h.getClass.getName)
       case None =>
         fail("Did not find root handler")
     }
@@ -52,17 +53,18 @@ class TestLogging extends AnyFlatSpec with Matchers {
     testLogger.getEffectiveLevel mustBe Level.INFO
   }
 
-
-  def test( result: Option[String], loggingFun: =>Unit )(implicit handler: TestHandler): Any = {
+  def test(result: Option[String], loggingFun: => Unit)(
+      implicit handler: TestHandler
+  ): Any = {
     handler.clear()
     loggingFun
     val res = handler.getLog
     result match {
       case Some(r) =>
-        val pattern = new Regex("""\d\d?:\d\d:\d\d.\d\d\d """+r)
+        val pattern = new Regex("""\d\d?:\d\d:\d\d.\d\d\d """ + r)
         res match {
           case pattern() =>
-            // found result
+          // found result
           case _ =>
             fail(s"""log did not match ${pattern.toString()}: "${res}"""")
         }
@@ -71,34 +73,76 @@ class TestLogging extends AnyFlatSpec with Matchers {
     }
   }
 
-  class ExceptionForTest extends Exception( "ExceptionForTest" )
+  class ExceptionForTest extends Exception("ExceptionForTest")
 
   it should "log at the SEVERE level" in {
     testLogger.isSevereLoggable() mustBe true
 
-    test( Some( """E TestLogging\.scala\:79 Hello\n"""), testLogger.severe("Hello") )
-    test( Some( """E TestLogging\.scala\:\d+ Hello world\n"""), testLogger.severe("Hello %s", "world") )
-    test( Some( """E TestLogging\.scala\:\d+ Hello world for 2\n"""), testLogger.severe("Hello %s for %d", "world",2) )
-    test( Some( """E TestLogging\.scala\:\d+ Got exception: com\.github\.thebridsk\.utilities\.logging\.test\.TestLogging\$ExceptionForTest\: ExceptionForTest\s+at[\s\S.]*"""), testLogger.severe("Got exception: ", new ExceptionForTest) )
+    test(
+      Some(s"E TestLogging\\.scala\\:${Position.here.lineNumber+1} Hello\\n"),
+      testLogger.severe("Hello")
+    )
+    test(
+      Some("""E TestLogging\.scala\:\d+ Hello world\n"""),
+      testLogger.severe("Hello %s", "world")
+    )
+    test(
+      Some("""E TestLogging\.scala\:\d+ Hello world for 2\n"""),
+      testLogger.severe("Hello %s for %d", "world", 2)
+    )
+    test(
+      Some(
+        """E TestLogging\.scala\:\d+ Got exception: com\.github\.thebridsk\.utilities\.logging\.test\.TestLogging\$ExceptionForTest\: ExceptionForTest\s+at[\s\S.]*"""
+      ),
+      testLogger.severe("Got exception: ", new ExceptionForTest)
+    )
   }
 
   it should "log at the WARNING level" in {
     testLogger.isWarningLoggable() mustBe true
 
-    test( Some( """W TestLogging\.scala\:\d+ Hello\n"""), testLogger.warning("Hello") )
-    test( Some( """W TestLogging\.scala\:\d+ Hello world\n"""), testLogger.warning("Hello %s", "world") )
-    test( Some( """W TestLogging\.scala\:\d+ Hello world for 2\n"""), testLogger.warning("Hello %s for %d", "world",2) )
-    test( Some( """W TestLogging\.scala\:\d+ Got exception: com\.github\.thebridsk\.utilities\.logging\.test\.TestLogging\$ExceptionForTest\: ExceptionForTest\s+at[\s\S.]*"""), testLogger.warning("Got exception: ", new ExceptionForTest) )
+    test(
+      Some("""W TestLogging\.scala\:\d+ Hello\n"""),
+      testLogger.warning("Hello")
+    )
+    test(
+      Some("""W TestLogging\.scala\:\d+ Hello world\n"""),
+      testLogger.warning("Hello %s", "world")
+    )
+    test(
+      Some("""W TestLogging\.scala\:\d+ Hello world for 2\n"""),
+      testLogger.warning("Hello %s for %d", "world", 2)
+    )
+    test(
+      Some(
+        """W TestLogging\.scala\:\d+ Got exception: com\.github\.thebridsk\.utilities\.logging\.test\.TestLogging\$ExceptionForTest\: ExceptionForTest\s+at[\s\S.]*"""
+      ),
+      testLogger.warning("Got exception: ", new ExceptionForTest)
+    )
 
   }
 
   it should "log at the INFO level" in {
     testLogger.isInfoLoggable() mustBe true
 
-    test( Some( """I TestLogging\.scala\:\d+ Hello\n"""), testLogger.info("Hello") )
-    test( Some( """I TestLogging\.scala\:\d+ Hello world\n"""), testLogger.info("Hello %s", "world") )
-    test( Some( """I TestLogging\.scala\:\d+ Hello world for 2\n"""), testLogger.info("Hello %s for %d", "world",2) )
-    test( Some( """I TestLogging\.scala\:\d+ Got exception: com\.github\.thebridsk\.utilities\.logging\.test\.TestLogging\$ExceptionForTest\: ExceptionForTest\s+at[\s\S.]*"""), testLogger.info("Got exception: ", new ExceptionForTest) )
+    test(
+      Some("""I TestLogging\.scala\:\d+ Hello\n"""),
+      testLogger.info("Hello")
+    )
+    test(
+      Some("""I TestLogging\.scala\:\d+ Hello world\n"""),
+      testLogger.info("Hello %s", "world")
+    )
+    test(
+      Some("""I TestLogging\.scala\:\d+ Hello world for 2\n"""),
+      testLogger.info("Hello %s for %d", "world", 2)
+    )
+    test(
+      Some(
+        """I TestLogging\.scala\:\d+ Got exception: com\.github\.thebridsk\.utilities\.logging\.test\.TestLogging\$ExceptionForTest\: ExceptionForTest\s+at[\s\S.]*"""
+      ),
+      testLogger.info("Got exception: ", new ExceptionForTest)
+    )
 
   }
 
@@ -113,10 +157,10 @@ class TestLogging extends AnyFlatSpec with Matchers {
     testLogger.isFinerLoggable() mustBe false
     testLogger.isFinestLoggable() mustBe false
 
-    test( None, testLogger.config("Hello") )
-    test( None, testLogger.fine("Hello") )
-    test( None, testLogger.finer("Hello") )
-    test( None, testLogger.finest("Hello") )
+    test(None, testLogger.config("Hello"))
+    test(None, testLogger.fine("Hello"))
+    test(None, testLogger.finer("Hello"))
+    test(None, testLogger.finest("Hello"))
   }
 
   it should "log at the CONFIG and FINE level" in {
@@ -126,26 +170,57 @@ class TestLogging extends AnyFlatSpec with Matchers {
     testLogger.isWarningLoggable() mustBe true
     testLogger.isInfoLoggable() mustBe true
 
-    test( Some( """E TestLogging\.scala\:\d+ Hello\n"""), testLogger.severe("Hello") )
+    test(
+      Some("""E TestLogging\.scala\:\d+ Hello\n"""),
+      testLogger.severe("Hello")
+    )
 
     testLogger.isConfigLoggable() mustBe true
     testLogger.isFineLoggable() mustBe true
 
-    test( Some( """C TestLogging\.scala\:\d+ Hello\n"""), testLogger.config("Hello") )
-    test( Some( """C TestLogging\.scala\:\d+ Hello world\n"""), testLogger.config("Hello %s", "world") )
-    test( Some( """C TestLogging\.scala\:\d+ Hello world for 2\n"""), testLogger.config("Hello %s for %d", "world",2) )
-    test( Some( """C TestLogging\.scala\:\d+ Got exception: com\.github\.thebridsk\.utilities\.logging\.test\.TestLogging\$ExceptionForTest\: ExceptionForTest\s+at[\s\S.]*"""), testLogger.config("Got exception: ", new ExceptionForTest) )
+    test(
+      Some("""C TestLogging\.scala\:\d+ Hello\n"""),
+      testLogger.config("Hello")
+    )
+    test(
+      Some("""C TestLogging\.scala\:\d+ Hello world\n"""),
+      testLogger.config("Hello %s", "world")
+    )
+    test(
+      Some("""C TestLogging\.scala\:\d+ Hello world for 2\n"""),
+      testLogger.config("Hello %s for %d", "world", 2)
+    )
+    test(
+      Some(
+        """C TestLogging\.scala\:\d+ Got exception: com\.github\.thebridsk\.utilities\.logging\.test\.TestLogging\$ExceptionForTest\: ExceptionForTest\s+at[\s\S.]*"""
+      ),
+      testLogger.config("Got exception: ", new ExceptionForTest)
+    )
 
-    test( Some( """1 TestLogging\.scala\:\d+ Hello\n"""), testLogger.fine("Hello") )
-    test( Some( """1 TestLogging\.scala\:\d+ Hello world\n"""), testLogger.fine("Hello %s", "world") )
-    test( Some( """1 TestLogging\.scala\:\d+ Hello world for 2\n"""), testLogger.fine("Hello %s for %d", "world",2) )
-    test( Some( """1 TestLogging\.scala\:\d+ Got exception: com\.github\.thebridsk\.utilities\.logging\.test\.TestLogging\$ExceptionForTest\: ExceptionForTest\s+at[\s\S.]*"""), testLogger.fine("Got exception: ", new ExceptionForTest) )
+    test(
+      Some("""1 TestLogging\.scala\:\d+ Hello\n"""),
+      testLogger.fine("Hello")
+    )
+    test(
+      Some("""1 TestLogging\.scala\:\d+ Hello world\n"""),
+      testLogger.fine("Hello %s", "world")
+    )
+    test(
+      Some("""1 TestLogging\.scala\:\d+ Hello world for 2\n"""),
+      testLogger.fine("Hello %s for %d", "world", 2)
+    )
+    test(
+      Some(
+        """1 TestLogging\.scala\:\d+ Got exception: com\.github\.thebridsk\.utilities\.logging\.test\.TestLogging\$ExceptionForTest\: ExceptionForTest\s+at[\s\S.]*"""
+      ),
+      testLogger.fine("Got exception: ", new ExceptionForTest)
+    )
 
     testLogger.isFinerLoggable() mustBe false
     testLogger.isFinestLoggable() mustBe false
 
-    test( None, testLogger.finer("Hello") )
-    test( None, testLogger.finest("Hello") )
+    test(None, testLogger.finer("Hello"))
+    test(None, testLogger.finest("Hello"))
   }
 
   it should "log at the all levels" in {
@@ -155,7 +230,10 @@ class TestLogging extends AnyFlatSpec with Matchers {
     testLogger.isWarningLoggable() mustBe true
     testLogger.isInfoLoggable() mustBe true
 
-    test( Some( """E TestLogging\.scala\:\d+ Hello\n"""), testLogger.severe("Hello") )
+    test(
+      Some("""E TestLogging\.scala\:\d+ Hello\n"""),
+      testLogger.severe("Hello")
+    )
 
     testLogger.isConfigLoggable() mustBe true
     testLogger.isFineLoggable() mustBe true
@@ -163,15 +241,43 @@ class TestLogging extends AnyFlatSpec with Matchers {
     testLogger.isFinerLoggable() mustBe true
     testLogger.isFinestLoggable() mustBe true
 
-    test( Some( """2 TestLogging\.scala\:\d+ Hello\n"""), testLogger.finer("Hello") )
-    test( Some( """2 TestLogging\.scala\:\d+ Hello world\n"""), testLogger.finer("Hello %s", "world") )
-    test( Some( """2 TestLogging\.scala\:\d+ Hello world for 2\n"""), testLogger.finer("Hello %s for %d", "world",2) )
-    test( Some( """2 TestLogging\.scala\:\d+ Got exception: com\.github\.thebridsk\.utilities\.logging\.test\.TestLogging\$ExceptionForTest\: ExceptionForTest\s+at[\s\S.]*"""), testLogger.finer("Got exception: ", new ExceptionForTest) )
+    test(
+      Some("""2 TestLogging\.scala\:\d+ Hello\n"""),
+      testLogger.finer("Hello")
+    )
+    test(
+      Some("""2 TestLogging\.scala\:\d+ Hello world\n"""),
+      testLogger.finer("Hello %s", "world")
+    )
+    test(
+      Some("""2 TestLogging\.scala\:\d+ Hello world for 2\n"""),
+      testLogger.finer("Hello %s for %d", "world", 2)
+    )
+    test(
+      Some(
+        """2 TestLogging\.scala\:\d+ Got exception: com\.github\.thebridsk\.utilities\.logging\.test\.TestLogging\$ExceptionForTest\: ExceptionForTest\s+at[\s\S.]*"""
+      ),
+      testLogger.finer("Got exception: ", new ExceptionForTest)
+    )
 
-    test( Some( """3 TestLogging\.scala\:\d+ Hello\n"""), testLogger.finest("Hello") )
-    test( Some( """3 TestLogging\.scala\:\d+ Hello world\n"""), testLogger.finest("Hello %s", "world") )
-    test( Some( """3 TestLogging\.scala\:\d+ Hello world for 2\n"""), testLogger.finest("Hello %s for %d", "world",2) )
-    test( Some( """3 TestLogging\.scala\:\d+ Got exception: com\.github\.thebridsk\.utilities\.logging\.test\.TestLogging\$ExceptionForTest\: ExceptionForTest\s+at[\s\S.]*"""), testLogger.finest("Got exception: ", new ExceptionForTest) )
+    test(
+      Some("""3 TestLogging\.scala\:\d+ Hello\n"""),
+      testLogger.finest("Hello")
+    )
+    test(
+      Some("""3 TestLogging\.scala\:\d+ Hello world\n"""),
+      testLogger.finest("Hello %s", "world")
+    )
+    test(
+      Some("""3 TestLogging\.scala\:\d+ Hello world for 2\n"""),
+      testLogger.finest("Hello %s for %d", "world", 2)
+    )
+    test(
+      Some(
+        """3 TestLogging\.scala\:\d+ Got exception: com\.github\.thebridsk\.utilities\.logging\.test\.TestLogging\$ExceptionForTest\: ExceptionForTest\s+at[\s\S.]*"""
+      ),
+      testLogger.finest("Got exception: ", new ExceptionForTest)
+    )
 
   }
 
@@ -183,12 +289,21 @@ class TestLogging extends AnyFlatSpec with Matchers {
       extraRootHandler.level = Level.INFO
 
       testLogger.isFineLoggable() mustBe true
-      test( Some( """2 TestLogging\.scala\:\d+ Hello\n"""), testLogger.finer("Hello") )
-      test( None, testLogger.fine("Hello") )( extraRootHandler )
+      test(
+        Some("""2 TestLogging\.scala\:\d+ Hello\n"""),
+        testLogger.finer("Hello")
+      )
+      test(None, testLogger.fine("Hello"))(extraRootHandler)
 
       testLogger.isFineLoggable() mustBe true
-      test( Some( """I TestLogging\.scala\:\d+ Hello\n"""), testLogger.info("Hello") )
-      test( Some( """I TestLogging\.scala\:\d+ Hello\n"""), testLogger.info("Hello") )(extraRootHandler)
+      test(
+        Some("""I TestLogging\.scala\:\d+ Hello\n"""),
+        testLogger.info("Hello")
+      )
+      test(
+        Some("""I TestLogging\.scala\:\d+ Hello\n"""),
+        testLogger.info("Hello")
+      )(extraRootHandler)
 
     } finally {
       Logger("").removeHandler(extraRootHandler)
@@ -198,16 +313,33 @@ class TestLogging extends AnyFlatSpec with Matchers {
 
   it should "log ENTRY, EXIT, and THROWING" in {
     rootHandler.isLoggingLevel(Level.FINER) mustBe true
-    test( Some( """2 TestLogging\.scala\:\d+ Enter \n"""), testLogger.entering() )
-    test( Some( """2 TestLogging\.scala\:\d+ Exit \n"""), testLogger.exiting() )
-    test( Some( """2 TestLogging\.scala\:\d+ Throwing exception: com\.github\.thebridsk\.utilities\.logging\.test\.TestLogging\$ExceptionForTest\: ExceptionForTest\s+at[\s\S.]*"""), testLogger.throwing( new ExceptionForTest ) )
+    test(Some("""2 TestLogging\.scala\:\d+ Enter \n"""), testLogger.entering())
+    test(Some("""2 TestLogging\.scala\:\d+ Exit \n"""), testLogger.exiting())
+    test(
+      Some(
+        """2 TestLogging\.scala\:\d+ Throwing exception: com\.github\.thebridsk\.utilities\.logging\.test\.TestLogging\$ExceptionForTest\: ExceptionForTest\s+at[\s\S.]*"""
+      ),
+      testLogger.throwing(new ExceptionForTest)
+    )
   }
 
   it should "log ENTRY and EXIT with arguments" in {
-    test( Some( """2 TestLogging\.scala\:\d+ Enter hello\n"""), testLogger.entering("hello") )
-    test( Some( """2 TestLogging\.scala\:\d+ Exit goodbye\n"""), testLogger.exiting("goodbye") )
-    test( Some( """2 TestLogging\.scala\:\d+ Enter hello, world\n"""), testLogger.entering("hello","world") )
-    test( Some( """2 TestLogging\.scala\:\d+ Exit goodbye\n"""), testLogger.exiting("goodbye") )
+    test(
+      Some("""2 TestLogging\.scala\:\d+ Enter hello\n"""),
+      testLogger.entering("hello")
+    )
+    test(
+      Some("""2 TestLogging\.scala\:\d+ Exit goodbye\n"""),
+      testLogger.exiting("goodbye")
+    )
+    test(
+      Some("""2 TestLogging\.scala\:\d+ Enter hello, world\n"""),
+      testLogger.entering("hello", "world")
+    )
+    test(
+      Some("""2 TestLogging\.scala\:\d+ Exit goodbye\n"""),
+      testLogger.exiting("goodbye")
+    )
   }
 
   val test2logger: Logger = Logger("comm.Sending")
@@ -223,7 +355,8 @@ class TestLogging extends AnyFlatSpec with Matchers {
     rootHandler.clear()
     utilsHandler.clear()
     testLogger.info("Going to both")
-    val loggedmsg = """\d\d?:\d\d:\d\d.\d\d\d I TestLogging\.scala\:\d+ Going to both\n"""
+    val loggedmsg =
+      """\d\d?:\d\d:\d\d.\d\d\d I TestLogging\.scala\:\d+ Going to both\n"""
     rootHandler.getLog must fullyMatch regex loggedmsg
     utilsHandler.getLog must fullyMatch regex loggedmsg
   }
@@ -232,7 +365,8 @@ class TestLogging extends AnyFlatSpec with Matchers {
     rootHandler.clear()
     utilsHandler.clear()
     test2logger.info("Going to rootHandler")
-    val loggedmsg = """\d\d?:\d\d:\d\d.\d\d\d I TestLogging\.scala\:\d+ Going to rootHandler\n"""
+    val loggedmsg =
+      """\d\d?:\d\d:\d\d.\d\d\d I TestLogging\.scala\:\d+ Going to rootHandler\n"""
     rootHandler.getLog must fullyMatch regex loggedmsg
     utilsHandler.getLog mustBe ""
   }

@@ -36,7 +36,8 @@ class Logger private (name: String, resource: String) {
   def getResourceBundle = logger.getResourceBundle
   def getResourceBundleName = logger.getResourceBundleName
 
-  def isLoggable(level: java.util.logging.Level): Boolean = logger.isLoggable(level)
+  def isLoggable(level: java.util.logging.Level): Boolean =
+    logger.isLoggable(level)
   def log(level: java.util.logging.Level, message: String): Unit =
     macro LoggerMacro.logMessage
   def log(
@@ -47,62 +48,72 @@ class Logger private (name: String, resource: String) {
   def log(level: java.util.logging.Level, message: String, args: Any*): Unit =
     macro LoggerMacro.logMessageArgs
 
-  def isSevereLoggable(): Boolean = logger.isLoggable(java.util.logging.Level.SEVERE)
+  def isSevereLoggable(): Boolean =
+    logger.isLoggable(java.util.logging.Level.SEVERE)
   def severe(message: String): Unit = macro LoggerMacro.severeMessage
   def severe(message: String, cause: Throwable): Unit =
     macro LoggerMacro.severeMessageCause
   def severe(message: String, args: Any*): Unit =
     macro LoggerMacro.severeMessageArgs
 
-  def isWarningLoggable(): Boolean = logger.isLoggable(java.util.logging.Level.WARNING)
+  def isWarningLoggable(): Boolean =
+    logger.isLoggable(java.util.logging.Level.WARNING)
   def warning(message: String): Unit = macro LoggerMacro.warningMessage
   def warning(message: String, cause: Throwable): Unit =
     macro LoggerMacro.warningMessageCause
   def warning(message: String, args: Any*): Unit =
     macro LoggerMacro.warningMessageArgs
 
-  def isInfoLoggable(): Boolean = logger.isLoggable(java.util.logging.Level.INFO)
+  def isInfoLoggable(): Boolean =
+    logger.isLoggable(java.util.logging.Level.INFO)
   def info(message: String): Unit = macro LoggerMacro.infoMessage
   def info(message: String, cause: Throwable): Unit =
     macro LoggerMacro.infoMessageCause
   def info(message: String, args: Any*): Unit =
     macro LoggerMacro.infoMessageArgs
 
-  def isConfigLoggable(): Boolean = logger.isLoggable(java.util.logging.Level.CONFIG)
+  def isConfigLoggable(): Boolean =
+    logger.isLoggable(java.util.logging.Level.CONFIG)
   def config(message: String): Unit = macro LoggerMacro.configMessage
   def config(message: String, cause: Throwable): Unit =
     macro LoggerMacro.configMessageCause
   def config(message: String, args: Any*): Unit =
     macro LoggerMacro.configMessageArgs
 
-  def isFineLoggable(): Boolean = logger.isLoggable(java.util.logging.Level.FINE)
+  def isFineLoggable(): Boolean =
+    logger.isLoggable(java.util.logging.Level.FINE)
   def fine(message: String): Unit = macro LoggerMacro.fineMessage
   def fine(message: String, cause: Throwable): Unit =
     macro LoggerMacro.fineMessageCause
   def fine(message: String, args: Any*): Unit =
     macro LoggerMacro.fineMessageArgs
 
-  def isFinerLoggable(): Boolean = logger.isLoggable(java.util.logging.Level.FINER)
+  def isFinerLoggable(): Boolean =
+    logger.isLoggable(java.util.logging.Level.FINER)
   def finer(message: String): Unit = macro LoggerMacro.finerMessage
   def finer(message: String, cause: Throwable): Unit =
     macro LoggerMacro.finerMessageCause
   def finer(message: String, args: Any*): Unit =
     macro LoggerMacro.finerMessageArgs
 
-  def isFinestLoggable(): Boolean = logger.isLoggable(java.util.logging.Level.FINEST)
+  def isFinestLoggable(): Boolean =
+    logger.isLoggable(java.util.logging.Level.FINEST)
   def finest(message: String): Unit = macro LoggerMacro.finestMessage
   def finest(message: String, cause: Throwable): Unit =
     macro LoggerMacro.finestMessageCause
   def finest(message: String, args: Any*): Unit =
     macro LoggerMacro.finestMessageArgs
 
-  def isEnteringLoggable(): Boolean = logger.isLoggable(java.util.logging.Level.FINER)
+  def isEnteringLoggable(): Boolean =
+    logger.isLoggable(java.util.logging.Level.FINER)
   def entering(): Unit = macro LoggerMacro.enteringNoArgs
   def entering(args: Any*): Unit = macro LoggerMacro.enteringArgs
-  def isExitingLoggable(): Boolean = logger.isLoggable(java.util.logging.Level.FINER)
+  def isExitingLoggable(): Boolean =
+    logger.isLoggable(java.util.logging.Level.FINER)
   def exiting(): Unit = macro LoggerMacro.exitingNoArg
   def exiting(arg: Any): Unit = macro LoggerMacro.exitingArg
-  def isThrowingLoggable(): Boolean = logger.isLoggable(java.util.logging.Level.FINER)
+  def isThrowingLoggable(): Boolean =
+    logger.isLoggable(java.util.logging.Level.FINER)
   def throwing(arg: Throwable): Unit = macro LoggerMacro.throwingArg
 }
 
@@ -154,12 +165,18 @@ class LoggerMacro(override val c: Context) extends Source(c) {
     logMessage(c.Expr(q"java.util.logging.Level.SEVERE"), message)
   }
 
-  def severeMessageCause(message: c.Expr[String], cause: c.Expr[Throwable]): c.universe.If = {
+  def severeMessageCause(
+      message: c.Expr[String],
+      cause: c.Expr[Throwable]
+  ): c.universe.If = {
     import c.universe._
     logMessageCause(c.Expr(q"java.util.logging.Level.SEVERE"), message, cause)
   }
 
-  def severeMessageArgs(message: c.Expr[String], args: c.Expr[Any]*): c.universe.If = {
+  def severeMessageArgs(
+      message: c.Expr[String],
+      args: c.Expr[Any]*
+  ): c.universe.If = {
     import c.universe._
     logMessageArgs(c.Expr(q"java.util.logging.Level.SEVERE"), message, args: _*)
   }
@@ -169,12 +186,18 @@ class LoggerMacro(override val c: Context) extends Source(c) {
     logMessage(c.Expr(q"java.util.logging.Level.WARNING"), message)
   }
 
-  def warningMessageCause(message: c.Expr[String], cause: c.Expr[Throwable]): c.universe.If = {
+  def warningMessageCause(
+      message: c.Expr[String],
+      cause: c.Expr[Throwable]
+  ): c.universe.If = {
     import c.universe._
     logMessageCause(c.Expr(q"java.util.logging.Level.WARNING"), message, cause)
   }
 
-  def warningMessageArgs(message: c.Expr[String], args: c.Expr[Any]*): c.universe.If = {
+  def warningMessageArgs(
+      message: c.Expr[String],
+      args: c.Expr[Any]*
+  ): c.universe.If = {
     import c.universe._
     logMessageArgs(
       c.Expr(q"java.util.logging.Level.WARNING"),
@@ -188,12 +211,18 @@ class LoggerMacro(override val c: Context) extends Source(c) {
     logMessage(c.Expr(q"java.util.logging.Level.INFO"), message)
   }
 
-  def infoMessageCause(message: c.Expr[String], cause: c.Expr[Throwable]): c.universe.If = {
+  def infoMessageCause(
+      message: c.Expr[String],
+      cause: c.Expr[Throwable]
+  ): c.universe.If = {
     import c.universe._
     logMessageCause(c.Expr(q"java.util.logging.Level.INFO"), message, cause)
   }
 
-  def infoMessageArgs(message: c.Expr[String], args: c.Expr[Any]*): c.universe.If = {
+  def infoMessageArgs(
+      message: c.Expr[String],
+      args: c.Expr[Any]*
+  ): c.universe.If = {
     import c.universe._
     logMessageArgs(c.Expr(q"java.util.logging.Level.INFO"), message, args: _*)
   }
@@ -203,12 +232,18 @@ class LoggerMacro(override val c: Context) extends Source(c) {
     logMessage(c.Expr(q"java.util.logging.Level.CONFIG"), message)
   }
 
-  def configMessageCause(message: c.Expr[String], cause: c.Expr[Throwable]): c.universe.If = {
+  def configMessageCause(
+      message: c.Expr[String],
+      cause: c.Expr[Throwable]
+  ): c.universe.If = {
     import c.universe._
     logMessageCause(c.Expr(q"java.util.logging.Level.CONFIG"), message, cause)
   }
 
-  def configMessageArgs(message: c.Expr[String], args: c.Expr[Any]*): c.universe.If = {
+  def configMessageArgs(
+      message: c.Expr[String],
+      args: c.Expr[Any]*
+  ): c.universe.If = {
     import c.universe._
     logMessageArgs(c.Expr(q"java.util.logging.Level.CONFIG"), message, args: _*)
   }
@@ -218,12 +253,18 @@ class LoggerMacro(override val c: Context) extends Source(c) {
     logMessage(c.Expr(q"java.util.logging.Level.FINE"), message)
   }
 
-  def fineMessageCause(message: c.Expr[String], cause: c.Expr[Throwable]): c.universe.If = {
+  def fineMessageCause(
+      message: c.Expr[String],
+      cause: c.Expr[Throwable]
+  ): c.universe.If = {
     import c.universe._
     logMessageCause(c.Expr(q"java.util.logging.Level.FINE"), message, cause)
   }
 
-  def fineMessageArgs(message: c.Expr[String], args: c.Expr[Any]*): c.universe.If = {
+  def fineMessageArgs(
+      message: c.Expr[String],
+      args: c.Expr[Any]*
+  ): c.universe.If = {
     import c.universe._
     logMessageArgs(c.Expr(q"java.util.logging.Level.FINE"), message, args: _*)
   }
@@ -233,12 +274,18 @@ class LoggerMacro(override val c: Context) extends Source(c) {
     logMessage(c.Expr(q"java.util.logging.Level.FINER"), message)
   }
 
-  def finerMessageCause(message: c.Expr[String], cause: c.Expr[Throwable]): c.universe.If = {
+  def finerMessageCause(
+      message: c.Expr[String],
+      cause: c.Expr[Throwable]
+  ): c.universe.If = {
     import c.universe._
     logMessageCause(c.Expr(q"java.util.logging.Level.FINER"), message, cause)
   }
 
-  def finerMessageArgs(message: c.Expr[String], args: c.Expr[Any]*): c.universe.If = {
+  def finerMessageArgs(
+      message: c.Expr[String],
+      args: c.Expr[Any]*
+  ): c.universe.If = {
     import c.universe._
     logMessageArgs(c.Expr(q"java.util.logging.Level.FINER"), message, args: _*)
   }
@@ -248,12 +295,18 @@ class LoggerMacro(override val c: Context) extends Source(c) {
     logMessage(c.Expr(q"java.util.logging.Level.FINEST"), message)
   }
 
-  def finestMessageCause(message: c.Expr[String], cause: c.Expr[Throwable]): c.universe.If = {
+  def finestMessageCause(
+      message: c.Expr[String],
+      cause: c.Expr[Throwable]
+  ): c.universe.If = {
     import c.universe._
     logMessageCause(c.Expr(q"java.util.logging.Level.FINEST"), message, cause)
   }
 
-  def finestMessageArgs(message: c.Expr[String], args: c.Expr[Any]*): c.universe.If = {
+  def finestMessageArgs(
+      message: c.Expr[String],
+      args: c.Expr[Any]*
+  ): c.universe.If = {
     import c.universe._
     logMessageArgs(c.Expr(q"java.util.logging.Level.FINEST"), message, args: _*)
   }

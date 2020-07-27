@@ -99,7 +99,9 @@ class FileHandler(pattern: String = null) extends StreamHandler {
 
   private val MAX_UNIQUE = 100;
 
-  private val fSDF = DateTimeFormatter.ofPattern("yyyy.MM.dd.HH.mm.ss.SSS").withZone( ZoneId.systemDefault() );
+  private val fSDF = DateTimeFormatter
+    .ofPattern("yyyy.MM.dd.HH.mm.ss.SSS")
+    .withZone(ZoneId.systemDefault());
   private val dateRegex = """\d\d\d\d\.\d\d\.\d\d\.\d\d\.\d\d\.\d\d\.\d\d\d"""
 
   private var fUnique = -1;
@@ -141,7 +143,9 @@ class FileHandler(pattern: String = null) extends StreamHandler {
     val cname = getClass().getName();
 
     fPattern = Option(pattern)
-      .getOrElse(Config.getStringProperty(cname + ".pattern", "%h/trace.%u.%d.log"))
+      .getOrElse(
+        Config.getStringProperty(cname + ".pattern", "%h/trace.%u.%d.log")
+      )
       .replace('\\', '/');
     fLimit = Config.getIntProperty(cname + ".limit", 0);
     if (fLimit < 0) {
@@ -153,7 +157,9 @@ class FileHandler(pattern: String = null) extends StreamHandler {
     }
     fAppend = Config.getBooleanProperty(cname + ".append", false);
     setLevel(Config.getLevelProperty(cname + ".level", Level.ALL));
-    setFilter(Config.getClassObjectProperty(classOf[Filter], cname + ".filter", null));
+    setFilter(
+      Config.getClassObjectProperty(classOf[Filter], cname + ".filter", null)
+    );
     setFormatter(
       Config.getClassObjectProperty(
         classOf[Formatter],
@@ -232,7 +238,7 @@ class FileHandler(pattern: String = null) extends StreamHandler {
       d = new Date();
     }
     lastDate = d;
-    fSDF.format( Instant.ofEpochMilli( d.getTime() ))
+    fSDF.format(Instant.ofEpochMilli(d.getTime()))
   }
 
   private def openFiles(): Unit = {

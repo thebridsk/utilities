@@ -25,14 +25,19 @@ class TeeWriter(writers: Writer*) extends Writer {
     writers.foreach(_.write(str, off, len))
 
   override def append(csq: CharSequence): TeeWriter = {
-    writers.foreach(_.append(csq)); this
+    writers.foreach(_.append(csq))
+    this
   }
 
   override def append(csq: CharSequence, off: Int, len: Int): TeeWriter = {
-    writers.foreach(_.append(csq, off, len)); this
+    writers.foreach(_.append(csq, off, len))
+    this
   }
 
-  override def append(c: Char): TeeWriter = { writers.foreach(_.append(c)); this }
+  override def append(c: Char): TeeWriter = {
+    writers.foreach(_.append(c))
+    this
+  }
 
   /**
     * Get specified writer, and optionally close other writers.

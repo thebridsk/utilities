@@ -45,7 +45,19 @@ object Level {
   /** Trace level for stderr messages */
   val STDERR: Level = Level("STDERR", Level.WARNING.value + 2, null, "R");
 
-  val allLevels: List[Level] = OFF :: SEVERE :: WARNING :: INFO :: CONFIG :: FINE :: FINER :: FINEST :: ALL :: STDOUT :: STDERR :: Nil
+  val allLevels: List[Level] =
+    OFF ::
+      SEVERE ::
+      WARNING ::
+      INFO ::
+      CONFIG ::
+      FINE ::
+      FINER ::
+      FINEST ::
+      ALL ::
+      STDOUT ::
+      STDERR ::
+      Nil
 
   def toLevel(s: String): Option[Level] = {
     allLevels.find(l => l.name == s || l.short == s)

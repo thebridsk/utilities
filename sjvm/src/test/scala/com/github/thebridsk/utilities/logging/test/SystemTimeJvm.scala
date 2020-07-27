@@ -7,7 +7,8 @@ import java.time.ZoneId
 
 object SystemTimeJvm {
 
-  val fmt: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS").withZone(ZoneId.systemDefault())
+  val fmt: DateTimeFormatter =
+    DateTimeFormatter.ofPattern("HH:mm:ss.SSS").withZone(ZoneId.systemDefault())
 
   def apply(): Unit = {
 
@@ -17,11 +18,11 @@ object SystemTimeJvm {
       }
 
       /**
-       * @param time the time in milliseconds since 1/1/1970
-       * @return the returned string has the format HH:mm:ss.SSS
-       */
-      def formatTime( time: Double ): String = {
-        fmt.format( java.time.Instant.ofEpochMilli( time.toLong ) )
+        * @param time the time in milliseconds since 1/1/1970
+        * @return the returned string has the format HH:mm:ss.SSS
+        */
+      def formatTime(time: Double): String = {
+        fmt.format(java.time.Instant.ofEpochMilli(time.toLong))
       }
     }
 

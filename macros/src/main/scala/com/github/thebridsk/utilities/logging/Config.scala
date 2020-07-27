@@ -11,14 +11,16 @@ import scala.collection.mutable.TreeSet
 import com.github.thebridsk.utilities.nls.Messages
 
 object Config {
-  val fsLog: JLogger = JLogger.getLogger(classOf[Config].getName(), Messages.BUNDLE_NAME);
+  val fsLog: JLogger =
+    JLogger.getLogger(classOf[Config].getName(), Messages.BUNDLE_NAME);
 
   /**
     * The default logging.properties filename.
     */
   val fsLoggingProperties = "logging.properties";
   val fsFileLoggingProperties = new File(fsLoggingProperties);
-  val fsDefaultLoggingProperties: String = "com/github/thebridsk/utilties/logging/" + fsLoggingProperties
+  val fsDefaultLoggingProperties
+      : String = "com/github/thebridsk/utilties/logging/" + fsLoggingProperties
 
   private[Config] var fsProgramName: Option[String] = None;
   private[Config] var fsProgramVersion: Option[String] = None;
@@ -86,16 +88,17 @@ object Config {
               case None     => None
             }
         }).map(resource => {
-          val (is, name) = resource
-          try {
-            // println(s"Initializing from resource: ${name}")
-            initializeFrom(is, "Resource " + name)
-          } finally {
-            is.close()
+            val (is, name) = resource
+            try {
+              // println(s"Initializing from resource: ${name}")
+              initializeFrom(is, "Resource " + name)
+            } finally {
+              is.close()
+            }
+          })
+          .getOrElse {
+            // println(s"Unable to find logging.properties")
           }
-        }).getOrElse {
-          // println(s"Unable to find logging.properties")
-        }
       }
     }
 //    showHandlerForAllLoggers()
@@ -112,7 +115,7 @@ object Config {
     }
   }
 
-  def showHandlers( logger: java.util.logging.Logger ): Unit = {
+  def showHandlers(logger: java.util.logging.Logger): Unit = {
     println(s"For logger <${logger.getName()}>")
     logger.getHandlers.foreach { h =>
       println(s"  Handler: ${h.getClass().getName()}")
@@ -215,7 +218,9 @@ object Config {
       loader: ClassLoader = null
   ): Unit = synchronized {
     val l = {
-      Option( loader ).getOrElse( fsProgramClassLoader.getOrElse(getClass.getClassLoader) )
+      Option(loader).getOrElse(
+        fsProgramClassLoader.getOrElse(getClass.getClassLoader)
+      )
     }
 
     val is = l.getResourceAsStream(resource)
@@ -342,7 +347,7 @@ object Config {
   }
 
   def getStringProperty(key: String, default: => String): String = {
-    Option( getProperty(key) ).getOrElse(default)
+    Option(getProperty(key)).getOrElse(default)
   }
 
   def getLevelProperty(key: String, default: => Level): Level = {

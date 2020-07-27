@@ -15,7 +15,7 @@ class InMemoryHandler extends MyStreamHandler {
     * The stdout stream
     */
   protected var fOut: OutputStream =
-    new  ByteArrayOutputStream(10*1024)
+    new ByteArrayOutputStream(10 * 1024)
   setOutputStream(fOut);
 
   override def publish(record: LogRecord): Unit = synchronized {
@@ -40,7 +40,7 @@ class InMemoryHandler extends MyStreamHandler {
   }
 
   def clear(): Unit = synchronized {
-    fOut = new  ByteArrayOutputStream(10*1024)
+    fOut = new ByteArrayOutputStream(10 * 1024)
     setOutputStream(fOut);
   }
 }

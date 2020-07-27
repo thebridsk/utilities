@@ -14,7 +14,9 @@ object DefaultFormatter extends Formatter {
     import traceMsg._
     msgtype match {
       case LogMsgType =>
-        getPrefix(traceMsg) + " " + getMsg(traceMsg) + Option(cause).map(getException(_)).getOrElse("")
+        getPrefix(traceMsg) + " " + getMsg(traceMsg) + Option(cause)
+          .map(getException(_))
+          .getOrElse("")
       case LogEnterType =>
         getPrefix(traceMsg) + " Enter " + args.mkString(", ")
       case LogExitType =>

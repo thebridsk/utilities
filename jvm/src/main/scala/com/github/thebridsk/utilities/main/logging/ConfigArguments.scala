@@ -7,7 +7,6 @@ import com.github.thebridsk.utilities.logging.Config
 import org.rogach.scallop.ScallopOption
 import scala.reflect.runtime.universe
 
-
 class ConfigArguments(
     val cmdline: ScallopConf,
     val defaultLevel: Option[Level] = None
