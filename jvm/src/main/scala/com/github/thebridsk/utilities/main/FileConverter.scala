@@ -20,7 +20,8 @@ object Converters {
         case _   => Left("provide filename") // error when parsing
       }
 
-    val tag: universe.TypeTag[Path] = universe.typeTag[Path] // some magic to make typing work
+    val tag: universe.TypeTag[Path] =
+      universe.typeTag[Path] // some magic to make typing work
     val argType = org.rogach.scallop.ArgType.SINGLE
   }
 
@@ -40,7 +41,8 @@ object Converters {
         case _   => Left("provide filename") // error when parsing
       }
 
-    val tag: universe.TypeTag[Directory] = universe.typeTag[Directory] // some magic to make typing work
+    val tag: universe.TypeTag[Directory] =
+      universe.typeTag[Directory] // some magic to make typing work
     val argType = org.rogach.scallop.ArgType.SINGLE
   }
 }

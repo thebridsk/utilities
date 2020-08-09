@@ -93,14 +93,18 @@ object MsgFormatter {
         case Some(l) =>
           builder
             .append("Classpath = ")
-            .append(sepChar) // .append(System.getProperty("java.class.path") ).append(sepChar)
+            .append(
+              sepChar
+            ) // .append(System.getProperty("java.class.path") ).append(sepChar)
           builder.append(ClassPath.show("  ", l))
         case None =>
           builder.append("ClassLoader was not specified").append(sepChar)
       }
       builder
         .append("System Properties")
-        .append(sepChar) // .append(System.getProperty("java.class.path") ).append(sepChar)
+        .append(
+          sepChar
+        ) // .append(System.getProperty("java.class.path") ).append(sepChar)
 
       builder.append(ClassPath.showProperties("  "))
 
@@ -188,7 +192,9 @@ object MsgFormatter {
       if (s != null) {
         if (testForEntryExit(s, "Entry") || testForEntryExit(s, "ENTRY")) {
           fsEntry
-        } else if (testForEntryExit(s, "Exit") || testForEntryExit(s, "RETURN")) {
+        } else if (
+          testForEntryExit(s, "Exit") || testForEntryExit(s, "RETURN")
+        ) {
           fsExit
         } else if (testForEntryExit(s, "THROW")) {
           fsThrowing

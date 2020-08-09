@@ -37,7 +37,6 @@ class TestMacros extends Logging {
 
 /**
   * @author werewolf
-  *
   */
 object TestMain extends Main { // with Logging {
 

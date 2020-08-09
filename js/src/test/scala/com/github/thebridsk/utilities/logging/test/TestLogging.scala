@@ -53,8 +53,8 @@ class TestLogging extends AnyFlatSpec with Matchers {
     testLogger.getEffectiveLevel mustBe Level.INFO
   }
 
-  def test(result: Option[String], loggingFun: => Unit)(
-      implicit handler: TestHandler
+  def test(result: Option[String], loggingFun: => Unit)(implicit
+      handler: TestHandler
   ): Any = {
     handler.clear()
     loggingFun
@@ -79,7 +79,7 @@ class TestLogging extends AnyFlatSpec with Matchers {
     testLogger.isSevereLoggable() mustBe true
 
     test(
-      Some(s"E TestLogging\\.scala\\:${Position.here.lineNumber+1} Hello\\n"),
+      Some(s"E TestLogging\\.scala\\:${Position.here.lineNumber + 1} Hello\\n"),
       testLogger.severe("Hello")
     )
     test(

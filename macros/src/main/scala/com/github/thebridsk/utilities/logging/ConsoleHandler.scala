@@ -52,10 +52,11 @@ class ConsoleHandler extends MyStreamHandler {
     new EatCloseOutputStream(System.out, "out", true);
   setOutputStream(fOut);
 
-  override def publish(record: LogRecord): Unit = synchronized {
-    super.publish(record);
-    flush();
-  }
+  override def publish(record: LogRecord): Unit =
+    synchronized {
+      super.publish(record);
+      flush();
+    }
 
   /* (non-Javadoc)
    * @see java.util.logging.StreamHandler#isLoggable(java.util.logging.LogRecord)

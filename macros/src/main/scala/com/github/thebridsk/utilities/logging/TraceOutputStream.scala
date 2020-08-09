@@ -46,47 +46,50 @@ class TraceOutputStream(
   private val fLog: JLogger =
     JLogger.getLogger(loggername, null /* resource bundle */ )
 
-  override def write(b: Array[Byte]): Unit = synchronized {
-    if (!isFromLogging()) {
-      out.write(b, 0, b.length);
-      b.find { c =>
-        c == '\n' || c == '\r'
-      } match {
-        case Some(_) => flush
-        case _       =>
-      }
-    }
-  }
-
-  override def write(b: Array[Byte], off: Int, len: Int): Unit = synchronized {
-    if (!isFromLogging()) {
-      out.write(b, off, len);
-      var foundcrlf = false;
-      val end = off + len;
-      import scala.util.control.Breaks._
-      breakable {
-        for (i <- off until end) {
-          val c = b(i);
-          if (c == '\n' || c == '\r') {
-            foundcrlf = true;
-            break()
-          }
+  override def write(b: Array[Byte]): Unit =
+    synchronized {
+      if (!isFromLogging()) {
+        out.write(b, 0, b.length);
+        b.find { c =>
+          c == '\n' || c == '\r'
+        } match {
+          case Some(_) => flush
+          case _       =>
         }
       }
-      if (foundcrlf) {
-        flush();
-      }
     }
-  }
 
-  override def write(b: Int): Unit = synchronized {
-    if (!isFromLogging()) {
-      out.write(b);
-      if (b == '\n' || b == '\r') {
-        flush();
+  override def write(b: Array[Byte], off: Int, len: Int): Unit =
+    synchronized {
+      if (!isFromLogging()) {
+        out.write(b, off, len);
+        var foundcrlf = false;
+        val end = off + len;
+        import scala.util.control.Breaks._
+        breakable {
+          for (i <- off until end) {
+            val c = b(i);
+            if (c == '\n' || c == '\r') {
+              foundcrlf = true;
+              break()
+            }
+          }
+        }
+        if (foundcrlf) {
+          flush();
+        }
       }
     }
-  }
+
+  override def write(b: Int): Unit =
+    synchronized {
+      if (!isFromLogging()) {
+        out.write(b);
+        if (b == '\n' || b == '\r') {
+          flush();
+        }
+      }
+    }
 
   override def close(): Unit = out.close()
 

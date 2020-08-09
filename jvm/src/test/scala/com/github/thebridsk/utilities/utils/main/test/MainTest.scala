@@ -60,26 +60,27 @@ object ExceptionForTest {
     * @param name the property name
     * @return the property value wrapped in a Some object.  None property not set.
     */
-  def getPropOrEnv(name: String): Option[String] = sys.props.get(name) match {
-    case v: Some[String] =>
-      MainTest.testlog.fine(
-        "getPropOrEnv: found system property: " + name + "=" + v.get
-      )
-      v
-    case None =>
-      sys.env.get(name) match {
-        case v: Some[String] =>
-          MainTest.testlog.fine(
-            "getPropOrEnv: found env var: " + name + "=" + v.get
-          )
-          v
-        case None =>
-          MainTest.testlog.fine(
-            "getPropOrEnv: did not find system property or env var: " + name
-          )
-          None
-      }
-  }
+  def getPropOrEnv(name: String): Option[String] =
+    sys.props.get(name) match {
+      case v: Some[String] =>
+        MainTest.testlog.fine(
+          "getPropOrEnv: found system property: " + name + "=" + v.get
+        )
+        v
+      case None =>
+        sys.env.get(name) match {
+          case v: Some[String] =>
+            MainTest.testlog.fine(
+              "getPropOrEnv: found env var: " + name + "=" + v.get
+            )
+            v
+          case None =>
+            MainTest.testlog.fine(
+              "getPropOrEnv: did not find system property or env var: " + name
+            )
+            None
+        }
+    }
 
 }
 

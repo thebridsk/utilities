@@ -17,8 +17,8 @@ import scala.util.Using
   * @param key
   * @param args
   */
-case class Message(bundle: String, key: String, args: Any*)(
-    implicit created: Position
+case class Message(bundle: String, key: String, args: Any*)(implicit
+    created: Position
 ) {
 
   /* (non-Javadoc)
@@ -58,7 +58,6 @@ case class Message(bundle: String, key: String, args: Any*)(
   * @param loader the class loader to use, may be null for the classloader that loaded this class
   * @param control the control, may be null for the default control
   * @author werewolf
-  *
   */
 case class MessageResolver(
     locale: Locale = Locale.getDefault,

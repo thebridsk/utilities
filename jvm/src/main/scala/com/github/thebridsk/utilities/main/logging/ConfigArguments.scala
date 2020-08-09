@@ -31,7 +31,8 @@ class ConfigArguments(
         case _   => Left("provide log level") // error when parsing
       }
 
-    val tag: universe.TypeTag[Level] = universe.typeTag[Level] // some magic to make typing work
+    val tag: universe.TypeTag[Level] =
+      universe.typeTag[Level] // some magic to make typing work
     val argType = org.rogach.scallop.ArgType.SINGLE
   }
 

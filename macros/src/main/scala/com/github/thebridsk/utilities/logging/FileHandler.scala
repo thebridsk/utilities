@@ -184,51 +184,53 @@ class FileHandler(pattern: String = null) extends StreamHandler {
   /* (non-Javadoc)
    * @see java.util.logging.StreamHandler#publish(java.util.logging.LogRecord)
    */
-  override def publish(record: LogRecord): Unit = synchronized {
-    if (!isLoggable(record)) {
-      return;
-    }
-    try {
-      super.publish(record);
-      flush();
-      if (fLimit > 0 && fMeter.getCurrentSize() >= fLimit) {
-        // We performed access checks in the constructor to make sure
-        // we are only initialized from trusted code.  So we assume
-        // it is OK to write the target files, even if we are
-        // currently being called from untrusted code.
-        // So it is safe to raise privilege here.
-        AccessController.doPrivileged(new PrivilegedAction[Object]() {
-          override def run(): Object = {
-            rotate();
-            return null;
-          }
-        });
+  override def publish(record: LogRecord): Unit =
+    synchronized {
+      if (!isLoggable(record)) {
+        return;
       }
-    } catch {
-      case x: IOException =>
-        println("Current log file is " + fCurrentFile + ": " + x)
-        throw x
+      try {
+        super.publish(record);
+        flush();
+        if (fLimit > 0 && fMeter.getCurrentSize() >= fLimit) {
+          // We performed access checks in the constructor to make sure
+          // we are only initialized from trusted code.  So we assume
+          // it is OK to write the target files, even if we are
+          // currently being called from untrusted code.
+          // So it is safe to raise privilege here.
+          AccessController.doPrivileged(new PrivilegedAction[Object]() {
+            override def run(): Object = {
+              rotate();
+              return null;
+            }
+          });
+        }
+      } catch {
+        case x: IOException =>
+          println("Current log file is " + fCurrentFile + ": " + x)
+          throw x
+      }
     }
-  }
 
   /* (non-Javadoc)
    * @see java.util.logging.StreamHandler#close()
    */
-  override def close(): Unit = synchronized {
-    super.close();
-    if (fLockStream != null) {
-      try {
-        fLockStream.close();
-      } catch {
-        case _: IOException =>
-        // ignore any errors
+  override def close(): Unit =
+    synchronized {
+      super.close();
+      if (fLockStream != null) {
+        try {
+          fLockStream.close();
+        } catch {
+          case _: IOException =>
+          // ignore any errors
+        }
       }
+      new File(fLockFileName).delete();
+      fLockFileName = null;
+      fLockStream = null;
+      fMeter = null;
     }
-    new File(fLockFileName).delete();
-    fLockFileName = null;
-    fLockStream = null;
-    fMeter = null;
-  }
 
   var lastDate: Date = null;
 
@@ -460,22 +462,23 @@ class FileHandler(pattern: String = null) extends StreamHandler {
       fUnique = i
       val fn = getFileName(fPattern, i, "_") + ".lck";
       fLockStream = null;
-      var fc = try {
-        fLockStream = new FileOutputStream(fn);
-        fLockFileName = fn;
-        Some(fLockStream.getChannel())
-      } catch {
-        case e: Exception =>
-          if (fLockStream != null) {
-            try {
-              fLockStream.close();
-            } catch {
-              case e1: IOException =>
-              // ignore any errors
+      var fc =
+        try {
+          fLockStream = new FileOutputStream(fn);
+          fLockFileName = fn;
+          Some(fLockStream.getChannel())
+        } catch {
+          case e: Exception =>
+            if (fLockStream != null) {
+              try {
+                fLockStream.close();
+              } catch {
+                case e1: IOException =>
+                // ignore any errors
+              }
             }
-          }
-          None;
-      }
+            None;
+        }
       fc.foreach(chan => {
         var gotLock = false;
         try {

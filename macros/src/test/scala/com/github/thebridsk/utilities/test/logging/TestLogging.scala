@@ -137,7 +137,8 @@ class TestLogging extends AnyFlatSpec with Matchers {
           val handler = new ConsoleHandler
           handler.setFormatter(formatter)
 
-          val expected = "01-01 00:00:00 TestThread Test       I Testing" + lineend
+          val expected =
+            "01-01 00:00:00 TestThread Test       I Testing" + lineend
 
           val msg = formatter.format(record)
           msg mustBe expected
@@ -180,7 +181,8 @@ class TestLogging extends AnyFlatSpec with Matchers {
 
             val handler = new ConsoleHandler
 
-            val expected = "01-01 00:00:00 TestThread Test       I Testing" + lineend
+            val expected =
+              "01-01 00:00:00 TestThread Test       I Testing" + lineend
 
             val msg = formatter.format(record)
             msg mustBe expected
@@ -538,7 +540,10 @@ class TestLogging extends AnyFlatSpec with Matchers {
       val formatter = new SimpleConsoleFormatter
 
       formatter.thisClassName mustBe "com.github.thebridsk.utilities.logging.SimpleConsoleFormatter"
-      formatter.getProp("format", "<Did not find format value in props>") mustBe "%3$s %7$s"
+      formatter.getProp(
+        "format",
+        "<Did not find format value in props>"
+      ) mustBe "%3$s %7$s"
       formatter.traceFormat mustBe "%3$s %7$s"
 
       val msg = formatter.format(record).removeTrailingCRLF()

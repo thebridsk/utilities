@@ -29,7 +29,9 @@ object DefaultFormatter extends Formatter {
 
   def getPrefix(traceMsg: TraceMsg): String = {
     import traceMsg._
-    LoggerImplFactory.formatTime(time) + " " + level.short + " " + pos.fileName + ":" + pos.lineNumber
+    LoggerImplFactory.formatTime(
+      time
+    ) + " " + level.short + " " + pos.fileName + ":" + pos.lineNumber
   }
 
   def getMsg(traceMsg: TraceMsg): String = {

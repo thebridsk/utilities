@@ -9,7 +9,6 @@ import com.github.thebridsk.utilities.logging.impl.LoggerImplFactory
 import com.github.thebridsk.utilities.logging.PrintHandler
 
 /** @author werewolf
-  *
   */
 object TestMain {
 

@@ -30,29 +30,30 @@ abstract class Main(val defaultLevel: Option[Level] = None)
     extends ScallopConf
     with Logging {
 
-  override def onError(e: Throwable): Unit = e match {
-    case Help("") =>
-      builder.printHelp()
-      throw new ExitException(99)
-    case Help(subname) =>
-      builder.findSubbuilder(subname).get.printHelp()
-      throw new ExitException(99)
-    case Version =>
-      builder.vers.foreach(println)
-      throw new ExitException(99)
-    case ScallopException(message) =>
-      if (System.console() == null) {
-        // no colors on output
-        println(s"[$printedName] Error: $message")
-      } else {
-        println(
-          s"[\u001b[31m${printedName}\u001b[0m] Error: ${message}"
-        )
-      }
-      throw new ExitException(1)
+  override def onError(e: Throwable): Unit =
+    e match {
+      case Help("") =>
+        builder.printHelp()
+        throw new ExitException(99)
+      case Help(subname) =>
+        builder.findSubbuilder(subname).get.printHelp()
+        throw new ExitException(99)
+      case Version =>
+        builder.vers.foreach(println)
+        throw new ExitException(99)
+      case ScallopException(message) =>
+        if (System.console() == null) {
+          // no colors on output
+          println(s"[$printedName] Error: $message")
+        } else {
+          println(
+            s"[\u001b[31m${printedName}\u001b[0m] Error: ${message}"
+          )
+        }
+        throw new ExitException(1)
 
-    case other => throw other
-  }
+      case other => throw other
+    }
 
   /**
     * Called at startup, before arguments are parsed.
@@ -164,9 +165,12 @@ abstract class Main(val defaultLevel: Option[Level] = None)
                 sc.init()
               } catch {
                 case x: Throwable =>
-                  logger.warning(s"""Failed in init of subcommand${cmdname(
-                    inited
-                  )}""", x)
+                  logger.warning(
+                    s"""Failed in init of subcommand${cmdname(
+                      inited
+                    )}""",
+                    x
+                  )
                   98
               }
             }
@@ -209,9 +213,12 @@ abstract class Main(val defaultLevel: Option[Level] = None)
             sc.cleanup()
           } catch {
             case x: Throwable =>
-              logger.warning(s"""Failed in cleanup of subcommand${cmdname(
-                inited
-              )}""", x)
+              logger.warning(
+                s"""Failed in cleanup of subcommand${cmdname(
+                  inited
+                )}""",
+                x
+              )
           }
         }
 

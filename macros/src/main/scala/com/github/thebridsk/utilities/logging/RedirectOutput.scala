@@ -66,7 +66,6 @@ object RedirectOutput {
   }
 
   /**
-    *
     */
   def restoreStandardOutAndErr(): Unit = {
     if (fsOldStdOut != null) {

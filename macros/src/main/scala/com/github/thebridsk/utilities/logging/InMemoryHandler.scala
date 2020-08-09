@@ -18,9 +18,10 @@ class InMemoryHandler extends MyStreamHandler {
     new ByteArrayOutputStream(10 * 1024)
   setOutputStream(fOut);
 
-  override def publish(record: LogRecord): Unit = synchronized {
-    super.publish(record);
-  }
+  override def publish(record: LogRecord): Unit =
+    synchronized {
+      super.publish(record);
+    }
 
   /* (non-Javadoc)
    * @see java.util.logging.StreamHandler#isLoggable(java.util.logging.LogRecord)
@@ -35,12 +36,14 @@ class InMemoryHandler extends MyStreamHandler {
     return super.isLoggable(record);
   }
 
-  def getLog(): String = synchronized {
-    fOut.toString()
-  }
+  def getLog(): String =
+    synchronized {
+      fOut.toString()
+    }
 
-  def clear(): Unit = synchronized {
-    fOut = new ByteArrayOutputStream(10 * 1024)
-    setOutputStream(fOut);
-  }
+  def clear(): Unit =
+    synchronized {
+      fOut = new ByteArrayOutputStream(10 * 1024)
+      setOutputStream(fOut);
+    }
 }
