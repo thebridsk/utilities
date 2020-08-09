@@ -1,7 +1,7 @@
 package com.github.thebridsk.utilities.logging
 
-import java.util.{ logging => jul }
-import java.{ text => jt, time => jtime, util => ju, lang => jl, io => ji }
+import java.util.{logging => jul}
+import java.{time => jtime, util => ju, io => ji}
 import com.github.thebridsk.utilities.classpath.ClassPath
 import com.github.thebridsk.utilities.message.Message
 import java.time.Instant
@@ -17,6 +17,7 @@ object MsgFormatterDefaults {
   val propShowKey = "showKey"
   val propAddHeader = "addHeader"
   val propUseThreadName = "useThreadName"
+  val propAddException = "addException"
 
   val defaultDateFormat: String = "yyyy-MM-dd HH:mm:ss:SSS zzz"
   val defaultTimezone: String = null
@@ -27,11 +28,12 @@ object MsgFormatterDefaults {
   val defaultShowKey: Boolean = false
   val defaultAddHeader: Boolean = true
   val defaultUseThreadName: Boolean = true
+  val defaultAddException: String = "long"
 
   /**
-   * If true use java.text.MessageFormat to format message
-   * otherwise use com.github.thebridsk.utilities.message.Message
-   */
+    * If true use java.text.MessageFormat to format message
+    * otherwise use com.github.thebridsk.utilities.message.Message
+    */
   val useMessageFormat: Boolean = false
 }
 
@@ -83,21 +85,26 @@ object MsgFormatter {
         .append("Java VM name = ")
         .append(System.getProperty("java.vm.name"))
         .append(sepChar)
-      version = Option(System.getProperty("java.fullversion")).getOrElse( System.getProperty("java.runtime.version") )
+      version = Option(System.getProperty("java.fullversion"))
+        .getOrElse(System.getProperty("java.runtime.version"))
       builder.append("Java Version = ").append(version).append(sepChar)
       // builder.append("Java Compiler = ").append(System.getProperty("java.compiler")   ).append(sepChar)
       Config.getprogramClassLoader() match {
         case Some(l) =>
           builder
             .append("Classpath = ")
-            .append(sepChar) // .append(System.getProperty("java.class.path") ).append(sepChar)
+            .append(
+              sepChar
+            ) // .append(System.getProperty("java.class.path") ).append(sepChar)
           builder.append(ClassPath.show("  ", l))
         case None =>
           builder.append("ClassLoader was not specified").append(sepChar)
       }
       builder
-      .append("System Properties")
-      .append(sepChar) // .append(System.getProperty("java.class.path") ).append(sepChar)
+        .append("System Properties")
+        .append(
+          sepChar
+        ) // .append(System.getProperty("java.class.path") ).append(sepChar)
 
       builder.append(ClassPath.showProperties("  "))
 
@@ -139,9 +146,9 @@ object MsgFormatter {
       logString: String,
       msgtype: MsgType = Normal
   ) {
-    def isNormal = msgtype == Normal
-    def isEntry = msgtype == Entry
-    def isExit = msgtype == Exit
+    def isNormal: Boolean = msgtype == Normal
+    def isEntry: Boolean = msgtype == Entry
+    def isExit: Boolean = msgtype == Exit
   }
 
   private val fsLevels = scala.collection.mutable.Map[jul.Level, MessageType]()
@@ -163,7 +170,7 @@ object MsgFormatter {
   private val fsExit = MessageType(jul.Level.FINER, "<", Exit)
   private val fsThrowing = MessageType(jul.Level.FINER, "T")
   private val fsFiner = MessageType(jul.Level.FINER, "2")
-  val fsUnknown = MessageType(null, "?")
+  val fsUnknown: MessageType = MessageType(null, "?")
 
   def mapLevelToType(record: jul.LogRecord): MessageType = {
     val level = record.getLevel()
@@ -185,7 +192,9 @@ object MsgFormatter {
       if (s != null) {
         if (testForEntryExit(s, "Entry") || testForEntryExit(s, "ENTRY")) {
           fsEntry
-        } else if (testForEntryExit(s, "Exit") || testForEntryExit(s, "RETURN")) {
+        } else if (
+          testForEntryExit(s, "Exit") || testForEntryExit(s, "RETURN")
+        ) {
           fsExit
         } else if (testForEntryExit(s, "THROW")) {
           fsThrowing
@@ -207,7 +216,7 @@ object MsgFormatter {
     else false
   }
 
-  val fsNewLine = System.getProperty("line.separator");
+  val fsNewLine: String = System.getProperty("line.separator");
 
 }
 
@@ -254,6 +263,11 @@ import MsgFormatter._
   *   useThreadName=<boolean>
   *               If true, use the thread name, the default
   *               otherwise use the thread id
+  *   addException=<enum>
+  *               how to show exception in trace message, valid values(default: long):
+  *                 none  - don't show exception at all
+  *                 short - only show exception toString
+  *                 long  - show exception with stack trace
   *
   * @constructor
   * @param defDateFormat
@@ -265,42 +279,48 @@ import MsgFormatter._
   * @param defShowKey
   * @param defAddHeader
   * @param defUseThreadName
+  * @param defAddException
   */
 class MsgFormatter(
-  defDateFormat: String,
-  defTimezone: String = defaultTimezone,
-  defFormat: String = defaultFormat,
-  defFakeDate: Boolean = defaultFakeDate,
-  defFmtMsg: Boolean = defaultFmtMsg,
-  defUseResource: Boolean = defaultUseResource,
-  defShowKey: Boolean = defaultShowKey,
-  defAddHeader: Boolean = defaultAddHeader,
-  defUseThreadName: Boolean = defaultUseThreadName,
+    defDateFormat: String,
+    defTimezone: String = defaultTimezone,
+    defFormat: String = defaultFormat,
+    defFakeDate: Boolean = defaultFakeDate,
+    defFmtMsg: Boolean = defaultFmtMsg,
+    defUseResource: Boolean = defaultUseResource,
+    defShowKey: Boolean = defaultShowKey,
+    defAddHeader: Boolean = defaultAddHeader,
+    defUseThreadName: Boolean = defaultUseThreadName,
+    defAddException: String = defaultAddException
 ) extends jul.Formatter {
 
   def this() = this(defaultDateFormat)
 
-  lazy val dateFormat = getProp( propDateFormat, defDateFormat)
-  lazy val timezone = getProp( propTimezone, defTimezone)
-  lazy val traceFormat = getProp( propFormat, defFormat)
-  lazy val fakeDate = getPropBoolean( propFakeDate, defFakeDate)
-  lazy val fmtMsg = getPropBoolean( propFmtMsg, defFmtMsg)
-  lazy val useResource = getPropBoolean( propUseResource, defUseResource)
-  lazy val showKey = getPropBoolean( propShowKey, defShowKey)
-  lazy val addHeader = getPropBoolean( propAddHeader, defAddHeader)
-  lazy val useThreadName = getPropBoolean( propUseThreadName, defUseThreadName)
+  lazy val dateFormat: String = getProp(propDateFormat, defDateFormat)
+  lazy val timezone: String = getProp(propTimezone, defTimezone)
+  lazy val traceFormat: String = getProp(propFormat, defFormat)
+  lazy val fakeDate: Boolean = getPropBoolean(propFakeDate, defFakeDate)
+  lazy val fmtMsg: Boolean = getPropBoolean(propFmtMsg, defFmtMsg)
+  lazy val useResource: Boolean =
+    getPropBoolean(propUseResource, defUseResource)
+  lazy val showKey: Boolean = getPropBoolean(propShowKey, defShowKey)
+  lazy val addHeader: Boolean = getPropBoolean(propAddHeader, defAddHeader)
+  lazy val useThreadName: Boolean =
+    getPropBoolean(propUseThreadName, defUseThreadName)
+  lazy val addException: String = getProp(propAddException, defAddException)
 
-  lazy val dateFmt =
-    jtime.format.DateTimeFormatter.ofPattern( dateFormat )
-        .withZone(
-          if (timezone != null) {
-            jtime.ZoneId.of(timezone)
-          } else {
-            jtime.ZoneId.systemDefault()
-          }
-        )
+  lazy val dateFmt: jtime.format.DateTimeFormatter =
+    jtime.format.DateTimeFormatter
+      .ofPattern(dateFormat)
+      .withZone(
+        if (timezone != null) {
+          jtime.ZoneId.of(timezone)
+        } else {
+          jtime.ZoneId.systemDefault()
+        }
+      )
 
-  def getShortName( fullname: String ) = {
+  def getShortName(fullname: String): String = {
     val sc = fullname.substring(fullname.lastIndexOf('.') + 1)
     val shortClass =
       if (sc.length() == 0) {
@@ -324,8 +344,7 @@ class MsgFormatter(
     shortClass
   }
 
-  override
-  def format(record: jul.LogRecord): String = {
+  override def format(record: jul.LogRecord): String = {
     val fbuf = new ju.Formatter()
     val buf = fbuf.out()
 
@@ -344,16 +363,10 @@ class MsgFormatter(
       }
     val timestamp =
       dateFmt.format(
-        Instant.ofEpochMilli( if (fakeDate) 0 else record.getMillis() )
+        Instant.ofEpochMilli(if (fakeDate) 0 else record.getMillis())
       )
 
     val msg = formatMessage(record)
-
-    if (traceFormat.indexOf("%-4$.20s")>=0) {
-      val e = new Exception("Found a format string of %-4$.20s")
-      e.printStackTrace()
-      throw e
-    }
 
     fbuf.format(
       traceFormat,
@@ -365,7 +378,7 @@ class MsgFormatter(
       methodName,
       msg,
       shortClass,
-      shortLogger,
+      shortLogger
     )
 
     buf.append(fsNewLine);
@@ -373,18 +386,23 @@ class MsgFormatter(
     // If there's a throwable, handle it.
     val tr = record.getThrown();
     if (null != tr) {
-      val sw = new ji.StringWriter();
-      val pw = new ji.PrintWriter(sw);
-      tr.printStackTrace(pw);
-      pw.flush();
-      buf.append(sw.toString());
+      addException match {
+        case "none" =>
+        case "short" =>
+          buf.append(tr.toString).append(fsNewLine)
+        case "long" =>
+          val sw = new ji.StringWriter();
+          val pw = new ji.PrintWriter(sw);
+          tr.printStackTrace(pw);
+          pw.flush();
+          buf.append(sw.toString());
+      }
     }
 
     buf.toString()
   }
 
-  override
-  def formatMessage(record: jul.LogRecord): String = {
+  override def formatMessage(record: jul.LogRecord): String = {
     formatMessage(mapLevelToType(record), record)
   }
 
@@ -393,113 +411,117 @@ class MsgFormatter(
     * @param record
     * @return the formatted string
     */
-  def formatMessage(mt: MessageType, record: jul.LogRecord) = synchronized {
-    var format = record.getMessage()
-    var key = ""
-    var bundle: ju.ResourceBundle = null
-    if (useResource) {
-      bundle = record.getResourceBundle()
-    }
-    if (bundle != null) {
-      try {
-        val newFmt = bundle.getString(format)
-        if (showKey) {
-          key = format + " "
-        }
-        format = newFmt
-      } catch {
-        case ex: java.util.MissingResourceException => // ignore errors
+  def formatMessage(mt: MessageType, record: jul.LogRecord): String =
+    synchronized {
+      var format = record.getMessage()
+      var key = ""
+      var bundle: ju.ResourceBundle = null
+      if (useResource) {
+        bundle = record.getResourceBundle()
       }
-    }
-    try {
-      val parameters = record.getParameters()
-      if (parameters == null || parameters.length == 0) {
-        key + format
-      } else {
-        var found = false
-        if (fmtMsg) {
-          if (useMessageFormat) {
-            var lastI = 0
-            var len = format.length()
-            import scala.util.control.Breaks._
-            breakable {
-              while (!found) {
-                lastI = format.indexOf("{", lastI)
-                if (lastI < 0) {
-                  break()
-                }
-                lastI += 1
-                if (lastI >= len) {
-                  break()
-                }
-                if (Character.isDigit(format.charAt(lastI))) {
-                  found = true
-                  break()
+      if (bundle != null) {
+        try {
+          val newFmt = bundle.getString(format)
+          if (showKey) {
+            key = format + " "
+          }
+          format = newFmt
+        } catch {
+          case ex: java.util.MissingResourceException => // ignore errors
+        }
+      }
+      try {
+        val parameters = record.getParameters()
+        if (parameters == null || parameters.length == 0) {
+          key + format
+        } else {
+          var found = false
+          if (fmtMsg) {
+            if (useMessageFormat) {
+              var lastI = 0
+              var len = format.length()
+              import scala.util.control.Breaks._
+              breakable {
+                while (!found) {
+                  lastI = format.indexOf("{", lastI)
+                  if (lastI < 0) {
+                    break()
+                  }
+                  lastI += 1
+                  if (lastI >= len) {
+                    break()
+                  }
+                  if (Character.isDigit(format.charAt(lastI))) {
+                    found = true
+                    break()
+                  }
                 }
               }
+            } else {
+              found = true
+            }
+          }
+          if (found) {
+            if (useMessageFormat) {
+              key + java.text.MessageFormat.format(format, parameters)
+            } else {
+              var f: String = ""
+              mt.msgtype match {
+                case Normal =>
+                  f = format
+                case Entry =>
+                  val b = new StringBuilder()
+                  b.append("ENTRY")
+                  if (parameters != null)
+                    b.append(
+                      parameters
+                        .map { p =>
+                          " %s"
+                        }
+                        .mkString("")
+                    )
+                  f = b.toString()
+
+                case Exit =>
+                  val b = new StringBuilder()
+                  b.append("RETURN")
+                  if (parameters != null)
+                    b.append(
+                      parameters
+                        .map { p =>
+                          " %s"
+                        }
+                        .mkString("")
+                    )
+                  f = b.toString()
+
+                case _ =>
+                  f = format
+
+              }
+              key + Message.getFormattedMessage(
+                null,
+                f,
+                parameters.toIndexedSeq: _*
+              )
             }
           } else {
-            found = true
-          }
-        }
-        if (found) {
-          if (useMessageFormat) {
-            key + java.text.MessageFormat.format(format, parameters)
-          } else {
-            var f: String = ""
-            mt.msgtype match {
-              case Normal =>
-                f = format
-              case Entry =>
-                val b = new StringBuilder()
-                b.append("ENTRY")
-                if (parameters != null)
-                  b.append(
-                    parameters
-                      .map { p =>
-                        " %s"
-                      }
-                      .mkString("")
-                  )
-                f = b.toString()
-
-              case Exit =>
-                val b = new StringBuilder()
-                b.append("RETURN")
-                if (parameters != null)
-                  b.append(
-                    parameters
-                      .map { p =>
-                        " %s"
-                      }
-                      .mkString("")
-                  )
-                f = b.toString()
-
-              case _ =>
-                f = format
-
+            val b = new StringBuilder()
+            b.append(format)
+            for (p <- parameters) {
+              b.append(" ")
+              b.append(p.toString())
             }
-            key + Message.getFormattedMessage(null, f, parameters.toIndexedSeq: _*)
+            key + b.toString()
           }
-        } else {
-          val b = new StringBuilder()
-          b.append(format)
-          for (p <- parameters) {
-            b.append(" ")
-            b.append(p.toString())
-          }
-          key + b.toString()
         }
+
+      } catch {
+        case _: Exception => record.getMessage()
       }
-
-    } catch {
-      case _: Exception => record.getMessage()
     }
-  }
 
-  override
-  def getHead(handler: jul.Handler): String = {
+  override def getHead(handler: jul.Handler): String = {
     if (!addHeader) {
       ""
     } else {
@@ -507,12 +529,11 @@ class MsgFormatter(
     }
   }
 
-  override
-  def getTail(handler: jul.Handler): String = {
+  override def getTail(handler: jul.Handler): String = {
     ""
   }
 
-  lazy val thisClassName = getClass().getName
+  lazy val thisClassName: String = getClass().getName
 
   def getProp(suffix: String, default: String): String = {
     Config.getStringProperty(

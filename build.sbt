@@ -25,3 +25,5 @@ lazy val `utilities-sjvm` = BldUtilitiesSJvm.`utilities-sjvm`
 
 lazy val sharedJS = BldUtilitiesShared.sharedJS
 lazy val sharedJVM = BldUtilitiesShared.sharedJVM
+
+BldUtilities.init

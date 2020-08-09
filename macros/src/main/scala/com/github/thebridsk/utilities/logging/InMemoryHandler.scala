@@ -1,7 +1,5 @@
 package com.github.thebridsk.utilities.logging
 
-import java.util.logging.StreamHandler
-import java.io.FilterOutputStream
 import java.io.OutputStream
 import java.util.logging.LogRecord
 import java.io.ByteArrayOutputStream
@@ -17,12 +15,13 @@ class InMemoryHandler extends MyStreamHandler {
     * The stdout stream
     */
   protected var fOut: OutputStream =
-    new  ByteArrayOutputStream(10*1024)
+    new ByteArrayOutputStream(10 * 1024)
   setOutputStream(fOut);
 
-  override def publish(record: LogRecord) = synchronized {
-    super.publish(record);
-  }
+  override def publish(record: LogRecord): Unit =
+    synchronized {
+      super.publish(record);
+    }
 
   /* (non-Javadoc)
    * @see java.util.logging.StreamHandler#isLoggable(java.util.logging.LogRecord)
@@ -37,12 +36,14 @@ class InMemoryHandler extends MyStreamHandler {
     return super.isLoggable(record);
   }
 
-  def getLog() = synchronized {
-    fOut.toString()
-  }
+  def getLog(): String =
+    synchronized {
+      fOut.toString()
+    }
 
-  def clear() = synchronized {
-    fOut = new  ByteArrayOutputStream(10*1024)
-    setOutputStream(fOut);
-  }
+  def clear(): Unit =
+    synchronized {
+      fOut = new ByteArrayOutputStream(10 * 1024)
+      setOutputStream(fOut);
+    }
 }

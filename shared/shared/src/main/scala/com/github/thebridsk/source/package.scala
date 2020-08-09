@@ -4,10 +4,12 @@ import org.scalactic.source.Position
 
 package object source {
 
-  implicit class SourcePosition(val pos: Position) extends AnyVal {
-    def line = s"${pos.fileName}:${pos.lineNumber}"
+  implicit class SourcePosition(private val ppos: Position) extends AnyVal {
+    def line: String = s"${pos.fileName}:${pos.lineNumber}"
 
-    def lineForFilename = s"${pos.fileName}_${pos.lineNumber}"
+    def lineForFilename: String = s"${pos.fileName}_${pos.lineNumber}"
+
+    def pos = ppos
   }
 
   object SourcePosition {

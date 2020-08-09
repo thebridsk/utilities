@@ -24,6 +24,7 @@ val vSbtDependencyGraph = "0.9.2"  // https://github.com/jrudolph/sbt-dependency
 val vSbtUpdates = "0.5.1"          // https://github.com/rtimush/sbt-updates
 val vSbtScalaFmt="2.4.0"           // https://github.com/scalameta/sbt-scalafmt
 val vBloop = "1.4.3"               // https://github.com/scalacenter/bloop
+val vSbtScalaFix="0.9.19"          // https://github.com/scalacenter/sbt-scalafix
 
 val scalaJSVersion = Option(System.getenv("SCALAJS_VERSION")).getOrElse(vScalaJSDefault)
 
@@ -61,3 +62,4 @@ addSbtPlugin("ch.epfl.scala" % "sbt-bloop" % vBloop withSources())
 scalacOptions ++= Seq( "-unchecked", "-deprecation" )
 
 scalacOptions ++= Seq( "-unchecked", "-feature", "-deprecation" )
+addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % vSbtScalaFix withSources())

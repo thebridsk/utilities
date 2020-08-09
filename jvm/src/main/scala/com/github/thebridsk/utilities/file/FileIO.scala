@@ -1,9 +1,5 @@
 package com.github.thebridsk.utilities.file
 
-import java.io.Reader
-import java.io.FileInputStream
-import java.io.InputStreamReader
-import java.io.BufferedReader
 import scala.io.Codec
 import scala.io.Source
 
@@ -18,11 +14,8 @@ import java.nio.file.FileSystems
 import java.nio.file.StandardCopyOption
 import java.nio.file.NoSuchFileException
 import java.io.IOException
-import java.util.function.Predicate
-import java.util.function.Consumer
 import com.github.thebridsk.utilities.logging.Logger
 import scala.io.BufferedSource
-import java.util.logging.Level
 import scala.util.Using
 import java.nio.file.SimpleFileVisitor
 import java.nio.file.attribute.BasicFileAttributes
@@ -30,11 +23,11 @@ import java.nio.file.FileVisitResult
 import java.nio.file.DirectoryNotEmptyException
 
 object FileIO {
-  val log = Logger(getClass().getName)
+  val log: Logger = Logger(getClass().getName)
 
   import scala.language.implicitConversions
 
-  implicit val utf8 = Codec.UTF8
+  implicit val utf8: Codec = Codec.UTF8
 
   implicit def getPath(filename: String): Path =
     FileSystems.getDefault.getPath(filename)
@@ -49,7 +42,7 @@ object FileIO {
   val newsuffix = ".new"
   val newsuffixForPattern = "\\.new"
 
-  def newfilename(filename: String) = filename + newsuffix
+  def newfilename(filename: String): String = filename + newsuffix
 
   def readFile(filename: File): String = {
     log.finest("Reading to file " + filename)
@@ -99,38 +92,47 @@ object FileIO {
   }
 
   /**
-   * Recursivily deletes all files
-   * @param directory the base directory
-   * @param ext an optional extension of files to delete.  MUST NOT start with ".".
-   */
-  def deleteDirectory( directory: Path, ext: Option[String] ) = {
-    val extension = ext.map( e => "."+e )
+    * Recursivily deletes all files
+    * @param directory the base directory
+    * @param ext an optional extension of files to delete.  MUST NOT start with ".".
+    */
+  def deleteDirectory(directory: Path, ext: Option[String]): Unit = {
+    val extension = ext.map(e => "." + e)
     if (directory.toFile().exists()) {
       if (directory.toFile().isDirectory()) {
-        Files.walkFileTree(directory, new SimpleFileVisitor[Path]() {
-           override
-           def visitFile( file: Path, attrs: BasicFileAttributes ): FileVisitResult = {
-             val del = extension.map { e =>
-               file.toString().toLowerCase().endsWith(e)
-             }.getOrElse(true)
-             if (del) {
+        Files.walkFileTree(
+          directory,
+          new SimpleFileVisitor[Path]() {
+            override def visitFile(
+                file: Path,
+                attrs: BasicFileAttributes
+            ): FileVisitResult = {
+              val del = extension
+                .map { e =>
+                  file.toString().toLowerCase().endsWith(e)
+                }
+                .getOrElse(true)
+              if (del) {
 //               println(s"Deleting ${file}")
-               Files.delete(file);
-             }
-             FileVisitResult.CONTINUE;
-           }
+                Files.delete(file);
+              }
+              FileVisitResult.CONTINUE;
+            }
 
-           override
-           def postVisitDirectory( dir: Path, exc: IOException ): FileVisitResult = {
+            override def postVisitDirectory(
+                dir: Path,
+                exc: IOException
+            ): FileVisitResult = {
 //             println(s"Deleting ${dir}")
-             try {
-               Files.delete(dir);
-             } catch {
-               case x: DirectoryNotEmptyException =>
-             }
-             FileVisitResult.CONTINUE;
-           }
-        })
+              try {
+                Files.delete(dir);
+              } catch {
+                case x: DirectoryNotEmptyException =>
+              }
+              FileVisitResult.CONTINUE;
+            }
+          }
+        )
       } else {
         directory.toFile().delete()
       }
@@ -194,7 +196,7 @@ object FileIO {
       }
       s
     } catch {
-      case e @ (_ : FileNotFoundException | _ : NoSuchFileException) =>
+      case e @ (_: FileNotFoundException | _: NoSuchFileException) =>
         try readFile(filename)
         catch {
           case e1: IOException =>
@@ -225,7 +227,7 @@ object FileIO {
     Files.list(dir).iterator().asScala
   }
 
-  def exists(path: String) = Files.exists(path)
+  def exists(path: String): Boolean = Files.exists(path)
 
-  def mktree(path: Path) = Files.createDirectories(path)
+  def mktree(path: Path): Path = Files.createDirectories(path)
 }

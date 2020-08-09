@@ -1,12 +1,11 @@
 package com.github.thebridsk.utilities.main.logging
 
 import org.rogach.scallop.ScallopConf
-import java.io.File
 import java.util.logging.Level
 import org.rogach.scallop.ValueConverter
 import com.github.thebridsk.utilities.logging.Config
-
-import com.github.thebridsk.utilities.main.Converters._
+import org.rogach.scallop.ScallopOption
+import scala.reflect.runtime.universe
 
 class ConfigArguments(
     val cmdline: ScallopConf,
@@ -32,19 +31,20 @@ class ConfigArguments(
         case _   => Left("provide log level") // error when parsing
       }
 
-    val tag = scala.reflect.runtime.universe.typeTag[Level] // some magic to make typing work
+    val tag: universe.TypeTag[Level] =
+      universe.typeTag[Level] // some magic to make typing work
     val argType = org.rogach.scallop.ArgType.SINGLE
   }
 
   import cmdline._
-  val logfile = opt[String](
+  val logfile: ScallopOption[String] = opt[String](
     "logfile",
     noshort = true,
     descr = "log filename pattern",
     argName = "filename",
     default = None
   )
-  val logconsolelevel = opt[Level](
+  val logconsolelevel: ScallopOption[Level] = opt[Level](
     "logconsolelevel",
     noshort = true,
     descr = "The level to use for console logging",
@@ -52,7 +52,7 @@ class ConfigArguments(
     default = defaultLevel
   )
 
-  def execute() = {
+  def execute(): Unit = {
     logfile.foreach { filename =>
       Config.setLogFile(filename)
     }

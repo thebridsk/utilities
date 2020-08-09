@@ -6,13 +6,13 @@ abstract class Handler(
     var filter: Filter = NoFilter
 ) {
 
-  def isLoggingLevel(l: Level) = l.isLoggable(level)
+  def isLoggingLevel(l: Level): Boolean = l.isLoggable(level)
 
-  def isLogged(traceMsg: TraceMsg) = filter.isLogged(traceMsg)
+  def isLogged(traceMsg: TraceMsg): Boolean = filter.isLogged(traceMsg)
 
   def logIt(traceMsg: TraceMsg): Unit
 
-  final def log(traceMsg: TraceMsg) = {
+  final def log(traceMsg: TraceMsg): Unit = {
     if (isLogged(traceMsg)) logIt(traceMsg)
   }
 }

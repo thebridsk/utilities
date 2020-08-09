@@ -2,23 +2,24 @@ package com.github.thebridsk.utilities.classpath
 
 import scala.annotation.tailrec
 import java.net.URLClassLoader
-import java.util.StringTokenizer
 
 object ClassPath {
 
   def show(
       linePrefix: String = "",
       loader: ClassLoader = getClass.getClassLoader
-  ) = {
+  ): String = {
     val b = showClasspath(new StringBuilder, linePrefix, loader)
     b.toString()
   }
 
-  def showProperties( linePrefix: String = "" ) = {
+  def showProperties(linePrefix: String = ""): String = {
     val b = new StringBuilder
-    val boot = sys.props.get("java.class.path").getOrElse( sys.props.getOrElse("sun.boot.class.path", "<unknown>"));
+    val boot = sys.props
+      .get("java.class.path")
+      .getOrElse(sys.props.getOrElse("sun.boot.class.path", "<unknown>"));
     b.append(linePrefix).append("java.class.path").append(fsCRLF)
-    val i = linePrefix+"  "
+    val i = linePrefix + "  "
     for (t <- boot.split(sys.props.getOrElse("path.separator", ";"))) {
       b.append(i).append(t).append(fsCRLF);
     }

@@ -9,13 +9,13 @@ object Messages {
 
   val BUNDLE_NAME = "com.github.thebridsk.utilities.nls.messages"; //$NON-NLS-1$
 
-  val RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
+  val RESOURCE_BUNDLE: ResourceBundle = ResourceBundle.getBundle(BUNDLE_NAME);
 
   /**
     * @param key
     * @return The NLS message
     */
-  def getString(key: String) = {
+  def getString(key: String): String = {
     try {
       RESOURCE_BUNDLE.getString(key);
     } catch {
@@ -29,7 +29,7 @@ object Messages {
     * @param args
     * @return the NLS message
     */
-  def getString(key: String, args: Any*) = {
+  def getString(key: String, args: Any*): String = {
     Message.getNLSMessage(
       RESOURCE_BUNDLE,
       BUNDLE_NAME,
@@ -45,7 +45,7 @@ object Messages {
     * @param args
     * @return the {@link Message} object.
     */
-  def get(key: String, args: Any*) = {
+  def get(key: String, args: Any*): Message = {
     new Message(Messages.BUNDLE_NAME, key, args: _*);
   }
 

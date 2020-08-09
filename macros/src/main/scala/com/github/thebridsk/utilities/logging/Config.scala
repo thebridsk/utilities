@@ -1,9 +1,8 @@
 package com.github.thebridsk.utilities.logging
 
-import java.util.logging.{Logger => JLogger, FileHandler => JFileHandler}
+import java.util.logging.{Logger => JLogger}
 import java.util.regex.Pattern
 import java.util.logging.Level
-import java.io.IOException
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
@@ -12,14 +11,16 @@ import scala.collection.mutable.TreeSet
 import com.github.thebridsk.utilities.nls.Messages
 
 object Config {
-  val fsLog = JLogger.getLogger(classOf[Config].getName(), Messages.BUNDLE_NAME);
+  val fsLog: JLogger =
+    JLogger.getLogger(classOf[Config].getName(), Messages.BUNDLE_NAME);
 
   /**
     * The default logging.properties filename.
     */
   val fsLoggingProperties = "logging.properties";
   val fsFileLoggingProperties = new File(fsLoggingProperties);
-  val fsDefaultLoggingProperties = "com/github/thebridsk/utilties/logging/" + fsLoggingProperties
+  val fsDefaultLoggingProperties: String =
+    "com/github/thebridsk/utilties/logging/" + fsLoggingProperties
 
   private[Config] var fsProgramName: Option[String] = None;
   private[Config] var fsProgramVersion: Option[String] = None;
@@ -36,7 +37,7 @@ object Config {
     * <li>level
     * </ol>
     */
-  val fsTraceSpec = Pattern.compile("([^=]+)=([^:]+):?");
+  val fsTraceSpec: Pattern = Pattern.compile("([^=]+)=([^:]+):?");
 
   def isInitialized = initialized
 
@@ -73,37 +74,38 @@ object Config {
     * When running with ScalaTest, this method will fail and throw an exception.  To prevent
     * this, use the {#initializeForTest} method first.
     */
-  def initialize(): Unit = synchronized {
-    if (!initialized) {
-      if (fsFileLoggingProperties.isFile()) {
-        // println(s"Initializing from file: ${fsFileLoggingProperties}")
-        initializeFromFile(fsFileLoggingProperties)
-      } else {
-        (findProgramLoggingPropertiesResource() match {
-          case Some(is) => Some(is)
-          case None =>
-            getResource(fsDefaultLoggingProperties) match {
-              case Some(is) => Some(is)
-              case None     => None
+  def initialize(): Unit =
+    synchronized {
+      if (!initialized) {
+        if (fsFileLoggingProperties.isFile()) {
+          // println(s"Initializing from file: ${fsFileLoggingProperties}")
+          initializeFromFile(fsFileLoggingProperties)
+        } else {
+          (findProgramLoggingPropertiesResource() match {
+            case Some(is) => Some(is)
+            case None =>
+              getResource(fsDefaultLoggingProperties) match {
+                case Some(is) => Some(is)
+                case None     => None
+              }
+          }).map(resource => {
+            val (is, name) = resource
+            try {
+              // println(s"Initializing from resource: ${name}")
+              initializeFrom(is, "Resource " + name)
+            } finally {
+              is.close()
             }
-        }).map(resource => {
-          val (is, name) = resource
-          try {
-            // println(s"Initializing from resource: ${name}")
-            initializeFrom(is, "Resource " + name)
-          } finally {
-            is.close()
+          }).getOrElse {
+            // println(s"Unable to find logging.properties")
           }
-        }).getOrElse {
-          // println(s"Unable to find logging.properties")
         }
       }
-    }
 //    showHandlerForAllLoggers()
-    initialized = true
-  }
+      initialized = true
+    }
 
-  def showHandlerForAllLoggers() = {
+  def showHandlerForAllLoggers(): Unit = {
     val lm = LogManager.getLogManager()
     val enum = lm.getLoggerNames()
     while (enum.hasMoreElements()) {
@@ -113,7 +115,7 @@ object Config {
     }
   }
 
-  def showHandlers( logger: java.util.logging.Logger ) = {
+  def showHandlers(logger: java.util.logging.Logger): Unit = {
     println(s"For logger <${logger.getName()}>")
     logger.getHandlers.foreach { h =>
       println(s"  Handler: ${h.getClass().getName()}")
@@ -158,12 +160,13 @@ object Config {
   /**
     * Initialize the logging system from the file.
     */
-  def initializeFromFile(file: File): Unit = synchronized {
-    if (!initialized) {
-      configureFromFile(file)
+  def initializeFromFile(file: File): Unit =
+    synchronized {
+      if (!initialized) {
+        configureFromFile(file)
+      }
+      initialized = true
     }
-    initialized = true
-  }
 
   /**
     * Initialize the logging system from a resource
@@ -174,36 +177,39 @@ object Config {
   def initializeFromResource(
       resource: String,
       loader: ClassLoader = null
-  ): Unit = synchronized {
-    if (!initialized) {
-      configureFromResource(resource, loader)
+  ): Unit =
+    synchronized {
+      if (!initialized) {
+        configureFromResource(resource, loader)
+      }
+      initialized = true
     }
-    initialized = true
-  }
 
   /**
     * Initialize the logging system from an input stream
     * @param is the input stream
     * @param name the name of the stream, used for logging
     */
-  def initializeFrom(is: InputStream, name: String): Unit = synchronized {
-    if (!initialized) {
-      configureFrom(is, name)
+  def initializeFrom(is: InputStream, name: String): Unit =
+    synchronized {
+      if (!initialized) {
+        configureFrom(is, name)
+      }
+      initialized = true
     }
-    initialized = true
-  }
 
   /**
     * Initialize the logging system from the file.
     */
-  def configureFromFile(file: File): Unit = synchronized {
-    val is = new FileInputStream(file)
-    try {
-      configureFrom(is, "File " + file)
-    } finally {
-      is.close()
+  def configureFromFile(file: File): Unit =
+    synchronized {
+      val is = new FileInputStream(file)
+      try {
+        configureFrom(is, "File " + file)
+      } finally {
+        is.close()
+      }
     }
-  }
 
   /**
     * Initialize the logging system from a resource
@@ -214,41 +220,45 @@ object Config {
   def configureFromResource(
       resource: String,
       loader: ClassLoader = null
-  ): Unit = synchronized {
-    val l = {
-      Option( loader ).getOrElse( fsProgramClassLoader.getOrElse(getClass.getClassLoader) )
-    }
+  ): Unit =
+    synchronized {
+      val l = {
+        Option(loader).getOrElse(
+          fsProgramClassLoader.getOrElse(getClass.getClassLoader)
+        )
+      }
 
-    val is = l.getResourceAsStream(resource)
-    if (is != null) {
-      try {
-        configureFrom(is, "Resource " + resource)
-      } finally {
-        is.close()
+      val is = l.getResourceAsStream(resource)
+      if (is != null) {
+        try {
+          configureFrom(is, "Resource " + resource)
+        } finally {
+          is.close()
+        }
       }
     }
-  }
 
   /**
     * Initialize the logging system from an input stream
     * @param is the input stream
     * @param name the name of the stream, used for logging
     */
-  def configureFrom(is: InputStream, name: String): Unit = synchronized {
-    try {
-      val lm = LogManager.getLogManager();
-      lm.readConfiguration(is);
-      fsLog.info("Successfully configured logging from " + name)
-    } catch {
-      case x: Throwable =>
-        fsLog.log(
-          Level.WARNING,
-          "Exception trying to load logging configuration from " + name,
-          x
-        )
-        throw x
+  def configureFrom(is: InputStream, name: String): Unit =
+    synchronized {
+      try {
+        val lm = LogManager.getLogManager();
+        lm.readConfiguration(is);
+        fsLog.info("Successfully configured logging from " + name)
+      } catch {
+        case x: Throwable =>
+          fsLog.log(
+            Level.WARNING,
+            "Exception trying to load logging configuration from " + name,
+            x
+          )
+          throw x
+      }
     }
-  }
 
   /**
     * Add a {@link FileHandler} to the root logger using the specified logfilename
@@ -257,7 +267,7 @@ object Config {
     * @throws SecurityException
     * @throws IOException
     */
-  def setLogFile(logfilename: String) = {
+  def setLogFile(logfilename: String): Unit = {
     val h = new FileHandler(logfilename);
     val root = JLogger.getLogger("");
     root.addHandler(h);
@@ -267,7 +277,7 @@ object Config {
     * Set the level on all console handlers on the root logger
     * @param level
     */
-  def setLevelOnConsoleHandler(level: Level) = {
+  def setLevelOnConsoleHandler(level: Level): Unit = {
     val root = JLogger.getLogger("");
     for (h <- root.getHandlers) {
       if (h.isInstanceOf[ConsoleHandler]) {
@@ -291,21 +301,21 @@ object Config {
   /**
     * @return the program name
     */
-  def getProgramName() = {
+  def getProgramName(): Option[String] = {
     fsProgramName;
   }
 
   /**
     * @return the program version
     */
-  def getProgramVersion() = {
+  def getProgramVersion(): Option[String] = {
     fsProgramVersion;
   }
 
   /**
     * @return the classloader for the program
     */
-  def getprogramClassLoader() = {
+  def getprogramClassLoader(): Option[ClassLoader] = {
     fsProgramClassLoader;
   }
 
@@ -337,13 +347,13 @@ object Config {
     }
   }
 
-  def getProperty(key: String) = {
+  def getProperty(key: String): String = {
     val manager: LogManager = LogManager.getLogManager();
     manager.getProperty(key);
   }
 
-  def getStringProperty(key: String, default: => String) = {
-    Option( getProperty(key) ).getOrElse(default)
+  def getStringProperty(key: String, default: => String): String = {
+    Option(getProperty(key)).getOrElse(default)
   }
 
   def getLevelProperty(key: String, default: => Level): Level = {
@@ -407,7 +417,6 @@ object Config {
 }
 
 /**
-  *
   * <p>
   * @author werewolf
   */
@@ -432,31 +441,32 @@ class Config() {
     * Example:
     * *=WARNING:com.example=INFO:com.example.donttrace=OFF
     */
-  def setTraceSpec(spec: String) = synchronized {
-    val saveLevel = fsLog.getLevel();
-    try {
-      fsLog.setLevel(Level.FINE);
-      fsLog.log(Level.FINE, "Setting tracespec to " + spec);
-    } finally {
-      fsLog.setLevel(saveLevel);
-    }
-    clearLogging();
-    val m = fsTraceSpec.matcher(spec);
-    while (m.find()) {
-      var loggername = m.group(1);
-      if (loggername.equals("*")) {
-        loggername = "";
+  def setTraceSpec(spec: String): Unit =
+    synchronized {
+      val saveLevel = fsLog.getLevel();
+      try {
+        fsLog.setLevel(Level.FINE);
+        fsLog.log(Level.FINE, "Setting tracespec to " + spec);
+      } finally {
+        fsLog.setLevel(saveLevel);
       }
-      var ltype = m.group(2);
+      clearLogging();
+      val m = fsTraceSpec.matcher(spec);
+      while (m.find()) {
+        var loggername = m.group(1);
+        if (loggername.equals("*")) {
+          loggername = "";
+        }
+        var ltype = m.group(2);
 
-      val l = Level.parse(ltype.toUpperCase());
+        val l = Level.parse(ltype.toUpperCase());
 
-      val logger = JLogger.getLogger(loggername);
-      if (logger != null) {
-        logger.setLevel(l);
+        val logger = JLogger.getLogger(loggername);
+        if (logger != null) {
+          logger.setLevel(l);
+        }
       }
     }
-  }
 
   /**
     * Get the current trace spec.  The format of the returned string is the

@@ -1,27 +1,16 @@
 package com.github.thebridsk.utilities.main
 
-import com.github.thebridsk.utilities.logging.Logger
 import com.github.thebridsk.utilities.logging.Logging
 
 import java.util.logging.Level
 
-import java.io.PrintWriter
-
-import scala.util.control.Breaks._
-import scala.language.postfixOps
 import com.github.thebridsk.utilities.logging.Config
 import org.rogach.scallop.ScallopConf
 import org.rogach.scallop.exceptions.Help
 import org.rogach.scallop.exceptions.Version
-import org.rogach.scallop.exceptions.Exit
 import org.rogach.scallop.exceptions.ScallopException
-import org.rogach.scallop.exceptions.RequiredOptionNotFound
 import org.rogach.scallop.{Subcommand => ScallopSubcommand}
-import org.rogach.scallop.Scallop
-import org.rogach.scallop.ValueConverter
-import org.rogach.scallop.ScallopOption
 import com.github.thebridsk.utilities.main.logging.ConfigArguments
-import com.github.thebridsk.utilities.classpath.ClassPath
 import org.rogach.scallop.ScallopConfBase
 import scala.annotation.tailrec
 
@@ -41,29 +30,30 @@ abstract class Main(val defaultLevel: Option[Level] = None)
     extends ScallopConf
     with Logging {
 
-  override def onError(e: Throwable): Unit = e match {
-    case Help("") =>
-      builder.printHelp()
-      throw new ExitException(99)
-    case Help(subname) =>
-      builder.findSubbuilder(subname).get.printHelp()
-      throw new ExitException(99)
-    case Version =>
-      builder.vers.foreach(println)
-      throw new ExitException(99)
-    case ScallopException(message) =>
-      if (System.console() == null) {
-        // no colors on output
-        println(s"[$printedName] Error: $message")
-      } else {
-        println(
-          s"[\u001b[31m${printedName}\u001b[0m] Error: ${message}"
-        )
-      }
-      throw new ExitException(1)
+  override def onError(e: Throwable): Unit =
+    e match {
+      case Help("") =>
+        builder.printHelp()
+        throw new ExitException(99)
+      case Help(subname) =>
+        builder.findSubbuilder(subname).get.printHelp()
+        throw new ExitException(99)
+      case Version =>
+        builder.vers.foreach(println)
+        throw new ExitException(99)
+      case ScallopException(message) =>
+        if (System.console() == null) {
+          // no colors on output
+          println(s"[$printedName] Error: $message")
+        } else {
+          println(
+            s"[\u001b[31m${printedName}\u001b[0m] Error: ${message}"
+          )
+        }
+        throw new ExitException(1)
 
-    case other => throw other
-  }
+      case other => throw other
+    }
 
   /**
     * Called at startup, before arguments are parsed.
@@ -175,9 +165,12 @@ abstract class Main(val defaultLevel: Option[Level] = None)
                 sc.init()
               } catch {
                 case x: Throwable =>
-                  logger.warning(s"""Failed in init of subcommand${cmdname(
-                    inited
-                  )}""", x)
+                  logger.warning(
+                    s"""Failed in init of subcommand${cmdname(
+                      inited
+                    )}""",
+                    x
+                  )
                   98
               }
             }
@@ -220,9 +213,12 @@ abstract class Main(val defaultLevel: Option[Level] = None)
             sc.cleanup()
           } catch {
             case x: Throwable =>
-              logger.warning(s"""Failed in cleanup of subcommand${cmdname(
-                inited
-              )}""", x)
+              logger.warning(
+                s"""Failed in cleanup of subcommand${cmdname(
+                  inited
+                )}""",
+                x
+              )
           }
         }
 

@@ -9,7 +9,7 @@ object BldVersion {
     verScalaVersion.substring(0, i2)
   }
 
-  lazy val verCrossScalaVersions = Seq("2.13.1", verScalaVersion)
+  lazy val verCrossScalaVersions = Seq(verScalaVersion)
 
   lazy val vScalactic = "3.2.0"      // https://github.com/scalatest/scalatest
   lazy val vScalatest = "3.2.0"      // https://github.com/scalatest/scalatest

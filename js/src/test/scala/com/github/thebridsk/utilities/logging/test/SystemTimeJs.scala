@@ -6,7 +6,7 @@ import scala.scalajs.js.Date
 
 object SystemTimeJs {
 
-  def apply() = {
+  def apply(): Unit = {
 
     val st = new SystemTime {
       def currentTimeMillis() = {
@@ -15,14 +15,14 @@ object SystemTimeJs {
       }
 
       /**
-       * @param time the time in milliseconds since 1/1/1970
-       * @return the returned string has the format HH:mm:ss.SSS
-       */
-      def formatTime( time: Double ): String = {
+        * @param time the time in milliseconds since 1/1/1970
+        * @return the returned string has the format HH:mm:ss.SSS
+        */
+      def formatTime(time: Double): String = {
         formatLogTime(time)
       }
 
-      final def formatLogTime( time: Double ): String = {
+      final def formatLogTime(time: Double): String = {
         val d = new Date(time)
 
         if (true) {
@@ -33,7 +33,7 @@ object SystemTimeJs {
           f"$hour%d:$min%02d:$sec%02d.$milli%03d"
         } else {
 
-          d.toLocaleDateString()+" "+d.toLocaleTimeString()
+          d.toLocaleDateString() + " " + d.toLocaleTimeString()
         }
       }
     }

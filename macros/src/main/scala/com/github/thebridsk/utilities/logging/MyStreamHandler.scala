@@ -1,8 +1,6 @@
 package com.github.thebridsk.utilities.logging
 
 import java.util.logging.StreamHandler
-import java.util.logging.Formatter
-import java.util.logging.LogManager
 
 class MyStreamHandler extends StreamHandler {
 

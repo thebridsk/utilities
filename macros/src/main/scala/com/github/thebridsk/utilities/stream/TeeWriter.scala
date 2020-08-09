@@ -24,15 +24,20 @@ class TeeWriter(writers: Writer*) extends Writer {
   override def write(str: String, off: Int, len: Int): Unit =
     writers.foreach(_.write(str, off, len))
 
-  override def append(csq: CharSequence) = {
-    writers.foreach(_.append(csq)); this
+  override def append(csq: CharSequence): TeeWriter = {
+    writers.foreach(_.append(csq))
+    this
   }
 
-  override def append(csq: CharSequence, off: Int, len: Int) = {
-    writers.foreach(_.append(csq, off, len)); this
+  override def append(csq: CharSequence, off: Int, len: Int): TeeWriter = {
+    writers.foreach(_.append(csq, off, len))
+    this
   }
 
-  override def append(c: Char) = { writers.foreach(_.append(c)); this }
+  override def append(c: Char): TeeWriter = {
+    writers.foreach(_.append(c))
+    this
+  }
 
   /**
     * Get specified writer, and optionally close other writers.
@@ -42,7 +47,7 @@ class TeeWriter(writers: Writer*) extends Writer {
     * @return the writer, null if index is out of range
     * @throws IOException if an error in underlying writer.
     */
-  def getWriter(i: Int, closeOthers: Boolean) = {
+  def getWriter(i: Int, closeOthers: Boolean): Writer = {
     var ret: Writer = null;
     if (closeOthers) {
       for (j <- 0 until writers.length) {

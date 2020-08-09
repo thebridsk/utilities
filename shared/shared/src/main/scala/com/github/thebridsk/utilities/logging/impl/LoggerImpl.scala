@@ -4,13 +4,13 @@ import com.github.thebridsk.utilities.logging.LoggerFactory
 import com.github.thebridsk.utilities.logging.Logger
 import com.github.thebridsk.utilities.logging.TraceMsg
 
-import org.scalactic.source.Position
 import com.github.thebridsk.utilities.logging.Handler
 import com.github.thebridsk.utilities.logging.Level
+import scala.util.matching.Regex
 
 trait LoggerImplFactory extends LoggerFactory {
 
-  def doingReplacement = {
+  def doingReplacement: Boolean = {
     var rc = false
     if (LoggerFactory.factory != null && LoggerFactory.factory != this) {
       if (LoggerFactory.factory.isReplaceable) {
@@ -22,7 +22,7 @@ trait LoggerImplFactory extends LoggerFactory {
     rc
   }
 
-  def init(rootHandler: Handler*) = {
+  def init(rootHandler: Handler*): Unit = {
     if (LoggerFactory.factory != null && LoggerFactory.factory != this) {
       if (!LoggerFactory.factory.isReplaceable) {
         throw new IllegalStateException("Logger.factory is not replaceable")
@@ -38,7 +38,7 @@ trait LoggerImplFactory extends LoggerFactory {
   }
 
   import scala.language.postfixOps
-  val hierarchySearch = """(.+)\.([^.]+)""" r
+  val hierarchySearch: Regex = """(.+)\.([^.]+)""" r
 
   /**
     * Get the logger
@@ -97,11 +97,11 @@ object LoggerImplFactory extends LoggerImplFactory {
 
   private var systemTime: SystemTime = null
 
-  def setSystemTimeObject(st: SystemTime) = systemTime = st
+  def setSystemTimeObject(st: SystemTime): Unit = systemTime = st
 
   def getTime(): Double = systemTime.currentTimeMillis()
 
-  def formatTime(time: Double) = systemTime.formatTime(time)
+  def formatTime(time: Double): String = systemTime.formatTime(time)
 }
 
 trait SystemTime {

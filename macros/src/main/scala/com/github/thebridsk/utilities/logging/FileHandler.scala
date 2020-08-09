@@ -3,11 +3,8 @@ package com.github.thebridsk.utilities.logging
 import java.util.logging.StreamHandler
 import java.io.File
 import java.io.FileOutputStream
-import java.nio.channels.FileChannel
 import java.io.IOException
 import com.github.thebridsk.utilities.stream.MeteredOutputStream
-import java.util.ArrayList
-import java.util.Arrays
 import java.util.logging.LogManager
 import java.util.logging.Level
 import java.util.logging.Filter
@@ -102,7 +99,9 @@ class FileHandler(pattern: String = null) extends StreamHandler {
 
   private val MAX_UNIQUE = 100;
 
-  private val fSDF = DateTimeFormatter.ofPattern("yyyy.MM.dd.HH.mm.ss.SSS").withZone( ZoneId.systemDefault() );
+  private val fSDF = DateTimeFormatter
+    .ofPattern("yyyy.MM.dd.HH.mm.ss.SSS")
+    .withZone(ZoneId.systemDefault());
   private val dateRegex = """\d\d\d\d\.\d\d\.\d\d\.\d\d\.\d\d\.\d\d\.\d\d\d"""
 
   private var fUnique = -1;
@@ -122,8 +121,8 @@ class FileHandler(pattern: String = null) extends StreamHandler {
 
   private var fOldFiles: List[File] = List()
 
-  def setLimit(l: Long) = { fLimit = l }
-  def setCount(c: Int) = { fCount = c }
+  def setLimit(l: Long): Unit = { fLimit = l }
+  def setCount(c: Int): Unit = { fCount = c }
 
   myCheckAccess();
   configure(pattern);
@@ -144,7 +143,9 @@ class FileHandler(pattern: String = null) extends StreamHandler {
     val cname = getClass().getName();
 
     fPattern = Option(pattern)
-      .getOrElse(Config.getStringProperty(cname + ".pattern", "%h/trace.%u.%d.log"))
+      .getOrElse(
+        Config.getStringProperty(cname + ".pattern", "%h/trace.%u.%d.log")
+      )
       .replace('\\', '/');
     fLimit = Config.getIntProperty(cname + ".limit", 0);
     if (fLimit < 0) {
@@ -156,7 +157,9 @@ class FileHandler(pattern: String = null) extends StreamHandler {
     }
     fAppend = Config.getBooleanProperty(cname + ".append", false);
     setLevel(Config.getLevelProperty(cname + ".level", Level.ALL));
-    setFilter(Config.getClassObjectProperty(classOf[Filter], cname + ".filter", null));
+    setFilter(
+      Config.getClassObjectProperty(classOf[Filter], cname + ".filter", null)
+    );
     setFormatter(
       Config.getClassObjectProperty(
         classOf[Formatter],
@@ -181,51 +184,53 @@ class FileHandler(pattern: String = null) extends StreamHandler {
   /* (non-Javadoc)
    * @see java.util.logging.StreamHandler#publish(java.util.logging.LogRecord)
    */
-  override def publish(record: LogRecord): Unit = synchronized {
-    if (!isLoggable(record)) {
-      return;
-    }
-    try {
-      super.publish(record);
-      flush();
-      if (fLimit > 0 && fMeter.getCurrentSize() >= fLimit) {
-        // We performed access checks in the constructor to make sure
-        // we are only initialized from trusted code.  So we assume
-        // it is OK to write the target files, even if we are
-        // currently being called from untrusted code.
-        // So it is safe to raise privilege here.
-        AccessController.doPrivileged(new PrivilegedAction[Object]() {
-          override def run(): Object = {
-            rotate();
-            return null;
-          }
-        });
+  override def publish(record: LogRecord): Unit =
+    synchronized {
+      if (!isLoggable(record)) {
+        return;
       }
-    } catch {
-      case x: IOException =>
-        println("Current log file is " + fCurrentFile + ": " + x)
-        throw x
+      try {
+        super.publish(record);
+        flush();
+        if (fLimit > 0 && fMeter.getCurrentSize() >= fLimit) {
+          // We performed access checks in the constructor to make sure
+          // we are only initialized from trusted code.  So we assume
+          // it is OK to write the target files, even if we are
+          // currently being called from untrusted code.
+          // So it is safe to raise privilege here.
+          AccessController.doPrivileged(new PrivilegedAction[Object]() {
+            override def run(): Object = {
+              rotate();
+              return null;
+            }
+          });
+        }
+      } catch {
+        case x: IOException =>
+          println("Current log file is " + fCurrentFile + ": " + x)
+          throw x
+      }
     }
-  }
 
   /* (non-Javadoc)
    * @see java.util.logging.StreamHandler#close()
    */
-  override def close(): Unit = synchronized {
-    super.close();
-    if (fLockStream != null) {
-      try {
-        fLockStream.close();
-      } catch {
-        case _: IOException =>
-        // ignore any errors
+  override def close(): Unit =
+    synchronized {
+      super.close();
+      if (fLockStream != null) {
+        try {
+          fLockStream.close();
+        } catch {
+          case _: IOException =>
+          // ignore any errors
+        }
       }
+      new File(fLockFileName).delete();
+      fLockFileName = null;
+      fLockStream = null;
+      fMeter = null;
     }
-    new File(fLockFileName).delete();
-    fLockFileName = null;
-    fLockStream = null;
-    fMeter = null;
-  }
 
   var lastDate: Date = null;
 
@@ -235,7 +240,7 @@ class FileHandler(pattern: String = null) extends StreamHandler {
       d = new Date();
     }
     lastDate = d;
-    fSDF.format( Instant.ofEpochMilli( d.getTime() ))
+    fSDF.format(Instant.ofEpochMilli(d.getTime()))
   }
 
   private def openFiles(): Unit = {
@@ -270,7 +275,7 @@ class FileHandler(pattern: String = null) extends StreamHandler {
     * This closes the current file, renames it to include the date,
     * then opens a new file.
     */
-  def rotate() = {
+  def rotate(): Unit = {
     val oldLevel = getLevel();
     setLevel(Level.OFF);
 
@@ -353,7 +358,6 @@ class FileHandler(pattern: String = null) extends StreamHandler {
       }
     })).getOrElse(Array())
 
-    import scala.jdk.CollectionConverters._
     val sortedfiles = files.toList.sorted
 //      println(s"Found ${sortedfiles.length} log files with pattern ${pat}")
     if (sortedfiles.length > fCount) {
@@ -458,22 +462,23 @@ class FileHandler(pattern: String = null) extends StreamHandler {
       fUnique = i
       val fn = getFileName(fPattern, i, "_") + ".lck";
       fLockStream = null;
-      var fc = try {
-        fLockStream = new FileOutputStream(fn);
-        fLockFileName = fn;
-        Some(fLockStream.getChannel())
-      } catch {
-        case e: Exception =>
-          if (fLockStream != null) {
-            try {
-              fLockStream.close();
-            } catch {
-              case e1: IOException =>
-              // ignore any errors
+      var fc =
+        try {
+          fLockStream = new FileOutputStream(fn);
+          fLockFileName = fn;
+          Some(fLockStream.getChannel())
+        } catch {
+          case e: Exception =>
+            if (fLockStream != null) {
+              try {
+                fLockStream.close();
+              } catch {
+                case e1: IOException =>
+                // ignore any errors
+              }
             }
-          }
-          None;
-      }
+            None;
+        }
       fc.foreach(chan => {
         var gotLock = false;
         try {

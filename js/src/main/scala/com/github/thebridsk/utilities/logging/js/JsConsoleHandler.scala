@@ -9,7 +9,7 @@ import com.github.thebridsk.utilities.logging.Level
 
 class JsConsoleHandler extends Handler {
 
-  def logIt(traceMsg: TraceMsg) = {
+  def logIt(traceMsg: TraceMsg): Unit = {
     if (isLoggingLevel(traceMsg.level)) {
       val s = formatter.format(traceMsg)
       traceMsg.level match {
@@ -24,16 +24,16 @@ class JsConsoleHandler extends Handler {
     }
   }
 
-  def error(msg: String) = {
+  def error(msg: String): Unit = {
     g.console.error(msg)
   }
-  def warning(msg: String) = {
+  def warning(msg: String): Unit = {
     g.console.warn(msg)
   }
-  def info(msg: String) = {
+  def info(msg: String): Unit = {
     g.console.info(msg)
   }
-  def debug(msg: String) = {
+  def debug(msg: String): Unit = {
     g.console.info(msg)
   }
 
@@ -41,16 +41,16 @@ class JsConsoleHandler extends Handler {
 
 class JsConsoleHandlerInfo extends JsConsoleHandler {
 
-  override def error(msg: String) = {
+  override def error(msg: String): Unit = {
     g.console.info(msg)
   }
-  override def warning(msg: String) = {
+  override def warning(msg: String): Unit = {
     g.console.info(msg)
   }
-  override def info(msg: String) = {
+  override def info(msg: String): Unit = {
     g.console.info(msg)
   }
-  override def debug(msg: String) = {
+  override def debug(msg: String): Unit = {
     g.console.info(msg)
   }
 

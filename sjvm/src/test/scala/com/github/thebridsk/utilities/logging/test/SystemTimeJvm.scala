@@ -2,16 +2,15 @@ package com.github.thebridsk.utilities.logging.test
 
 import com.github.thebridsk.utilities.logging.impl.SystemTime
 import com.github.thebridsk.utilities.logging.impl.LoggerImplFactory
-import java.text.DateFormat
-import java.util.Date
 import java.time.format.DateTimeFormatter
 import java.time.ZoneId
 
 object SystemTimeJvm {
 
-  val fmt = DateTimeFormatter.ofPattern("HH:mm:ss.SSS").withZone(ZoneId.systemDefault())
+  val fmt: DateTimeFormatter =
+    DateTimeFormatter.ofPattern("HH:mm:ss.SSS").withZone(ZoneId.systemDefault())
 
-  def apply() = {
+  def apply(): Unit = {
 
     val st = new SystemTime {
       def currentTimeMillis() = {
@@ -19,11 +18,11 @@ object SystemTimeJvm {
       }
 
       /**
-       * @param time the time in milliseconds since 1/1/1970
-       * @return the returned string has the format HH:mm:ss.SSS
-       */
-      def formatTime( time: Double ): String = {
-        fmt.format( java.time.Instant.ofEpochMilli( time.toLong ) )
+        * @param time the time in milliseconds since 1/1/1970
+        * @return the returned string has the format HH:mm:ss.SSS
+        */
+      def formatTime(time: Double): String = {
+        fmt.format(java.time.Instant.ofEpochMilli(time.toLong))
       }
     }
 

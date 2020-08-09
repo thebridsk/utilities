@@ -1,7 +1,6 @@
 package com.github.thebridsk.utilities.message
 
 import java.util.logging.Logger
-import org.scalactic._
 import org.scalactic.source.Position
 import java.util.Locale
 import java.util.ResourceBundle
@@ -9,7 +8,6 @@ import java.util.ResourceBundle.Control
 import java.util.Formatter
 import java.util.MissingResourceException
 import java.util.logging.Level
-import java.util.Arrays
 import com.github.thebridsk.utilities.nls.Messages
 import scala.util.Using
 
@@ -19,14 +17,14 @@ import scala.util.Using
   * @param key
   * @param args
   */
-case class Message(bundle: String, key: String, args: Any*)(
-    implicit created: Position
+case class Message(bundle: String, key: String, args: Any*)(implicit
+    created: Position
 ) {
 
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
-  override def toString() = {
+  override def toString(): String = {
     val loc = created.fileName + ":" + created.lineNumber
 
     "{Message bundle=" + bundle + ", key=" + key + ", args=" +
@@ -38,7 +36,7 @@ case class Message(bundle: String, key: String, args: Any*)(
     * @param resolver
     * @return the message
     */
-  def toNLS(implicit resolver: MessageResolver) = resolver.toNLS(this)
+  def toNLS(implicit resolver: MessageResolver): String = resolver.toNLS(this)
 
   /**
     * Trace the message
@@ -49,7 +47,7 @@ case class Message(bundle: String, key: String, args: Any*)(
     */
   def log(logger: Logger, level: Level, clsname: String, methodname: String)(
       implicit resolver: MessageResolver
-  ) = {
+  ): Unit = {
     resolver.log(logger, level, clsname, methodname, this)
   }
 }
@@ -60,7 +58,6 @@ case class Message(bundle: String, key: String, args: Any*)(
   * @param loader the class loader to use, may be null for the classloader that loaded this class
   * @param control the control, may be null for the default control
   * @author werewolf
-  *
   */
 case class MessageResolver(
     locale: Locale = Locale.getDefault,
@@ -69,13 +66,13 @@ case class MessageResolver(
 ) {
 
   private def rb(msg: Message) = {
-    val useClassLoader = Option(loader).getOrElse( getClass.getClassLoader )
+    val useClassLoader = Option(loader).getOrElse(getClass.getClassLoader)
     if (control == null)
       ResourceBundle.getBundle(msg.bundle, locale, useClassLoader)
     else ResourceBundle.getBundle(msg.bundle, locale, useClassLoader, control)
   }
 
-  def toNLS(msg: Message) = {
+  def toNLS(msg: Message): String = {
     Message.getNLSMessage(rb(msg), msg.bundle, locale, msg.key, msg.args: _*)
   }
 
@@ -92,14 +89,14 @@ case class MessageResolver(
       clsname: String,
       methodname: String,
       msg: Message
-  ) = {
+  ): Unit = {
     logger.logrb(level, clsname, methodname, rb(msg), msg.key, msg.args);
   }
 
 }
 
 object Message {
-  val fsLog =
+  val fsLog: Logger =
     Logger.getLogger(classOf[Message].getName(), null /* resource bundle */ );
 
   /**
@@ -116,7 +113,7 @@ object Message {
       locale: Locale,
       key: String,
       args: Any*
-  ) = {
+  ): String = {
     try {
       val fmt = rb.getString(key)
       val msg = getFormattedMessage(locale, fmt, args: _*)
@@ -134,7 +131,7 @@ object Message {
     * @param args
     * @return the formatted message
     */
-  def getFormattedMessage(locale: Locale, fmt: String, args: Any*) = {
+  def getFormattedMessage(locale: Locale, fmt: String, args: Any*): String = {
 
     if (args != null && args.length > 0) {
       val b: Appendable = new java.lang.StringBuilder();

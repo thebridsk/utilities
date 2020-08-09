@@ -8,47 +8,54 @@ import com.github.thebridsk.utilities.logging.Logging
 import com.github.thebridsk.utilities.macros.Source._
 import java.util.logging.Level
 import com.github.thebridsk.utilities.main.Main
-import org.rogach.scallop.ScallopConf
 import com.github.thebridsk.utilities.classpath.ClassPath
+import org.rogach.scallop.ScallopOption
 
 class TestMacros extends Logging {
 
-  def testMacros( x: String ) : Unit = {
-    logger.info("in testMacros(x=%s)",x)
-    logger.info("className is %s",className)
-    logger.info("methodName is %s",methodName)
-    logger.info("sourceFilename is %s",sourceFilename)
-    logger.info("sourceFullFilename is %s",sourceFullFilename)
-    logger.info("sourceLine is %d",sourceLine)
+  def testMacros(x: String): Unit = {
+    logger.info("in testMacros(x=%s)", x)
+    logger.info("className is %s", className)
+    logger.info("methodName is %s", methodName)
+    logger.info("sourceFilename is %s", sourceFilename)
+    logger.info("sourceFullFilename is %s", sourceFullFilename)
+    logger.info("sourceLine is %d", sourceLine)
   }
 
   import scala.language.implicitConversions
-  implicit def intToAnyRef( i: Int ) : AnyRef =  java.lang.Integer.valueOf(i)
+  implicit def intToAnyRef(i: Int): AnyRef = java.lang.Integer.valueOf(i)
 
-  def testMacros( i: Int ) : Unit = {
-    logger.info("in testMacros(x=%s)",i)
-    logger.info("className is %s",className)
-    logger.info("methodName is %s",methodName)
-    logger.info("sourceFilename is %s",sourceFilename)
-    logger.info("sourceFullFilename is %s",sourceFullFilename)
-    logger.info("sourceLine is %s",sourceLine)
+  def testMacros(i: Int): Unit = {
+    logger.info("in testMacros(x=%s)", i)
+    logger.info("className is %s", className)
+    logger.info("methodName is %s", methodName)
+    logger.info("sourceFilename is %s", sourceFilename)
+    logger.info("sourceFullFilename is %s", sourceFullFilename)
+    logger.info("sourceLine is %s", sourceLine)
   }
 }
+
 /**
- * @author werewolf
- *
- */
+  * @author werewolf
+  */
 object TestMain extends Main { // with Logging {
 
   val version = "0.2"
 
-  val optionDef = toggle("def", descrYes="enable def", descrNo="disable def")
-  val optionA = toggle("abc", descrYes="enable abc")
-  val optionXyz = opt[String]("xyz", short='x', descr="val is the xyz option", argName="val")
+  val optionDef: ScallopOption[Boolean] =
+    toggle("def", descrYes = "enable def", descrNo = "disable def")
+  val optionA: ScallopOption[Boolean] = toggle("abc", descrYes = "enable abc")
+  val optionXyz: ScallopOption[String] = opt[String](
+    "xyz",
+    short = 'x',
+    descr = "val is the xyz option",
+    argName = "val"
+  )
 
-  val runFunFunction = () => logger.info("Hello from runFunFunction")
+  val runFunFunction: () => Unit = () =>
+    logger.info("Hello from runFunFunction")
 
-  def execute() = {
+  def execute(): Int = {
     println(ClassPath.show("", getClass.getClassLoader))
     testLogging()
     if (optionXyz.isSupplied) {
@@ -63,49 +70,70 @@ object TestMain extends Main { // with Logging {
     0
   }
 
-  def runFun( fun: ()=>Unit) = {
+  def runFun(fun: () => Unit): Unit = {
     fun()
   }
 
-  class ExceptionForTest( msg: String ) extends Exception( msg )
+  class ExceptionForTest(msg: String) extends Exception(msg)
 
-  def testLogging() : Unit = {
+  def testLogging(): Unit = {
     logger.logger.setLevel(Level.FINE)
 
     logger.severe("hello noargs")
-    logger.severe("hello %s",value())
-    logger.severe("hello %s, goodbye %s",value(), "sucker")
-    logger.severe("severe exception", new ExceptionForTest("oops, showing exception"))
+    logger.severe("hello %s", value())
+    logger.severe("hello %s, goodbye %s", value(), "sucker")
+    logger.severe(
+      "severe exception",
+      new ExceptionForTest("oops, showing exception")
+    )
 
     logger.warning("hello noargs")
-    logger.warning("hello %s",value())
-    logger.warning("hello %s, goodbye %s",value(), "sucker")
-    logger.warning("warning exception", new ExceptionForTest("oops, showing exception"))
+    logger.warning("hello %s", value())
+    logger.warning("hello %s, goodbye %s", value(), "sucker")
+    logger.warning(
+      "warning exception",
+      new ExceptionForTest("oops, showing exception")
+    )
 
     logger.info("hello noargs")
-    logger.info("hello %s",value())
-    logger.info("hello %s, goodbye %s",value(), "sucker")
-    logger.info("info exception", new ExceptionForTest("oops, showing exception"))
+    logger.info("hello %s", value())
+    logger.info("hello %s, goodbye %s", value(), "sucker")
+    logger.info(
+      "info exception",
+      new ExceptionForTest("oops, showing exception")
+    )
 
     logger.config("hello noargs")
-    logger.config("hello %s",value())
-    logger.config("hello %s, goodbye %s",value(), "sucker")
-    logger.config("config exception", new ExceptionForTest("oops, showing exception"))
+    logger.config("hello %s", value())
+    logger.config("hello %s, goodbye %s", value(), "sucker")
+    logger.config(
+      "config exception",
+      new ExceptionForTest("oops, showing exception")
+    )
 
     logger.fine("hello noargs")
-    logger.fine("hello %s",value())
-    logger.fine("hello %s, goodbye %s",value(), "sucker")
-    logger.fine("fine exception", new ExceptionForTest("oops, showing exception"))
+    logger.fine("hello %s", value())
+    logger.fine("hello %s, goodbye %s", value(), "sucker")
+    logger.fine(
+      "fine exception",
+      new ExceptionForTest("oops, showing exception")
+    )
 
     logger.finer("hello noargs")
-    logger.finer("hello %s",value())
-    logger.finer("hello %s, goodbye %s",value(), "sucker")
-    logger.finer("finer exception", new ExceptionForTest("oops, showing exception"))
+    logger.finer("hello %s", value())
+    logger.finer("hello %s, goodbye %s", value(), "sucker")
+    logger.finer(
+      "finer exception",
+      new ExceptionForTest("oops, showing exception")
+    )
 
     logger.finest("hello noargs")
-    logger.finest("hello %s",value())
-    logger.finest("hello %s, goodbye %s",value(), "sucker")
-    logger.finest("finest exception", new ExceptionForTest("oops, showing exception"))
+    logger.finest("hello %s", value())
+    logger.finest("hello %s, goodbye %s", value(), "sucker")
+    logger.finest(
+      "finest exception",
+      new ExceptionForTest("oops, showing exception")
+    )
 
     logger.entering()
     logger.exiting()
@@ -122,22 +150,21 @@ object TestMain extends Main { // with Logging {
 
   }
 
-
-  def value() : String = {
+  def value(): String = {
     logger.info("value() called, return world")
     "world"
   }
 
-  val tracefun = {
+  val tracefun: Unit = {
     logger.info("Hello from tracefun")
   }
 
 }
 
 object TestXX {
-   private lazy val logger: Logger =
+  private lazy val logger: Logger =
     Logger(getClass.getName)
- def staticMethod() : Unit = {
+  def staticMethod(): Unit = {
     logger.info("From staticMethod()")
   }
 }
