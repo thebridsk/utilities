@@ -11,8 +11,8 @@ object BldVersion {
 
   lazy val verCrossScalaVersions = Seq(verScalaVersion)
 
-  lazy val vScalactic = "3.2.0"      // https://github.com/scalatest/scalatest
-  lazy val vScalatest = "3.2.0"      // https://github.com/scalatest/scalatest
+  lazy val vScalactic = "3.2.1"      // https://github.com/scalatest/scalatest
+  lazy val vScalatest = "3.2.1"      // https://github.com/scalatest/scalatest
   lazy val vJunit = "4.13"           // https://github.com/junit-team/junit4
 
   lazy val vScallop = "3.5.0"        // https://github.com/scallop/scallop
