@@ -14,7 +14,7 @@ val vJGit = "5.9.0.202009080501-r" // https://github.com/eclipse/jgit
 val vCrossProject = "1.0.0"        // https://github.com/portable-scala/sbt-crossproject
 val vPlatformDeps = "1.0.0"        // https://github.com/portable-scala/sbt-platform-deps
 // scala-react does not compile on scalajs 1.0 yet
-val vScalaJSDefault = "1.2.0"      // http://www.scala-js.org/
+val vScalaJSDefault = "1.3.0"      // http://www.scala-js.org/
 val vSbtAssembly = "0.15.0"        // https://github.com/sbt/sbt-assembly
 val vSbtGit = "1.0.0"              // https://github.com/sbt/sbt-git
 val vSbtSCoverage = "1.6.1"        // https://github.com/scoverage/sbt-scoverage
