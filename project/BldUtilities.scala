@@ -52,6 +52,13 @@ object BldUtilities {
       scalafixScalaBinaryVersion := CrossVersion.binaryScalaVersion(verScalaVersion),
       semanticdbEnabled := false,
       semanticdbVersion := scalafixSemanticdb.revision,
+
+      Global / excludeLintKeys ++= Set(
+        releaseProcess in BldUtilities.utilities,
+        releaseUseGlobalVersion in BldUtilities.utilities,
+        suppressSbtShellNotification in BldUtilities.utilities
+      )
+
     )
   )
 

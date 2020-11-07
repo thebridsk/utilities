@@ -6,7 +6,7 @@
 
 name := "project-utilities"
 
-scalaVersion := "2.12.12"
+// scalaVersion := "2.12.12"
 
 val vLog4j = "1.7.30"              // https://github.com/qos-ch/slf4j
 val vJGit = "5.9.0.202009080501-r" // https://github.com/eclipse/jgit
@@ -14,7 +14,7 @@ val vJGit = "5.9.0.202009080501-r" // https://github.com/eclipse/jgit
 val vCrossProject = "1.0.0"        // https://github.com/portable-scala/sbt-crossproject
 val vPlatformDeps = "1.0.0"        // https://github.com/portable-scala/sbt-platform-deps
 // scala-react does not compile on scalajs 1.0 yet
-val vScalaJSDefault = "1.2.0"      // http://www.scala-js.org/
+val vScalaJSDefault = "1.3.0"      // http://www.scala-js.org/
 val vSbtAssembly = "0.15.0"        // https://github.com/sbt/sbt-assembly
 val vSbtGit = "1.0.0"              // https://github.com/sbt/sbt-git
 val vSbtSCoverage = "1.6.1"        // https://github.com/scoverage/sbt-scoverage
@@ -23,8 +23,8 @@ val vSbtRelease = "1.0.13"         // https://github.com/sbt/sbt-release
 val vSbtDependencyGraph = "0.9.2"  // https://github.com/jrudolph/sbt-dependency-graph
 val vSbtUpdates = "0.5.1"          // https://github.com/rtimush/sbt-updates
 val vSbtScalaFmt="2.4.2"           // https://github.com/scalameta/sbt-scalafmt
-val vBloop = "1.4.4"               // https://github.com/scalacenter/bloop
-val vSbtScalaFix="0.9.21"          // https://github.com/scalacenter/sbt-scalafix
+val vBloop = "1.4.5"               // https://github.com/scalacenter/bloop
+val vSbtScalaFix="0.9.23"          // https://github.com/scalacenter/sbt-scalafix
 
 val scalaJSVersion = Option(System.getenv("SCALAJS_VERSION")).getOrElse(vScalaJSDefault)
 
