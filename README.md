@@ -1,6 +1,6 @@
 # Utilities
 
-[![Build Status](https://travis-ci.org/thebridsk/utilities.svg?branch=main)](https://travis-ci.org/thebridsk/utilities)
+[![Build Status](https://travis-ci.com/thebridsk/utilities.svg?branch=main)](https://travis-ci.com/thebridsk/utilities)
 [![GitHub release](https://img.shields.io/github/release/thebridsk/utilities.svg)](https://github.com/thebridsk/utilities/releases/latest)
 [![ZenHub](https://img.shields.io/badge/Managed_with-ZenHub-5e60ba.svg)](https://app.zenhub.com/workspace/o/thebridsk/utilities/boards)
 
