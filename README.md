@@ -1,6 +1,6 @@
 # Utilities
 
-[![Build Status](https://travis-ci.org/thebridsk/utilities.svg?branch=master)](https://travis-ci.org/thebridsk/utilities)
+[![Build Status](https://travis-ci.org/thebridsk/utilities.svg?branch=main)](https://travis-ci.org/thebridsk/utilities)
 [![GitHub release](https://img.shields.io/github/release/thebridsk/utilities.svg)](https://github.com/thebridsk/utilities/releases/latest)
 [![ZenHub](https://img.shields.io/badge/Managed_with-ZenHub-5e60ba.svg)](https://app.zenhub.com/workspace/o/thebridsk/utilities/boards)
 
@@ -10,7 +10,7 @@
 
 ## Releasing
 
-To release a new version, the current branch must be `master`, the workspace must be clean.  The `release` branch must not exist.
+To release a new version, the current branch must be `main`, the workspace must be clean.  The `release` branch must not exist.
 
 To create the release, execute:
 

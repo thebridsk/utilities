@@ -10,7 +10,7 @@ jdk:
 
 branches:
   only:
-  - master
+  - main
   - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
 
 script:
