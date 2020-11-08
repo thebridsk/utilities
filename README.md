@@ -8,6 +8,10 @@
 
 	git clone https://github.com/thebridsk/utilities.git
 
+## Contributing
+
+Use pull requests.  [Travis CI](https://travis-ci.com/thebridsk/bridgescorer) is used to test all pull requests prior to merging.
+
 ## Releasing
 
 To release a new version, the current branch must be `main`, the workspace must be clean.  The `release` branch must not exist.
