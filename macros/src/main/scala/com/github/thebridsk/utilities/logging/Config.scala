@@ -64,13 +64,13 @@ object Config {
     * Initialize by looking for a logger configuration file.
     *
     * Searches in the following order:
-    * <ol>
-    * <li>logging.properties file in current directory
-    * <li>logging.properties in classpath in same directory as main program
-    * <li>logging.properties in classpath at com.github.thebridsk.utilities/logging/logging.properties
-    * </ol>
+    *
+    * 1. logging.properties file in current directory
+    * 2. logging.properties in classpath in same directory as main program
+    * 3. logging.properties in classpath at com.github.thebridsk.utilities/logging/logging.properties
+    *
     * The resource searches use the classloader that loaded the main program.
-    * <p>
+    *
     * When running with ScalaTest, this method will fail and throw an exception.  To prevent
     * this, use the {#initializeForTest} method first.
     */

@@ -1,4 +1,4 @@
-package com.github.thebridsk.utilities.main.test.manual
+package com.github.thebridsk.utilities.main.utils.test.manual
 
 import java.io.File
 

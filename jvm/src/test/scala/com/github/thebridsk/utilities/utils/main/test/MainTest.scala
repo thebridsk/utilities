@@ -12,6 +12,7 @@ import com.github.thebridsk.utilities.logging.FileFormatter
 import java.util.logging.Level
 import com.github.thebridsk.utilities.logging.Logger
 import com.github.thebridsk.source.SourcePosition
+import com.github.thebridsk.utilities.main.MainConf
 
 trait Counters {
 
@@ -122,7 +123,18 @@ class ExampleSubcommand(
   }
 }
 
-class SimpleMain(returnOptions: Options = optionOk) extends Main with Counters {
+class SimpleMainConf
+      extends MainConf
+
+class SimpleMain(returnOptions: Options = optionOk) extends Main[SimpleMainConf] with Counters {
+
+  override def conf(): SimpleMainConf = {
+    val c = new SimpleMainConf
+    addToConfig(c)
+    c
+  }
+
+  def addToConfig(config: SimpleMainConf): Unit = {}
 
   val counter = new AtomicInteger(0)
 
@@ -184,6 +196,18 @@ class MainTest extends AnyFlatSpec with Matchers {
     m.initCount mustBe 1
     m.executeCount mustBe 2
     m.cleanupCount mustBe 3
+  }
+
+  it should "return 99 from call with --help" in {
+    MainTest.logStartTest()
+    val m = new SimpleMain
+    m.mainRun(Array("--help")) mustBe 99
+  }
+
+  it should "return 99 from call with --version" in {
+    MainTest.logStartTest()
+    val m = new SimpleMain
+    m.mainRun(Array("--version")) mustBe 99
   }
 
   it should "not call execute on main class when init returns 1" in {
@@ -273,10 +297,16 @@ class MainTest extends AnyFlatSpec with Matchers {
       mainOptions: Options = optionOk,
       testOptions: Options = optionOk
   ): (SimpleMain, ExampleSubcommand) = {
-    val m = new SimpleMain(mainOptions)
-    val t = new ExampleSubcommand("test", m.counter, testOptions)
-    m.addSubcommand(t)
-    (m, t)
+    val m = new SimpleMain(mainOptions) {
+
+      val t = new ExampleSubcommand("test", counter, testOptions)
+
+      override def addToConfig(config: SimpleMainConf): Unit = {
+        config.addSubcommand(t)
+      }
+    }
+    import scala.language.reflectiveCalls
+    (m, m.t)
   }
 
   it should "call execute on test subcommand" in {
@@ -289,6 +319,15 @@ class MainTest extends AnyFlatSpec with Matchers {
     t.executeCount mustBe 3
     t.cleanupCount mustBe 4
     m.cleanupCount mustBe 5
+  }
+
+  it should "fail on xxxx subcommand" in {
+    MainTest.logStartTest()
+    val (m, t) = mainWithSubcommands()
+    val status = TrapExit.trapExit {
+      m.mainRun(Array("xxxx"))
+    }
+    status mustBe 1
   }
 
   it should "not call execute on test subcommand when main init returns 1" in {
@@ -406,12 +445,17 @@ class MainTest extends AnyFlatSpec with Matchers {
       testOptions: Options = optionOk,
       test2Options: Options = optionOk
   ): (SimpleMain, ExampleSubcommand, ExampleSubcommand) = {
-    val m = new SimpleMain(mainOptions)
-    val t = new ExampleSubcommand("test", m.counter, testOptions)
-    val t2 = new ExampleSubcommand("again", m.counter, test2Options)
-    t.addSubcommand(t2)
-    m.addSubcommand(t)
-    (m, t, t2)
+    val m = new SimpleMain(mainOptions) {
+      val t = new ExampleSubcommand("test", counter, testOptions)
+      val t2 = new ExampleSubcommand("again", counter, test2Options)
+
+      override def addToConfig(config: SimpleMainConf): Unit = {
+        t.addSubcommand(t2)
+        config.addSubcommand(t)
+      }
+    }
+    import scala.language.reflectiveCalls
+    (m, m.t, m.t2)
   }
 
   it should "call execute on nested again subcommand" in {

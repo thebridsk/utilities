@@ -1,7 +1,7 @@
 //
 // Created May 24, 2015
 //
-package com.github.thebridsk.utilities.main.test.manual
+package com.github.thebridsk.utilities.utils.main.test.manual
 
 import com.github.thebridsk.utilities.logging.Logger
 import com.github.thebridsk.utilities.logging.Logging
@@ -10,6 +10,7 @@ import java.util.logging.Level
 import com.github.thebridsk.utilities.main.Main
 import com.github.thebridsk.utilities.classpath.ClassPath
 import org.rogach.scallop.ScallopOption
+import com.github.thebridsk.utilities.main.MainConf
 
 class TestMacros extends Logging {
 
@@ -35,12 +36,9 @@ class TestMacros extends Logging {
   }
 }
 
-/**
-  * @author werewolf
-  */
-object TestMain extends Main { // with Logging {
 
-  val version = "0.2"
+class TestMainConf
+    extends MainConf {
 
   val optionDef: ScallopOption[Boolean] =
     toggle("def", descrYes = "enable def", descrNo = "disable def")
@@ -52,9 +50,23 @@ object TestMain extends Main { // with Logging {
     argName = "val"
   )
 
+  override protected def onError(e: Throwable): Unit = {
+    println(s"onError called with $e")
+    super.onError(e)
+  }
+}
+
+/**
+  * @author werewolf
+  */
+object TestMain extends Main[TestMainConf] { // with Logging {
+
+  override val version = "0.2"
+
   val runFunFunction: () => Unit = () =>
     logger.info("Hello from runFunFunction")
 
+  import config._
   def execute(): Int = {
     println(ClassPath.show("", getClass.getClassLoader))
     testLogging()
