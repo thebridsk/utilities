@@ -107,9 +107,9 @@ object Config {
 
   def showHandlerForAllLoggers(): Unit = {
     val lm = LogManager.getLogManager()
-    val enum = lm.getLoggerNames()
-    while (enum.hasMoreElements()) {
-      val logger = enum.nextElement()
+    val enums = lm.getLoggerNames()
+    while (enums.hasMoreElements()) {
+      val logger = enums.nextElement()
       val l = lm.getLogger(logger)
       showHandlers(l)
     }
