@@ -13,8 +13,8 @@ object BldVersion {
 
   lazy val vScalactic = "3.2.10"      // https://github.com/scalatest/scalatest
   lazy val vScalatest = "3.2.10"      // https://github.com/scalatest/scalatest
-  lazy val vJunit = "4.13.1"         // https://github.com/junit-team/junit4
+  lazy val vJunit = "4.13.2"         // https://github.com/junit-team/junit4
 
-  lazy val vScallop = "4.0.1"        // https://github.com/scallop/scallop
+  lazy val vScallop = "4.1.0"        // https://github.com/scallop/scallop
 
 }
