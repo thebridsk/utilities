@@ -6,6 +6,8 @@ import scala.scalajs.js.Any.fromString
 import com.github.thebridsk.utilities.logging.Handler
 import com.github.thebridsk.utilities.logging.TraceMsg
 import com.github.thebridsk.utilities.logging.Level
+import com.github.thebridsk.utilities.time.js.SystemTimeJs
+import com.github.thebridsk.utilities.logging.impl.LoggerImplFactory
 
 class JsConsoleHandler extends Handler {
 
@@ -37,6 +39,14 @@ class JsConsoleHandler extends Handler {
     g.console.info(msg)
   }
 
+}
+
+object JsConsoleHandler {
+  def init(): Unit = {
+    SystemTimeJs()
+    val handler = new JsConsoleHandler
+    LoggerImplFactory.init(handler)
+  }
 }
 
 class JsConsoleHandlerInfo extends JsConsoleHandler {
