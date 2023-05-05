@@ -23,7 +23,7 @@ val vSbtRelease = "1.0.13"         // https://github.com/sbt/sbt-release
 val vSbtDependencyGraph = "0.9.2"  // https://github.com/jrudolph/sbt-dependency-graph
 val vSbtUpdates = "0.6.0"          // https://github.com/rtimush/sbt-updates
 val vSbtScalaFmt="2.4.5"           // https://github.com/scalameta/sbt-scalafmt
-val vBloop = "1.4.11"              // https://github.com/scalacenter/bloop
+val vBloop = "1.5.6"               // https://github.com/scalacenter/bloop
 val vSbtScalaFix="0.9.33"          // https://github.com/scalacenter/sbt-scalafix
 
 val scalaJSVersion = Option(System.getenv("SCALAJS_VERSION")).getOrElse(vScalaJSDefault)
