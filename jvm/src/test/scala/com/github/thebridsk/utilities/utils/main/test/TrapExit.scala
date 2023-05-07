@@ -6,6 +6,18 @@ object TrapExit {
 
   case class ExitTrappedException(status: Int) extends RuntimeException
 
+  /**
+    * SecurityManager has been deprecated staring in Java 17.
+    *
+    * This class in only used to trap the System.exit() and to get status call.
+    *
+    * See https://www.quora.com/What-is-the-best-way-to-prevent-JVM-from-exiting-after-calling-System-exit-in-Java-programming-language
+    * And https://openjdk.org/jeps/411
+    * and https://bugs.openjdk.org/browse/JDK-8199704
+    *
+    * @param old
+    */
+  @annotation.nowarn
   class MySecurityManager(old: SecurityManager) extends SecurityManager {
 
     override def checkExit(status: Int): Unit = {
@@ -26,12 +38,14 @@ object TrapExit {
     }
   }
 
+  @annotation.nowarn
   def getSecurityManager(): SecurityManager = {
     val sm = System.getSecurityManager()
     if (sm != null) println(s"SecurityManager is ${sm.getClass()}")
     sm
   }
 
+  @annotation.nowarn
   def setSecurityManager(sm: SecurityManager): Unit = {
     System.setSecurityManager(sm)
   }
