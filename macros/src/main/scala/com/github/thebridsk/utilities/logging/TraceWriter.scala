@@ -9,6 +9,17 @@ import scala.util.matching.Regex
 object TraceWriter {
   val fsLines: Regex = "\\r\\n|\\r|\\n".r
 
+  /**
+    * SecurityManager has been deprecated staring in Java 17.
+    *
+    * This class in only used to trap the System.exit() and to get status call.
+    *
+    * See https://www.quora.com/What-is-the-best-way-to-prevent-JVM-from-exiting-after-calling-System-exit-in-Java-programming-language
+    * And https://openjdk.org/jeps/411
+    * and https://bugs.openjdk.org/browse/JDK-8199704
+    *
+    */
+  @annotation.nowarn
   private object StackRetriever extends SecurityManager {
 
     def getCurrentStack(): Array[Class[_]] = {

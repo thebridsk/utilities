@@ -129,6 +129,17 @@ class FileHandler(pattern: String = null) extends StreamHandler {
   cleanupExistingFiles();
   openFiles();
 
+  /**
+    * SecurityManager has been deprecated staring in Java 17.
+    *
+    * This class in only used to trap the System.exit() and to get status call.
+    *
+    * See https://www.quora.com/What-is-the-best-way-to-prevent-JVM-from-exiting-after-calling-System-exit-in-Java-programming-language
+    * And https://openjdk.org/jeps/411
+    * and https://bugs.openjdk.org/browse/JDK-8199704
+    *
+    */
+  @annotation.nowarn
   private def myCheckAccess() = {
     val manager: LogManager = LogManager.getLogManager();
     manager.checkAccess();
@@ -184,6 +195,7 @@ class FileHandler(pattern: String = null) extends StreamHandler {
   /* (non-Javadoc)
    * @see java.util.logging.StreamHandler#publish(java.util.logging.LogRecord)
    */
+  @annotation.nowarn
   override def publish(record: LogRecord): Unit =
     synchronized {
       if (!isLoggable(record)) {
